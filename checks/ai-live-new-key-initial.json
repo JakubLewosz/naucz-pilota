@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-03T12:35:50.762Z",
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "promptVersion": "1.0.2",
+  "status": "FAILED",
+  "providerCalls": 1,
+  "maxProviderCalls": 4,
+  "results": [
+    {
+      "id": "M01-teach",
+      "status": "FAIL",
+      "httpStatus": 503,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": false
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": false
+        },
+        {
+          "name": "Model schema valid",
+          "passed": false
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "No robot solution in teach",
+          "passed": false
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "2e30ed53-e2e0-41b8-86c6-fd76069dc14d",
+        "sessionRevision": 1,
+        "turnId": "3c63728b-10fb-497b-aac1-2f577e631ae3",
+        "sceneId": "M01-teach",
+        "mode": "unavailable",
+        "learner": null,
+        "proposalValidation": {
+          "status": "not_proposed",
+          "failureCode": null,
+          "normalizedExpression": null,
+          "facts": []
+        },
+        "memory": {
+          "learnedRuleIds": [],
+          "qualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "newlyQualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": null,
+          "providerResponseId": null,
+          "requestCount": 1,
+          "inputTokens": null,
+          "outputTokens": null,
+          "latencyMs": 244
+        },
+        "error": {
+          "code": "AI_NOT_CONFIGURED",
+          "messagePL": "Model live nie jest skonfigurowany.",
+          "retryable": false
+        }
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Czy Piko reaguje na konkretne wyjaśnienie i pozostaje uczniem?"
+      ]
+    },
+    {
+      "id": "M01-transfer",
+      "status": "NOT RUN",
+      "httpStatus": null,
+      "checks": [],
+      "envelope": null,
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Czy propozycja wykorzystuje zapisaną zasadę? Wynik lotu jest oddzielnym obliczeniem silnika."
+      ],
+      "reason": "Stopped after M01-teach: AI_NOT_CONFIGURED."
+    }
+  ]
+}

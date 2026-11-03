@@ -1,12 +1,19 @@
 {
-  "date": "2026-11-03T12:19:04.589413+00:00",
+  "date": "2026-11-03T13:03:39.068475+00:00",
   "status": "PASS",
-  "sourceFiles": 135,
+  "sourceFiles": 149,
   "sourceZipCRC": "PASS",
+  "sourceSnapshotMatchesWorkingFiles": true,
   "sourceExcludesSecretsAndNodeModules": true,
+  "credentialScan": {
+    "status": "PASS",
+    "trackedAndUntrackedFilesPlusASAR": 151,
+    "secretValuesPrinted": false
+  },
   "windowsZipCRC": "PASS",
   "windowsSHA256Matches": true,
   "windowsRuntime": "NOT RUN",
+  "requiredArtifactsPresent": 13,
   "forms": "Missing signatures; official source links supplied",
-  "live": "NOT RUN \u2014 awaiting local credential setup"
+  "live": "22/22 structural PASS; browser M04 PASS; semantic warnings recorded; human signoff PENDING"
 }

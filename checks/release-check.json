@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-03T12:17:46.559Z",
+  "date": "2026-11-03T13:02:48.187Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -55,6 +55,17 @@
       "sha256": "8bdd40f03ccbd667af375c8fd10ddbb0b5e03f19cec6f002052cc8de05adaafd"
     }
   ],
-  "live": "NOT RUN",
+  "live": "PASS STRUCTURAL (22 cases); semantic warnings recorded",
+  "liveDetails": {
+    "promptVersion": "1.0.2",
+    "currentPromptVersion": "1.0.2",
+    "humanSignoff": "PENDING",
+    "limitations": [
+      "Model still sometimes speaks like a tutor and offers computations.",
+      "Two explanation assessments differ from the authored rubric; neither controls game progression.",
+      "This assistant review does not replace human semantic signoff or a usability pilot."
+    ],
+    "browser": "PASS"
+  },
   "windowsRuntime": "NOT RUN"
 }

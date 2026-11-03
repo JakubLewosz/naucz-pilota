@@ -4,6 +4,7 @@ import {existsSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import path from 'node:path';
 import source from '../content/missions.v1.json';
+import {PROMPT_VERSION} from '../apps/server/src/system';
 const require=createRequire(import.meta.url);
 const asar=require('@electron/asar') as {listPackage:(file:string)=>string[];extractFile:(file:string,name:string)=>Buffer};
 async function walk(dir:string):Promise<string[]>{const entries=await readdir(dir,{withFileTypes:true});return (await Promise.all(entries.map(e=>e.isDirectory()?walk(path.join(dir,e.name)):Promise.resolve([path.join(dir,e.name)])))).flat();}
@@ -30,5 +31,14 @@ if(existsSync(archive)){
 }else assert('Windows artifact exists',false,'Run npm run desktop:dist first.');
 const artifacts=[];
 for(const file of (await readdir('release/bin')).filter(f=>f.endsWith('.zip'))){const bytes=await readFile(`release/bin/${file}`);artifacts.push({file,size:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});}
-const report={date:new Date().toISOString(),status:process.exitCode?'FAIL':'PASS LOCAL CHECKS',checks,artifacts,live:'NOT RUN',windowsRuntime:'NOT RUN'};
+async function optional<T>(file:string):Promise<T|null>{return existsSync(file)?JSON.parse(await readFile(file,'utf8')) as T:null;}
+const live=await optional<{status:string;promptVersion:string;results:{status:string}[]}>('checks/ai-live-results.json');
+const semantic=await optional<{humanSignoff:string;limitations:string[]}>('checks/ai-semantic-review.json');
+const browser=await optional<{status:string;promptVersion:string}>('checks/browser-live.json');
+const desktop=await optional<{platform:string;packaged:boolean;status:string}>('checks/desktop-smoke.json');
+const liveCurrent=live?.promptVersion===PROMPT_VERSION&&live.status.startsWith('PASSED STRUCTURAL')&&live.results.length===22&&live.results.every(r=>r.status==='PASS');
+const report={date:new Date().toISOString(),status:process.exitCode?'FAIL':'PASS LOCAL CHECKS',checks,artifacts,
+ live:liveCurrent?'PASS STRUCTURAL (22 cases); semantic warnings recorded':live?.promptVersion===PROMPT_VERSION?live.status:'NOT RUN FOR CURRENT PROMPT',
+ liveDetails:{promptVersion:live?.promptVersion??null,currentPromptVersion:PROMPT_VERSION,humanSignoff:semantic?.humanSignoff??'PENDING',limitations:semantic?.limitations??[],browser:browser?.promptVersion===PROMPT_VERSION?browser.status:'NOT RUN FOR CURRENT PROMPT'},
+ windowsRuntime:desktop?.platform==='win32'&&desktop.packaged&&desktop.status==='PASS'?'PASS':'NOT RUN'};
 await writeFile('checks/release-check.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-03T12:28:50.904Z",
+  "status": "FAILED",
+  "providerCalls": 2,
+  "maxProviderCalls": 4,
+  "results": [
+    {
+      "id": "SEM05",
+      "status": "FAIL",
+      "httpStatus": 502,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": false
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": false
+        },
+        {
+          "name": "Model schema valid",
+          "passed": false
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "No robot solution in teach",
+          "passed": false
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "4234ba43-9f12-48f7-a7d9-a4cf71a4d51c",
+        "sessionRevision": 1,
+        "turnId": "f9dbe53c-22f7-4233-8e0f-091cd814a5ec",
+        "sceneId": "M01-teach",
+        "mode": "unavailable",
+        "learner": null,
+        "proposalValidation": {
+          "status": "not_proposed",
+          "failureCode": null,
+          "normalizedExpression": null,
+          "facts": []
+        },
+        "memory": {
+          "learnedRuleIds": [],
+          "qualifiedRuleIds": [],
+          "newlyQualifiedRuleIds": [],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": "gpt-5.4-mini-2026-03-17",
+          "providerResponseId": "resp_0e1dd5d78c151ada016ae9d3817fb887d2bea7f585a65bc012",
+          "requestCount": 2,
+          "inputTokens": 3908,
+          "outputTokens": 247,
+          "latencyMs": 3328
+        },
+        "error": {
+          "code": "AI_INVALID_OUTPUT",
+          "messagePL": "Model nie zwrócił poprawnej odpowiedzi.",
+          "retryable": false
+        }
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Jedno konkretne pytanie zamiast zawstydzania ucznia.",
+        "Brak udawania, że z wypowiedzi wynika dowód zrozumienia."
+      ]
+    }
+  ],
+  "captured": [
+    {
+      "payload": {
+        "utterancePL": "To nie wystarczy: y=0 daje prostą na wysokości 0, a start i bramki są około y=2. Przy funkcji stałej trzeba wpisać liczbę 2, jeśli ma lecieć poziomo na tej wysokości.",
+        "followUpPL": "Chcesz, żebym sprawdził wartości w punktach x=2 i x=4?",
+        "explanationAssessment": "incorrect",
+        "proposedExpression": null,
+        "suggestedRuleId": "RULE_LINE_INTERCEPT",
+        "usedFactIds": [],
+        "action": "explain_back"
+      },
+      "schemaValid": true,
+      "schemaErrors": [],
+      "contractValid": false,
+      "allowedFactIds": [],
+      "eligibleRuleIds": []
+    },
+    {
+      "payload": {
+        "utterancePL": "To jest za mało uzasadnione. Przy funkcji stałej trzeba podać wartość zgodną z wysokością lotu, a nie tylko powiedzieć, że „działa”.",
+        "followUpPL": "Jaką wartość ma mieć funkcja, żeby przejść przez start i bramki?",
+        "explanationAssessment": "unclear",
+        "proposedExpression": null,
+        "suggestedRuleId": "RULE_LINE_INTERCEPT",
+        "usedFactIds": [],
+        "action": "ask_question"
+      },
+      "schemaValid": true,
+      "schemaErrors": [],
+      "contractValid": false,
+      "allowedFactIds": [],
+      "eligibleRuleIds": []
+    }
+  ]
+}

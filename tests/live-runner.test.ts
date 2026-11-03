@@ -6,11 +6,11 @@ import {buildLiveCases} from './live/cases';
 import {executeLiveCases} from './live/runner';
 import evals from '../content/ai-evals.v1.json';
 it('live evaluator groups 22 cases and keeps teach/transfer in the same session',async()=>{
- const cases=buildLiveCases();expect(cases).toHaveLength(22);const selected=cases.filter(c=>c.sequence==='M01'),contexts:unknown[]=[];
+ const updates:number[][]=[];const cases=buildLiveCases();expect(cases).toHaveLength(22);const selected=cases.filter(c=>c.sequence==='M01'),contexts:unknown[]=[];
  const provider:Provider=async context=>{contexts.push(context);return {text:JSON.stringify(context.phase==='robot_propose'?evals.modelPayloadFixtures.robot_fails:evals.modelPayloadFixtures.teach_qualified),actualModel:'stub',responseId:'stub',inputTokens:1,outputTokens:1};};
  const store=new Store(':memory:');try{
-  const app=createApp({store,provider,config:{mode:'live',model:'stub'}}),result=await executeLiveCases(app,selected,4);
-  expect(result.status).toBe('PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED');expect(result.providerCalls).toBe(2);
+  const app=createApp({store,provider,config:{mode:'live',model:'stub'}}),result=await executeLiveCases(app,selected,4,async p=>{updates.push([p.providerCalls,p.results.length]);});
+  expect(result.status).toBe('PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED');expect(result.providerCalls).toBe(2);expect(updates).toEqual([[1,1],[2,2]]);
   expect(result.results[0].envelope?.sessionId).toBe(result.results[1].envelope?.sessionId);expect(result.results[1].envelope?.sessionRevision).toBe(2);
   expect(result.results[1].envelope?.proposalValidation.status).toBe('failed');expect(contexts[1]).toMatchObject({learnedRules:[{id:'RULE_LINE_INTERCEPT'}],recentExchanges:[]});
  }finally{store.close();}

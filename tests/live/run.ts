@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import {mkdir,writeFile} from 'node:fs/promises';
+import {writeFileSync} from 'node:fs';
 import {createApp} from '../../apps/server/src/app';
 import {Store} from '../../apps/server/src/store';
 import {openAIProvider} from '../../apps/server/src/provider';
@@ -20,7 +21,13 @@ if(!process.env.OPENAI_API_KEY||!process.env.AI_MODEL){
  const store=new Store(process.env.STATE_DB_PATH??'var/piko.sqlite');
  try{
   const app=createApp({store,provider:openAIProvider(process.env.OPENAI_API_KEY,process.env.AI_MODEL,Number(process.env.AI_MAX_OUTPUT_TOKENS??1200)),config:{mode:'live',model:process.env.AI_MODEL,dailyBudget:Number(process.env.AI_DAILY_REQUEST_BUDGET??200)}});
-  Object.assign(report,await executeLiveCases(app,selected,maxProviderCalls));
+  report.status='RUNNING';
+  const save=()=>writeFile('checks/ai-live-results.json',JSON.stringify(report,null,2)+'\n');
+  await save();
+  const interrupted=()=>{report.status='INTERRUPTED';report.reason='Operator stopped the run. The last in-flight provider request may have been processed; completed cases are preserved.';writeFileSync('checks/ai-live-results.json',JSON.stringify(report,null,2)+'\n');process.exit(130);};
+  process.once('SIGINT',interrupted);process.once('SIGTERM',interrupted);
+  try{Object.assign(report,await executeLiveCases(app,selected,maxProviderCalls,async progress=>{Object.assign(report,progress);await save();console.log(`${progress.results.at(-1)?.id}: ${progress.results.at(-1)?.status}; provider requests so far: ${progress.providerCalls}`);}));}
+  finally{process.removeListener('SIGINT',interrupted);process.removeListener('SIGTERM',interrupted);}
   process.exitCode=report.status==='FAILED'?1:report.status==='PARTIAL'?2:0;
  }catch(error){report.status='FAILED';report.reason=error instanceof Error?error.message:'Live runner failed.';process.exitCode=1;}
  finally{store.close();}

@@ -74,3 +74,15 @@ export function demoTurn(request:LearnerRequest):Envelope {
  if(!checkModel(learner,context)) throw new Error('Invalid demo fixture');
  return makeEnvelope(request,memory,learner,'demo');
 }
+
+/** Narrow the canonical output schema to the current phase and verified memory. */
+export function providerSchemaForContext(context:Context){
+ const facts=context.facts.map(f=>f.id),robot=context.phase==='robot_propose';
+ const properties=responseSchema.properties;
+ return {...providerSchema,properties:{...properties,
+  suggestedRuleId:{...properties.suggestedRuleId,enum:properties.suggestedRuleId.enum.filter(id=>id===null||(!robot&&context.eligibleRuleIds.includes(id)))},
+  usedFactIds:{...properties.usedFactIds,maxItems:Math.min(properties.usedFactIds.maxItems,facts.length),items:{...properties.usedFactIds.items,...facts.length?{enum:facts}:{}}},
+  proposedExpression:robot?properties.proposedExpression:{type:'null'},
+  action:{...properties.action,enum:properties.action.enum.filter(action=>robot?['propose_attempt','acknowledge_uncertainty'].includes(action):action!=='propose_attempt')}
+ }};
+}

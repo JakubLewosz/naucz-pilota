@@ -2,6 +2,7 @@ import {mkdir,cp,readFile,readdir,writeFile,stat} from 'node:fs/promises';
 import {existsSync} from 'node:fs';
 import {writeSourceZip} from './zip';
 import path from 'node:path';
+import {PROMPT_VERSION} from '../apps/server/src/system';
 const root='release/Naucz_Pilota_zgloszenie';
 for(const dir of ['01_formularze','02_aplikacja','03_kod','04_instrukcja','05_prezentacja','06_weryfikacja'])await mkdir(`${root}/${dir}`,{recursive:true});
 await writeFile(`${root}/01_formularze/DO_UZUPELNIENIA.txt`,'Brak podpisanych formularzy autora. Sprawdź aktualny regulamin i załączniki u organizatora, uzupełnij dane i podpisy. Nie utworzono fikcyjnych formularzy.\n');
@@ -15,6 +16,7 @@ for(const [source,target] of [
  ['release/media/Naucz_Pilota_demo.mp4','05_prezentacja/Naucz_Pilota_demo.mp4']]){
  if(!existsSync(source))throw new Error(`Required release artifact missing: ${source}`);await cp(source,`${root}/${target}`);
 }
+if(existsSync('release/media/Naucz_Pilota_live.mp4'))await cp('release/media/Naucz_Pilota_live.mp4',`${root}/05_prezentacja/Naucz_Pilota_live.mp4`);
 for(const file of await readdir('docs/konkurs'))await cp(`docs/konkurs/${file}`,`${root}/01_formularze/${file}`);
 await cp('release/CHECKLISTA.md',`${root}/CHECKLISTA.md`);
 for(const name of (await readdir('checks')).filter(f=>f.endsWith('.json')&&!f.includes('e2e-results')&&!f.includes('unit-results')))await cp(`checks/${name}`,`${root}/06_weryfikacja/${name}`);
@@ -39,6 +41,8 @@ async function collect(file:string){
 for(const file of top)await collect(file);
 const zipPath=path.resolve(`${root}/03_kod/Naucz_Pilota_kod.zip`);
 await writeSourceZip(zipPath,sourceFiles);
-const summary={date:new Date().toISOString(),sourceFiles:sourceFiles.length,scope:'Local demo release, unverified Windows runtime; no jury live endpoint.',missing:['Signed author forms','Live API run and semantic review','Public HTTPS endpoint','Clean Windows runtime test','Human usability pilot']};
+const live=existsSync('checks/ai-live-results.json')?JSON.parse(await readFile('checks/ai-live-results.json','utf8')) as {status:string;promptVersion:string;results:{status:string}[]}:null;
+const verifiedLive=live?.promptVersion===PROMPT_VERSION&&live.status.startsWith('PASSED STRUCTURAL')&&live.results.length===22&&live.results.every(result=>result.status==='PASS');
+const summary={date:new Date().toISOString(),sourceFiles:sourceFiles.length,scope:verifiedLive?'Local web live verified; Windows distribution remains demo with unverified runtime; jury HTTPS pending.':'Local demo release; live not verified for current prompt.',missing:['Signed author forms',...verifiedLive?[]:['Live API run'],'Human semantic signoff','Public HTTPS endpoint','Clean Windows runtime test','Human usability pilot']};
 await writeFile(`${root}/STAN_PACZKI.json`,JSON.stringify(summary,null,2)+'\n');
 console.log('Prepared',root,'with',sourceFiles.length,'source files. External blockers remain explicit.');

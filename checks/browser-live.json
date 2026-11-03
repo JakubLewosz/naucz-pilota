@@ -1,0 +1,146 @@
+{
+  "date": "2026-11-03T12:43:59.454Z",
+  "status": "PASS",
+  "mode": "live",
+  "promptVersion": "1.0.2",
+  "source": "var/video/page@daf16b0e632125727f342beb795da67e.webm",
+  "mission": "M04",
+  "automated": true,
+  "providerCalls": 2,
+  "responses": [
+    {
+      "schemaVersion": "1.0.0",
+      "sessionId": "bece6e8e-ecef-429b-913a-fbc629b17368",
+      "sessionRevision": 1,
+      "turnId": "00026123-20a8-4da1-9763-12b10988acbf",
+      "sceneId": "M04-teach",
+      "mode": "live",
+      "learner": {
+        "utterancePL": "Rozumiem: nawias x+1 daje przesunięcie w lewo o 1, bo zeruje się przy x=-1, a wierzchołek jest wtedy po lewej stronie. To pasuje do poprawionego wzoru.",
+        "followUpPL": "Czy mam jeszcze krótko podać wartości w G1 i G2?",
+        "explanationAssessment": "sound",
+        "proposedExpression": null,
+        "suggestedRuleId": "RULE_QUAD_HORIZONTAL",
+        "usedFactIds": [
+          "F_CANDIDATE_VALIDATION",
+          "F_CANDIDATE_G1_VALUE",
+          "F_CANDIDATE_G2_VALUE"
+        ],
+        "action": "explain_back"
+      },
+      "proposalValidation": {
+        "status": "not_proposed",
+        "failureCode": null,
+        "normalizedExpression": null,
+        "facts": []
+      },
+      "memory": {
+        "learnedRuleIds": [
+          "RULE_LINE_INTERCEPT",
+          "RULE_LINE_SLOPE",
+          "RULE_QUAD_VERTICAL"
+        ],
+        "qualifiedRuleIds": [
+          "RULE_LINE_INTERCEPT",
+          "RULE_LINE_SLOPE",
+          "RULE_QUAD_VERTICAL",
+          "RULE_QUAD_HORIZONTAL"
+        ],
+        "newlyQualifiedRuleIds": [
+          "RULE_LINE_INTERCEPT",
+          "RULE_LINE_SLOPE",
+          "RULE_QUAD_VERTICAL",
+          "RULE_QUAD_HORIZONTAL"
+        ],
+        "rejectedEvidenceMissionIds": []
+      },
+      "model": {
+        "provider": "openai",
+        "configuredModel": "gpt-5.4-mini",
+        "actualModel": "gpt-5.4-mini-2026-03-17",
+        "providerResponseId": "resp_03a66d5b784a262f016ae9d6f1592887d2bfd2cac90213ba37",
+        "requestCount": 1,
+        "inputTokens": 3482,
+        "outputTokens": 148,
+        "latencyMs": 2092
+      },
+      "error": null
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "sessionId": "bece6e8e-ecef-429b-913a-fbc629b17368",
+      "sessionRevision": 2,
+      "turnId": "d34c45c1-7308-461a-bcee-0e0d1d41e29c",
+      "sceneId": "M04-robot_transfer",
+      "mode": "live",
+      "learner": {
+        "utterancePL": "Spróbuję przesunąć parabolę tak, by jej wierzchołek miał x = 1, czyli użyję przesunięcia w prawo o 1.",
+        "followUpPL": null,
+        "explanationAssessment": "not_applicable",
+        "proposedExpression": "0.25(x-1)^2",
+        "suggestedRuleId": null,
+        "usedFactIds": [],
+        "action": "propose_attempt"
+      },
+      "proposalValidation": {
+        "status": "failed",
+        "failureCode": "START_MISS",
+        "normalizedExpression": "{\"c2\":0.25,\"c1\":-0.5,\"c0\":0.25}",
+        "facts": [
+          {
+            "id": "F_CANDIDATE_VALIDATION",
+            "textPL": "Tor omija otwór startowy. Sprawdź wysokość przy starcie."
+          },
+          {
+            "id": "F_CANDIDATE_start_VALUE",
+            "textPL": "start: dla x=-1 wzór daje y=1; brak prześwitu."
+          },
+          {
+            "id": "F_CANDIDATE_G1_VALUE",
+            "textPL": "G1: dla x=1 wzór daje y=0; prześwit zachowany."
+          },
+          {
+            "id": "F_CANDIDATE_G2_VALUE",
+            "textPL": "G2: dla x=3 wzór daje y=1; brak prześwitu."
+          },
+          {
+            "id": "F_CANDIDATE_goal_VALUE",
+            "textPL": "goal: dla x=5 wzór daje y=4; brak prześwitu."
+          }
+        ]
+      },
+      "memory": {
+        "learnedRuleIds": [
+          "RULE_LINE_INTERCEPT",
+          "RULE_LINE_SLOPE",
+          "RULE_QUAD_VERTICAL",
+          "RULE_QUAD_HORIZONTAL"
+        ],
+        "qualifiedRuleIds": [
+          "RULE_LINE_INTERCEPT",
+          "RULE_LINE_SLOPE",
+          "RULE_QUAD_VERTICAL",
+          "RULE_QUAD_HORIZONTAL"
+        ],
+        "newlyQualifiedRuleIds": [],
+        "rejectedEvidenceMissionIds": []
+      },
+      "model": {
+        "provider": "openai",
+        "configuredModel": "gpt-5.4-mini",
+        "actualModel": "gpt-5.4-mini-2026-03-17",
+        "providerResponseId": "resp_0a4c35104c2a2871016ae9d6f74d0487d2804dfa5a03603f68",
+        "requestCount": 1,
+        "inputTokens": 2253,
+        "outputTokens": 98,
+        "latencyMs": 2089
+      },
+      "error": null
+    }
+  ],
+  "pageErrors": [],
+  "firstIndependentAttemptPreserved": true,
+  "note": "Actual live model replies, real UI, no substitutions. Author-prepared automated demonstration.",
+  "mp4": "release/media/Naucz_Pilota_live.mp4",
+  "duration": "00:00:45.28"
+}

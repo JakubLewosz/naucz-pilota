@@ -2,7 +2,7 @@
 
 Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkcje stopnia 0–2, robot Piko i osobna samodzielna próba gracza. Matematyka jest liczona analitycznie przez współdzielony silnik TypeScript. Demo działa bez klucza, serwera i internetu po załadowaniu zasobów aplikacji.
 
-**Stan:** pełna kampania demo i testy lokalne działają. Adapter prawdziwego AI jest zaimplementowany i sprawdzony z atrapami HTTP; testy płatnego modelu są NOT RUN. ZIP Windows jest cross-buildem z macOS; uruchomienie na Windows jest NOT RUN. Szczegóły i rzeczywiste wyniki: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+**Stan:** pełna kampania demo i testy lokalne działają. Adapter prawdziwego AI przeszedł 22 tury live oraz rzeczywisty przebieg M04 w przeglądarce z modelem gpt-5.4-mini. Przegląd odpowiedzi wykazał uwagi do tonu i dwóch ocen tekstowych; opinia AI nie rozstrzyga zaliczeń. ZIP Windows jest cross-buildem z macOS; uruchomienie na Windows jest NOT RUN. Szczegóły i rzeczywiste wyniki: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## Szybki start
 
@@ -87,3 +87,10 @@ Pierwsza komenda jest płatnym testem teach → transfer M01. Używa jednej sesj
 Kontener został lokalnie zbudowany i uruchomiony; testowane są health, brak .env/rozwiązań autora w obrazie, użytkownik bez uprawnień root i trwałość sesji po restarcie. Publiczny hosting HTTPS nadal nie jest skonfigurowany. Test kontenera nie uruchamia płatnego API.
 
 Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Ręczny workflow GitHub Actions dla Windows i Linux jest przygotowany w .github/workflows/verify.yml; jego wykonanie wymaga repozytorium z remote i nie zostało dotąd przeprowadzone.
+
+
+## Wynik rzeczywistego odbioru live
+
+3 listopada 2026: prompt 1.0.2, model gpt-5.4-mini-2026-03-17. Pełne 22 tury przeszły kontrolę schematu, pamięci i zgodności z niezależnym silnikiem, po jednym żądaniu dostawcy na turę. W sześciu transferach robot uzyskał 2 poprawne tory i 4 odrzucone przez silnik; błędne propozycje zachowano bez podstawiania rozwiązań. M04 przeszła też rzeczywisty test UI live z zachowaniem błędnej pierwszej próby po poprawce i odświeżeniu. Nagranie live ma 45,28 s.
+
+Wyniki: checks/ai-live-results.json, checks/ai-semantic-review.json i checks/browser-live.json. Przegląd wykonany przez asystenta jest wstępny; SEM03 i SEM09 mają etykiety oceny różniące się od rubryki, a Piko czasem mówi zbyt nauczycielsko. Akceptacja jakości dialogu przez człowieka i pilotaż pozostają do wykonania. Lokalna konfiguracja klucza działa; klucz nie jest częścią repozytorium ani wydania.

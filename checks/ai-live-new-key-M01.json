@@ -1,0 +1,189 @@
+{
+  "date": "2026-11-03T12:36:46.196Z",
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "promptVersion": "1.0.2",
+  "status": "PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED",
+  "providerCalls": 2,
+  "maxProviderCalls": 4,
+  "results": [
+    {
+      "id": "M01-teach",
+      "status": "PASS",
+      "httpStatus": 200,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": true
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": true
+        },
+        {
+          "name": "Model schema valid",
+          "passed": true
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "No robot solution in teach",
+          "passed": true
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "d4bfb9fb-5af6-4fbb-93d3-96298657bff5",
+        "sessionRevision": 1,
+        "turnId": "b1be8e87-cdd1-4034-b18a-4a632e537dc8",
+        "sceneId": "M01-teach",
+        "mode": "live",
+        "learner": {
+          "utterancePL": "Rozumiem: przesunięcie w pionie daje składnik b, a przy a=0 wykres jest poziomą prostą na wysokości b. W tym zadaniu to właśnie trzyma y na stałej wysokości 2.",
+          "followUpPL": "Czy mam też wskazać wartości w punktach G1 i G2?",
+          "explanationAssessment": "sound",
+          "proposedExpression": null,
+          "suggestedRuleId": "RULE_LINE_INTERCEPT",
+          "usedFactIds": [
+            "F_CANDIDATE_G1_VALUE",
+            "F_CANDIDATE_G2_VALUE"
+          ],
+          "action": "explain_back"
+        },
+        "proposalValidation": {
+          "status": "not_proposed",
+          "failureCode": null,
+          "normalizedExpression": null,
+          "facts": []
+        },
+        "memory": {
+          "learnedRuleIds": [],
+          "qualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "newlyQualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": "gpt-5.4-mini-2026-03-17",
+          "providerResponseId": "resp_00b9f2285a7e7d99016ae9d55f400087d28d7dffbb3a5e5324",
+          "requestCount": 1,
+          "inputTokens": 2418,
+          "outputTokens": 139,
+          "latencyMs": 2792
+        },
+        "error": null
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Czy Piko reaguje na konkretne wyjaśnienie i pozostaje uczniem?"
+      ]
+    },
+    {
+      "id": "M01-transfer",
+      "status": "PASS",
+      "httpStatus": 200,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": true
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": true
+        },
+        {
+          "name": "Model schema valid",
+          "passed": true
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "Independent engine agrees with proposal result",
+          "passed": true
+        },
+        {
+          "name": "Confirmed memory passed to transfer",
+          "passed": true
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "d4bfb9fb-5af6-4fbb-93d3-96298657bff5",
+        "sessionRevision": 2,
+        "turnId": "7694404a-1201-4c84-97a3-e2aa4e535835",
+        "sceneId": "M01-robot_transfer",
+        "mode": "live",
+        "learner": {
+          "utterancePL": "Spróbuję z prostą funkcją stałą, bo wykres ma być poziomy.",
+          "followUpPL": null,
+          "explanationAssessment": "not_applicable",
+          "proposedExpression": "1",
+          "suggestedRuleId": null,
+          "usedFactIds": [],
+          "action": "propose_attempt"
+        },
+        "proposalValidation": {
+          "status": "failed",
+          "failureCode": "START_MISS",
+          "normalizedExpression": "{\"c2\":0,\"c1\":0,\"c0\":1}",
+          "facts": [
+            {
+              "id": "F_CANDIDATE_VALIDATION",
+              "textPL": "Tor omija otwór startowy. Sprawdź wysokość przy starcie."
+            },
+            {
+              "id": "F_CANDIDATE_start_VALUE",
+              "textPL": "start: dla x=-1 wzór daje y=1; brak prześwitu."
+            },
+            {
+              "id": "F_CANDIDATE_G1_VALUE",
+              "textPL": "G1: dla x=1 wzór daje y=1; brak prześwitu."
+            },
+            {
+              "id": "F_CANDIDATE_G2_VALUE",
+              "textPL": "G2: dla x=3 wzór daje y=1; brak prześwitu."
+            },
+            {
+              "id": "F_CANDIDATE_goal_VALUE",
+              "textPL": "goal: dla x=5 wzór daje y=1; brak prześwitu."
+            }
+          ]
+        },
+        "memory": {
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "qualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "newlyQualifiedRuleIds": [],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": "gpt-5.4-mini-2026-03-17",
+          "providerResponseId": "resp_01c3a9932891838b016ae9d561685487d2b15af86454f80e93",
+          "requestCount": 1,
+          "inputTokens": 2033,
+          "outputTokens": 73,
+          "latencyMs": 2266
+        },
+        "error": null
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Czy propozycja wykorzystuje zapisaną zasadę? Wynik lotu jest oddzielnym obliczeniem silnika."
+      ]
+    }
+  ]
+}

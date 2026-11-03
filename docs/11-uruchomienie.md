@@ -20,7 +20,7 @@ Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznany
 
 ## Konfiguracja modelu
 
-Skopiuj .env.example do .env i uzupełnij AI_MODE=live, OPENAI_API_KEY, AI_MODEL. Nie ma domyślnej zgadywanej nazwy modelu. Wybierz dostępny na własnym koncie model obsługujący używany strict JSON Schema, potem uruchom test live. Klucz nie trafia do gry ani paczki desktopowej.
+Skopiuj .env.example do .env i uzupełnij AI_MODE=live, OPENAI_API_KEY, AI_MODEL. Plik przykładowy wskazuje lokalnie przetestowany gpt-5.4-mini. Dostęp modelu na własnym koncie sprawdź krótkim testem live. Klucz nie trafia do gry ani paczki desktopowej.
 
 Dla Vite PUBLIC_ORIGIN=http://127.0.0.1:5173. Dla lokalnego `npm start` ustaw http://127.0.0.1:3001. W produkcji ustaw pełny origin HTTPS, NODE_ENV=production i trwały STATE_DB_PATH. Brak klucza/modelu jest jawnym błędem, bez podstawiania demo. Zmianę na demo wykonuje gracz.
 
@@ -52,3 +52,6 @@ Oficjalne źródła sprawdzone podczas implementacji: https://developers.openai.
 Dockerfile został lokalnie zbudowany, a kontener przeszedł test zdrowia, braku sekretów i danych autora, użytkownika bez root oraz trwałości sesji SQLite po restarcie. npm run docker:build oraz npm run docker:smoke odtwarzają te sprawdzenia bez klucza AI.
 
 Pierwszą próbę live można ograniczyć poleceniem npm run test:ai:live -- --case M01 --max-calls 4. Runner zatrzymuje się po pierwszym błędzie i zachowuje osobne NOT RUN dla pozostałych scenariuszy. Przejścia teach/transfer tej misji używają jednej sesji. Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md.
+
+
+Odbiór lokalny live został wykonany: prompt 1.0.2 i model gpt-5.4-mini-2026-03-17, 22 tury oraz M04 w UI. Pozostają uwagi do semantyki, publiczny HTTPS i odbiór Windows. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.

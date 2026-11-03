@@ -383,3 +383,8 @@ Minimalna telemetria lokalna: turnId, missionId, sceneRole, mode, model, latency
 - [ ] Globalny limit przetrwa restart; wynik opóźniony nie nadpisuje nowej sceny.
 - [ ] Nieparsowalne wyrażenie nie może zostać uruchomione jako kod.
 - [ ] Raport odróżnia mock, demo i rzeczywiste testy live.
+
+
+### Odbiór implementacji 3 listopada 2026
+
+Kod używa promptu 1.0.2. Z kanonicznego schematu odpowiedzi wyprowadza na czas jednej tury węższy schemat dostawcy: tylko dozwolone w tej fazie akcje, istniejące factId i kwalifikowane suggestedRuleId; przy braku dowodów sugestia musi być null. Backend nadal sprawdza pełny kontrakt po odpowiedzi. To zawężenie istniejących pól, bez dodatkowego równoległego DTO. Testy live i zastrzeżenia jakościowe są w checks/ai-live-results.json i checks/ai-semantic-review.json.

@@ -5,7 +5,7 @@ Naucz Pilota 1.0.0, 3 listopada 2026. Środowisko: macOS arm64, Node 24.11.0, np
 ## Wyniki wykonane
 
 - Silnik TypeScript: 24 rozwiązania witness dają SUCCESS; 37 knownFailures odrzucanych dokładnie oczekiwanym kodem. Przeniesiono 42 kontrole parsera i geometrii z walidatora Python, w tym dokładne skracanie dziesiętne, limity, cienką przeszkodę i wewnętrzny wierzchołek.
-- Testy jednostkowe/integracyjne: 156 PASS w sześciu plikach Vitest. Obejmują silnik, maszynę stanów, 32 deterministyczne scenariusze INT z ai-evals i oficjalny SDK na lokalnej atrapie HTTP. Dziesięć wejść SEM sprawdzono strukturalnie; ich jakość semantyczna pozostaje NOT RUN.
+- Testy jednostkowe/integracyjne: 158 PASS w siedmiu plikach Vitest. Obejmują silnik, maszynę stanów, 32 deterministyczne scenariusze INT z ai-evals i oficjalny SDK na lokalnej atrapie HTTP. Dodano regresję błędu zaobserwowanego w SEM05: schemat dostawcy nie pozwala wskazać reguły bez dowodu ani nieistniejących faktów.
 - Python: PASS, 6 misji / 24 sceny / 24 witness / 37 błędów / 42 kontrole. Niezależny od TypeScript walidator referencyjny potwierdza dane, nie zastępuje testu aplikacji.
 - Playwright: 7 PASS. Pełna kampania demo z 24 scenami; porażka robota w M04 nie blokuje gracza. Pierwszy wynik jest zachowany po odświeżeniu, poprawkach i powtórce. Przed human_check brak toru, robota, dziennika, wskazówek, obliczonych y i rozmowy.
 - Interfejs: widoki 1366×768, 1440×900, 390×844; axe WCAG A/AA bez wykrytych naruszeń na starcie i practice; brak poziomego przewijania, klawiaturowa M01, tekst 200%, reduced motion i demo po wyłączeniu sieci. Zrzuty obejrzano wzrokowo. To ograniczony zakres, bez deklaracji pełnej dostępności dla wszystkich użytkowników.
@@ -14,11 +14,13 @@ Naucz Pilota 1.0.0, 3 listopada 2026. Środowisko: macOS arm64, Node 24.11.0, np
 - Produkcyjny build: frontend bez source maps i bez danych witness/knownFailures. Statyczne walidatory zamiast runtime kompilacji Ajv. Serwer bundluje współdzielone pakiety do JavaScript.
 - Electron macOS: cała M01 z lokalnych zasobów app://, bez backendu; izolacja kontekstu, sandbox, brak require/process w rendererze; rzeczywiste zamknięcie i wznowienie z zachowaniem błędnej pierwszej próby po korekcie; PASS w checks/desktop-smoke.json.
 - Windows x64: utworzono ZIP zawierający EXE PE i zasoby. Inspekcja ASAR wyklucza node_modules, .env, mapy źródeł i dane autora. Paczka niepodpisana. Cross-build jest osobną czynnością od testu uruchomienia.
-- Nagrano rzeczywisty automatyczny przebieg M04 w trybie demo: MP4, 37,56 s, 1440×900, napisy objaśniające, bez udawania live i bez fikcyjnego głosu autora.
+- Nagrano rzeczywiste automatyczne przebiegi M04: demo (37,56 s) oraz live (45,28 s), MP4 1440×900 z napisami. Nagranie live wykonało 2 prawdziwe żądania, pokazało oryginalną propozycję robota i zachowało pierwszą nieudaną próbę człowieka po korekcie i odświeżeniu. Nie udaje pilotażu z użytkownikami.
 
 ## Uczciwe ograniczenia
 
-Prawdziwe AI: NOT RUN. Brak OPENAI_API_KEY/AI_MODEL. Polecenie test:ai:live zapisuje powód i kończy się kodem 2, bez wywołań dostawcy. Nie oceniono jakości polskich odpowiedzi ani pokrycia live wszystkich umiejętności.
+Prawdziwe AI: WYKONANO lokalnie. Prompt 1.0.2, model gpt-5.4-mini-2026-03-17, 22 tury i 22 żądania dostawcy w końcowym przebiegu. Wszystkie odpowiedzi przeszły kontrolę struktury, fazy, potwierdzonej pamięci i niezależnego wyniku silnika. Opóźnienia: 1069–2330 ms, mediana 1426 ms; 49505 tokenów wejścia i 2595 wyjścia. To obserwacja tego przebiegu, bez gwarancji podobnych wyników w przyszłości. Wcześniejsze błędy i przerwane próby zachowano osobno w checks/.
+
+Jakość dialogu: wstępny przegląd asystenta jest zapisany w checks/ai-semantic-review.json; akceptacja przez człowieka PENDING. SEM03 otrzymał sound zamiast oczekiwanego partial, a SEM09 partial zamiast incorrect. Piko czasem proponuje objaśnianie lub liczenie za gracza. Komentarz i etykieta modelu nie odblokowują misji. W sześciu końcowych transferach robot zaliczył 2 plansze; 4 propozycje silnik odrzucił. Porażki robota są zachowane i nie blokują zadania człowieka.
 
 Windows runtime: NOT RUN. Nie ma dostępu do czystego komputera Windows. Paczkę należy rozpakować i przetestować niezależnie od środowiska autora. Dostępny jest tylko smoke macOS i inspekcja formatu PE/ASAR.
 
@@ -38,9 +40,14 @@ Naprawiono eksport fixture parsera, niezgodność runtime Ajv z CSP, eksporty st
 
 Uruchom npm ci; npm run typecheck; npm run lint; npm test; npm run test:content; npm run test:e2e; npm run build; npm run desktop:dist; npm run release:check. Test AI live jest osobny i może zużywać płatne API. Raporty maszynowe w checks/ podają rzeczywiste wyniki, a IMPLEMENTATION_STATUS.md określa końcowy stan etapów.
 
-Po konfiguracji live wykonaj 10 scenariuszy semantycznych i teach/transfer sześciu umiejętności, przeczytaj odpowiedzi według rubryk, przetestuj publiczny endpoint na urządzeniu odbiorcy, następnie odbierz Windows i pilotaż. Nie łącz sukcesu robota z samodzielnym wynikiem gracza.
+Przeczytaj zapisane odpowiedzi live według rubryk i zatwierdź jakość dialogu. Następnie przetestuj publiczny endpoint na urządzeniu odbiorcy, odbierz Windows i pilotaż. Nie powtarzaj płatnych prób bez konkretnego powodu. Nie łącz sukcesu robota z samodzielnym wynikiem gracza.
 
 
 ## Dalszy odbiór
 
 Runner live obsługuje filtr --case i limit --max-calls, sprawdza teach i transfer misji w jednej sesji, zatrzymuje test po pierwszym błędzie i zwraca niezerowy kod przy awarii. Cztery dodatkowe testy sprawdzają ten mechanizm bez płatnego API. Przygotowany ręczny workflow GitHub Actions obejmuje Windows EXE i kontener Linux; wykonanie workflow pozostaje NOT RUN, ponieważ repozytorium nie ma remote. Dostępne są protokoły pilotażu i ręcznego odbioru Windows w docs/15-pilotaz.md i docs/16-windows-odbior.md.
+
+
+## Poprawki po wywołaniach prawdziwego modelu
+
+Po krótkiej odpowiedzi bez dowodów model sugerował niekwalifikowaną regułę. Schemat przekazywany dostawcy jest teraz zawężany do bieżących faktów, dozwolonych sugestii i fazy, przy zachowaniu źródłowego kontraktu i niezależnej walidacji. Doprecyzowano rolę Piko i pojedyncze pytanie. Runner zapisuje wyniki po każdej turze i stan INTERRUPTED po zatrzymaniu, zachowując informację o możliwym wywołaniu w toku. Nowy klucz po podmianie wymagał usunięcia jednego dodatkowego znaku i przywrócenia pola AI_MODEL; sekret nie został wypisany ani zapisany w raportach.

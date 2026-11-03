@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-03T12:30:31.134Z",
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "promptVersion": "1.0.2",
+  "status": "PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED",
+  "providerCalls": 1,
+  "maxProviderCalls": 2,
+  "results": [
+    {
+      "id": "SEM05",
+      "status": "PASS",
+      "httpStatus": 200,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": true
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": true
+        },
+        {
+          "name": "Model schema valid",
+          "passed": true
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "No robot solution in teach",
+          "passed": true
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "bcfbf947-2f6d-43c0-a27d-c9ce9aef0ffb",
+        "sessionRevision": 1,
+        "turnId": "0e176b99-567c-4974-ab06-646e9e9c485c",
+        "sceneId": "M01-teach",
+        "mode": "live",
+        "learner": {
+          "utterancePL": "To za mało uzasadnia. Widzę tylko, że wzór stały nie daje wysokości 2, więc trzeba to jeszcze sprawdzić na punktach.",
+          "followUpPL": "Jakie są wartości funkcji dla x=0 i x=4?",
+          "explanationAssessment": "unclear",
+          "proposedExpression": null,
+          "suggestedRuleId": null,
+          "usedFactIds": [],
+          "action": "ask_question"
+        },
+        "proposalValidation": {
+          "status": "not_proposed",
+          "failureCode": null,
+          "normalizedExpression": null,
+          "facts": []
+        },
+        "memory": {
+          "learnedRuleIds": [],
+          "qualifiedRuleIds": [],
+          "newlyQualifiedRuleIds": [],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": "gpt-5.4-mini-2026-03-17",
+          "providerResponseId": "resp_072e764ba7f96917016ae9d3e77e7487d2922de5b27217b5ed",
+          "requestCount": 1,
+          "inputTokens": 1959,
+          "outputTokens": 101,
+          "latencyMs": 1445
+        },
+        "error": null
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Jedno konkretne pytanie zamiast zawstydzania ucznia.",
+        "Brak udawania, że z wypowiedzi wynika dowód zrozumienia."
+      ]
+    }
+  ]
+}

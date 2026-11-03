@@ -1,0 +1,190 @@
+{
+  "date": "2026-11-03T12:23:48.619Z",
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "promptVersion": "1.0.0",
+  "status": "PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED",
+  "providerCalls": 2,
+  "maxProviderCalls": 4,
+  "results": [
+    {
+      "id": "M01-teach",
+      "status": "PASS",
+      "httpStatus": 200,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": true
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": true
+        },
+        {
+          "name": "Model schema valid",
+          "passed": true
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "No robot solution in teach",
+          "passed": true
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "af2ded68-2500-498c-b7c4-cf5c58004f83",
+        "sessionRevision": 1,
+        "turnId": "4cdbc561-1389-4c22-80c0-2b9e4cfbde0a",
+        "sceneId": "M01-teach",
+        "mode": "live",
+        "learner": {
+          "utterancePL": "Tak, to pasuje: przy a=0 wykres jest poziomy, więc y=b ma wszędzie tę samą wysokość. Tu wzór 2 daje y=2 w każdym punkcie, dlatego lot jest bezpieczny. Czy mam też wskazać wartości w start i w dwóch bramkach?",
+          "followUpPL": "Czy mam też wskazać wartości w start i w dwóch bramkach?",
+          "explanationAssessment": "sound",
+          "proposedExpression": null,
+          "suggestedRuleId": "RULE_LINE_INTERCEPT",
+          "usedFactIds": [
+            "F_CANDIDATE_start_VALUE",
+            "F_CANDIDATE_G1_VALUE",
+            "F_CANDIDATE_G2_VALUE"
+          ],
+          "action": "explain_back"
+        },
+        "proposalValidation": {
+          "status": "not_proposed",
+          "failureCode": null,
+          "normalizedExpression": null,
+          "facts": []
+        },
+        "memory": {
+          "learnedRuleIds": [],
+          "qualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "newlyQualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": "gpt-5.4-mini-2026-03-17",
+          "providerResponseId": "resp_09850378390e89e7016ae9d255c53087d2b03bc8dc19c5780e",
+          "requestCount": 1,
+          "inputTokens": 2219,
+          "outputTokens": 162,
+          "latencyMs": 3908
+        },
+        "error": null
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Czy Piko reaguje na konkretne wyjaśnienie i pozostaje uczniem?"
+      ]
+    },
+    {
+      "id": "M01-transfer",
+      "status": "PASS",
+      "httpStatus": 200,
+      "checks": [
+        {
+          "name": "HTTP 200",
+          "passed": true
+        },
+        {
+          "name": "Response from configured live adapter",
+          "passed": true
+        },
+        {
+          "name": "Model schema valid",
+          "passed": true
+        },
+        {
+          "name": "Scene identity preserved",
+          "passed": true
+        },
+        {
+          "name": "Independent engine agrees with proposal result",
+          "passed": true
+        },
+        {
+          "name": "Confirmed memory passed to transfer",
+          "passed": true
+        }
+      ],
+      "envelope": {
+        "schemaVersion": "1.0.0",
+        "sessionId": "af2ded68-2500-498c-b7c4-cf5c58004f83",
+        "sessionRevision": 2,
+        "turnId": "e68116d3-8bcc-4a7d-933d-752de1b0e6c9",
+        "sceneId": "M01-robot_transfer",
+        "mode": "live",
+        "learner": {
+          "utterancePL": "Proponuję stałą funkcję y=3. Próbuję utrzymać poziom między bramkami i nad przeszkodą.",
+          "followUpPL": null,
+          "explanationAssessment": "not_applicable",
+          "proposedExpression": "3",
+          "suggestedRuleId": null,
+          "usedFactIds": [],
+          "action": "propose_attempt"
+        },
+        "proposalValidation": {
+          "status": "passed",
+          "failureCode": null,
+          "normalizedExpression": "{\"c2\":0,\"c1\":0,\"c0\":3}",
+          "facts": [
+            {
+              "id": "F_CANDIDATE_VALIDATION",
+              "textPL": "Bezpieczny lot. Wszystkie bramki zaliczone."
+            },
+            {
+              "id": "F_CANDIDATE_start_VALUE",
+              "textPL": "start: dla x=-1 wzór daje y=3; prześwit zachowany."
+            },
+            {
+              "id": "F_CANDIDATE_G1_VALUE",
+              "textPL": "G1: dla x=1 wzór daje y=3; prześwit zachowany."
+            },
+            {
+              "id": "F_CANDIDATE_G2_VALUE",
+              "textPL": "G2: dla x=3 wzór daje y=3; prześwit zachowany."
+            },
+            {
+              "id": "F_CANDIDATE_goal_VALUE",
+              "textPL": "goal: dla x=5 wzór daje y=3; prześwit zachowany."
+            }
+          ]
+        },
+        "memory": {
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "qualifiedRuleIds": [
+            "RULE_LINE_INTERCEPT"
+          ],
+          "newlyQualifiedRuleIds": [],
+          "rejectedEvidenceMissionIds": []
+        },
+        "model": {
+          "provider": "openai",
+          "configuredModel": "gpt-5.4-mini",
+          "actualModel": "gpt-5.4-mini-2026-03-17",
+          "providerResponseId": "resp_01d0df60dba6c549016ae9d259295087d29b00c5348268d14b",
+          "requestCount": 1,
+          "inputTokens": 1848,
+          "outputTokens": 84,
+          "latencyMs": 3546
+        },
+        "error": null
+      },
+      "semanticReview": "NOT REVIEWED",
+      "rubric": [
+        "Czy propozycja wykorzystuje zapisaną zasadę? Wynik lotu jest oddzielnym obliczeniem silnika."
+      ]
+    }
+  ]
+}
