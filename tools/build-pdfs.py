@@ -1,6 +1,6 @@
 """Author tool only. Uses reportlab; the game itself never requires Python."""
 from pathlib import Path
-import html,re,os
+import html,re,os,sys
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
@@ -8,6 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
 from reportlab.lib.enums import TA_LEFT
 from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,KeepTogether
 from pypdf import PdfReader
+SELECTED=set(sys.argv[1:])
 OUT=Path('output/pdf');OUT.mkdir(parents=True,exist_ok=True)
 font=os.environ.get('PIKO_PDF_FONT','/System/Library/Fonts/Supplemental/Arial.ttf')
 bold=os.environ.get('PIKO_PDF_FONT_BOLD','/System/Library/Fonts/Supplemental/Arial Bold.ttf')
@@ -28,8 +29,10 @@ def footer(canvas,doc):
  canvas.setFont('Body',8);canvas.setFillColor(colors.HexColor('#49576d'));canvas.drawString(48,29,'NAUCZ PILOTA / 1.0.0 / 03.11.2026');canvas.drawRightString(547,29,str(doc.page))
 
 def make(name,text):
+ if SELECTED and name not in SELECTED:return None
  blocks=text.strip().split('\n\n');story=[]
  for block in blocks:
+  block=block.strip()
   if block.startswith('# '):story.append(Paragraph(safe(block[2:]),styles['TitlePL']))
   elif block.startswith('## '):story.append(Paragraph(safe(block[3:]),styles['HeadingPL']))
   elif block.startswith('- ') or re.match(r'^\d+\. ',block):
@@ -74,5 +77,5 @@ Sprawdź start bez Node, M01 offline, zamknięcie i wznowienie, pierwszą prób�
 make('instrukcja_uruchomienia.pdf',launch)
 make('instrukcja_kompilacji.pdf',source)
 make('instrukcja_uzytkownika.pdf',Path('docs/12-instrukcja-uzytkownika.md').read_text())
-assert make('opis_funkcjonalnosci.pdf',Path('docs/14-opis-funkcjonalnosci.md').read_text())==1
+assert make('opis_funkcjonalnosci.pdf',Path('docs/14-opis-funkcjonalnosci.md').read_text()) in (None,1)
 make('raport_weryfikacji.pdf',Path('docs/13-raport-weryfikacji.md').read_text())

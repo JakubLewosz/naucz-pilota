@@ -15,6 +15,7 @@ for(const [source,target] of [
  ['release/media/Naucz_Pilota_demo.mp4','05_prezentacja/Naucz_Pilota_demo.mp4']]){
  if(!existsSync(source))throw new Error(`Required release artifact missing: ${source}`);await cp(source,`${root}/${target}`);
 }
+for(const file of await readdir('docs/konkurs'))await cp(`docs/konkurs/${file}`,`${root}/01_formularze/${file}`);
 await cp('release/CHECKLISTA.md',`${root}/CHECKLISTA.md`);
 for(const name of (await readdir('checks')).filter(f=>f.endsWith('.json')&&!f.includes('e2e-results')&&!f.includes('unit-results')))await cp(`checks/${name}`,`${root}/06_weryfikacja/${name}`);
 const lock=JSON.parse(await readFile('package-lock.json','utf8')) as {packages:Record<string,{version?:string;license?:string}>};
@@ -26,7 +27,7 @@ for(const [entry,meta]of Object.entries(lock.packages)){
 }
 await writeFile('release/THIRD_PARTY_NOTICES.txt',notices);await writeFile(`${root}/03_kod/THIRD_PARTY_NOTICES.txt`,notices);
 // Explicit top-level source allowlist; no .env, var, release binaries, saves or node_modules.
-const top=['apps','packages','content','contracts','docs','tools','tests','checks','output/pdf','release/media','release/CHECKLISTA.md','release/THIRD_PARTY_NOTICES.txt','AGENTS.md','README.md','START_CODEX.md','SCHEMAT_PROJEKTU.md','IMPLEMENTATION_STATUS.md','package.json','package-lock.json','tsconfig.json','vitest.config.ts','playwright.config.ts','eslint.config.js','Dockerfile','.dockerignore','.env.example','.gitignore','.nvmrc'];
+const top=['.github','apps','packages','content','contracts','docs','tools','tests','checks','output/pdf','release/media','release/CHECKLISTA.md','release/THIRD_PARTY_NOTICES.txt','AGENTS.md','README.md','START_CODEX.md','SCHEMAT_PROJEKTU.md','IMPLEMENTATION_STATUS.md','package.json','package-lock.json','tsconfig.json','vitest.config.ts','playwright.config.ts','eslint.config.js','Dockerfile','.dockerignore','.env.example','.gitignore','.nvmrc'];
 const sourceFiles:string[]=[];
 async function collect(file:string){
  const info=await stat(file);

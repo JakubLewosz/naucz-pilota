@@ -17,3 +17,4 @@ tmp/
 release/media/
 __pycache__/
 *.pyc
+release/*.bundle

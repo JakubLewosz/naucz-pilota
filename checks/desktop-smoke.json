@@ -1,7 +1,9 @@
 {
-  "date": "2026-11-03T11:28:20.626Z",
+  "date": "2026-11-03T12:09:41.737Z",
   "platform": "darwin",
+  "packaged": false,
+  "executable": "local Electron",
   "status": "PASS",
-  "scope": "Electron local app:// assets, sandbox, isolation, no Node in renderer, offline M01 four stages",
+  "scope": "app://, sandbox, isolation, offline M01, immutable first attempt and restart persistence",
   "windowsStatus": "NOT RUN"
 }

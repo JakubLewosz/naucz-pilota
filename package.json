@@ -24,7 +24,10 @@
     "desktop:dev": "npm run build && electron apps/desktop/main.cjs",
     "desktop:dist": "npm run build && tsx tools/prepare-desktop.ts && electron-builder --config apps/desktop/builder.json --win zip --x64",
     "release:check": "tsx tools/release-check.ts",
-    "release:prepare": "tsx tools/prepare-release.ts"
+    "release:prepare": "tsx tools/prepare-release.ts",
+    "desktop:smoke": "tsx tools/smoke-desktop.ts",
+    "docker:build": "docker build -t naucz-pilota:codex-readiness .",
+    "docker:smoke": "tsx tools/smoke-docker.ts"
   },
   "dependencies": {
     "ajv": "8.20.0",
@@ -62,5 +65,8 @@
     "typescript-eslint": "8.72.1",
     "vite": "8.3.5",
     "vitest": "5.1.0"
+  },
+  "overrides": {
+    "minimatch@>=9 <11": "11.0.4"
   }
 }

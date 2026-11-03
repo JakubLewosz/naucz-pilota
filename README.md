@@ -69,3 +69,21 @@ python3 tools/audit_package.py
 ```
 
 Raporty w `checks/`. Weryfikacja ograniczeń: [docs/13-raport-weryfikacji.md](docs/13-raport-weryfikacji.md). Materiały konkursowe i jawne braki: `release/Naucz_Pilota_zgloszenie/`. Nie opublikowano hostingu ani nie wysłano zgłoszenia. Oryginalny README paczki zachowano w `docs/README-pakiet-startowy.md`.
+
+## Odbiór wydania i test live w małym zakresie
+
+Obecna wersja ma również:
+
+```sh
+npm run test:ai:live -- --case M01 --max-calls 4
+npm run desktop:smoke
+npm run desktop:smoke -- --executable "release/bin/win-unpacked/Naucz Pilota.exe"
+npm run docker:build
+npm run docker:smoke
+```
+
+Pierwsza komenda jest płatnym testem teach → transfer M01. Używa jednej sesji i zatrzymuje się po pierwszym błędzie, zachowując statusy pozostałych przypadków jako NOT RUN. Budżet tej próby wynosi maksymalnie 4 żądania dostawcy; nadal obowiązuje trwały limit dzienny. Pełny zestaw ma 22 tury i domyślny budżet 44 żądań. Wynik automatyczny dotyczy struktury i matematyki; semantyka wymaga przeczytania odpowiedzi.
+
+Kontener został lokalnie zbudowany i uruchomiony; testowane są health, brak .env/rozwiązań autora w obrazie, użytkownik bez uprawnień root i trwałość sesji po restarcie. Publiczny hosting HTTPS nadal nie jest skonfigurowany. Test kontenera nie uruchamia płatnego API.
+
+Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Ręczny workflow GitHub Actions dla Windows i Linux jest przygotowany w .github/workflows/verify.yml; jego wykonanie wymaga repozytorium z remote i nie zostało dotąd przeprowadzone.

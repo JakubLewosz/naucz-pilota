@@ -13,7 +13,8 @@ Ten katalog nie potwierdza gotowości do wysyłki. Bez publikacji i bez wysyłan
 - [ ] Hosting: wdrożony origin HTTPS, trwały wolumen, jedna instancja, ustawiony distribution.json i przebudowana paczka.
 - [ ] Windows: test na czystym osobnym komputerze bez Node, offline, zapis/wznowienie i awaria live.
 - [ ] Pilotaż 3–5 osób: rzeczywiste obserwacje, bez danych osobowych i bez deklaracji badania skuteczności.
-- [ ] Autor: sprawdź aktualny regulamin i kwalifikację, uzupełnij oraz podpisz formularze. Brak fikcyjnych plików PDF udających podpisy.
+- [x] Sprawdzono oficjalną stronę oraz treść regulaminu 3 listopada 2026; linki i status HTTP 403 przy pobraniu lokalnym są zapisane w checks/contest-sources.json.
+- [ ] Autor: sprawdź własną kwalifikację, pobierz oryginalne formularze ze strony organizatora, uzupełnij oraz podpisz formularze. Brak fikcyjnych plików PDF udających podpisy.
 - [ ] Film live: jeśli ma stanowić dowód działania prawdziwego modelu, nagraj go po konfiguracji; aktualny film jest wyłącznie demo.
 - [ ] Udostępnienie: wybierz chmurę, sprawdź dostęp bez konta autora i linki, następnie samodzielnie wyślij zgłoszenie.
 

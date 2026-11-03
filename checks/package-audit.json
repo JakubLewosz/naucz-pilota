@@ -1,13 +1,12 @@
 {
-  "date": "2026-11-03T11:41:32.167917+00:00",
+  "date": "2026-11-03T12:19:04.589413+00:00",
   "status": "PASS",
-  "requiredFiles": 12,
-  "sourceFiles": 121,
+  "sourceFiles": 135,
   "sourceZipCRC": "PASS",
   "sourceExcludesSecretsAndNodeModules": true,
   "windowsZipCRC": "PASS",
   "windowsSHA256Matches": true,
   "windowsRuntime": "NOT RUN",
-  "forms": "Missing, explicit placeholder only",
-  "live": "NOT RUN"
+  "forms": "Missing signatures; official source links supplied",
+  "live": "NOT RUN \u2014 awaiting local credential setup"
 }

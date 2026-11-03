@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-03T11:38:30.712Z",
+  "date": "2026-11-03T12:17:46.559Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -52,7 +52,7 @@
     {
       "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
       "size": 153313090,
-      "sha256": "f9e7714b0b7c5ff48f0a5086e2cf7dcc27ddc451dff706bdb576c8ff6ec27689"
+      "sha256": "8bdd40f03ccbd667af375c8fd10ddbb0b5e03f19cec6f002052cc8de05adaafd"
     }
   ],
   "live": "NOT RUN",

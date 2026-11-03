@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-03T12:09:39.536Z",
+  "status": "PASS",
+  "image": "naucz-pilota:codex-readiness",
+  "checks": [
+    "HTTP health and explicit demo",
+    "No .env or author corpus; runtime is not root",
+    "Session and SQLite survive process restart on mounted volume"
+  ],
+  "providerCalls": 0,
+  "publicHTTPS": "NOT DEPLOYED"
+}

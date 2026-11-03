@@ -17,12 +17,12 @@ Wykonano wszystkie części E0–E6 dostępne lokalnie. Projekt nie ma jeszcze p
 ## Rzeczywiste wyniki poleceń
 | Polecenie / kontrola | Wynik |
 |---|---|
-| `npm ci` | PASS; 612 pakietów z lockfile, 619 audytowanych. Ostrzeżenia narzędzi developerskich opisane poniżej. |
+| `npm ci` | PASS; 610 pakietów z lockfile, 617 audytowanych. Ostrzeżenia narzędzi developerskich opisane poniżej. |
 | `npm run dev` | PASS; Vite na 127.0.0.1:5173 i API na 3001, jawne demo. |
 | `npm run build:content` | PASS; JSON Schema, 6/24 sceny, publiczne dane bez witness/knownFailures, wygenerowane typy i statyczne walidatory. |
 | `npm run typecheck` | PASS. |
 | `npm run lint` | PASS. |
-| `npm test -- --reporter=default --reporter=json --outputFile=checks/unit-results.json` | PASS, 152 testy w 5 plikach; raport rzeczywisty w checks/unit-results.json. |
+| `npm test -- --reporter=default --reporter=json --outputFile=checks/unit-results.json` | PASS, 156 testów w 6 plikach; raport rzeczywisty w checks/unit-results.json. |
 | `npm run test:content` | PASS, 62 testy: schemat i wszystkie 24+37 fixture. |
 | `python3 tools/validate_missions.py --json-report checks/math-validation-current.json` | PASS, 6 misji / 24 sceny / 24 witness / 37 knownFailures / 42 kontrole. |
 | `python3 tools/audit_package.py` | PASS; niezależne rozwinięcie AST i nierówności na przedziałach, 24+37, 18 wskazówek; checks/independent-audit.json. |
@@ -34,13 +34,13 @@ Wykonano wszystkie części E0–E6 dostępne lokalnie. Projekt nie ma jeszcze p
 | `npm run desktop:dist` | PASS; release/bin/Naucz_Pilota_1.0.0_Windows_x64.zip, 153313090 bajtów. Niepodpisana paczka z EXE PE. |
 | `npx tsx tools/smoke-desktop.ts` | PASS na macOS; lokalny app://, cała M01 offline, sandbox/contextIsolation, brak require/process w rendererze. |
 | `npm run release:prepare` | PASS; folder 01–06, źródłowy ZIP tworzony przenośnie w Node 24, pięć PDF-ów, film i jawne braki formularzy. |
-| Kontrola obu ZIP-ów i folderu | PASS; CRC obu archiwów, zgodność SHA-256 Windows, 12 wymaganych plików, 121 plików źródłowych, brak .env/node_modules/var. checks/package-audit.json. |
+| Kontrola obu ZIP-ów i folderu | PASS; CRC obu archiwów, zgodność SHA-256 Windows, 12 wymaganych plików, aktualny zbiór plików źródłowych, brak .env/node_modules/var. checks/package-audit.json. |
 | `npm run release:check` | PASS LOCAL CHECKS; dane publiczne, renderer bez sekretów/author corpus/source maps/runtime eval, ASAR bez node_modules, PE. Live endpoint NOT READY; Windows runtime NOT RUN. SHA-256 w checks/release-check.json. |
 | `npm audit --omit=dev --json` | PASS; 0 podatności produkcyjnych. |
-| `npm audit` / `npm audit fix` | 25 moderate w zależnościach developerskich minimatch i narzędzi zależnych. Nie wymuszono niekompatybilnego downgrade ESLint. Desktop nie zawiera tych zależności. |
+| `npm audit` / `npm audit fix` | 15 moderate po celowanej aktualizacji minimatch >=9 do 11.0.4 (wcześniej 25). Pozostałe dotyczą starszego wywoływalnego API. Desktop nie zawiera tych zależności. |
 | `npx tsx tools/record-demo.ts` + konwersja ffmpeg | PASS; rzeczywiste UI M04 z napisami, jawne demo, MP4 1440×900, 37,56 s. Bez fikcyjnego modelu i głosu autora. |
 | `tools/build-pdfs.py` | PASS w bundlowanym Pythonie autora; 5 PDF-ów, wyrenderowano i obejrzano wszystkie 8 stron. Opis funkcjonalności: dokładnie 1 strona. Gra nie wymaga Pythona. |
-| `docker info` | BLOCKED; brak działającego demona i lokalnego socketu. Dockerfile przygotowany, obraz NOT BUILT/NOT RUN. |
+| `npm run docker:build` / `npm run docker:smoke` | PASS; Docker Desktop uruchomiony, obraz zbudowany, HTTP health, brak sekretów i danych autora, runtime bez root, sesja zachowana po restarcie z wolumenem. |
 
 ## Dostarczone pliki
 - `README.md`: działające komendy; oryginał paczki zachowany w docs/README-pakiet-startowy.md.
@@ -63,3 +63,17 @@ Brak eksportu bad-parser.json; runtime Ajv naruszający CSP; błędny eksport ES
 
 ## Następny krok
 Lokalna implementacja zakończona. Kontynuacja powinna zaczynać się od faktycznej konfiguracji live i odbiorów zewnętrznych powyżej, z zachowaniem istniejącego kodu i raportów. Nie oznaczać live, Windows, pilotażu ani zgłoszenia jako PASS na podstawie obecnej demonstracji.
+
+## Kontynuacja odbioru — 2026-11-03
+- Pierwszy commit bazowy: `5335952`; dalsza praca na `codex/release-readiness`. Przed commitem przeskanowano 111 plików tekstowych, bez wykrytych kluczy/kluczy prywatnych. `.env` jest ignorowany i ma uprawnienia 0600.
+- Uruchomiono istniejący Docker Desktop. `docker build --pull -t naucz-pilota:codex-readiness .`: PASS. Obraz produkcyjny ma 0 podatności npm. Poprzedni blocker demona został usunięty.
+- Zaktualizowano wybrane zależności minimatch w linii >=9 do 11.0.4; npm audit: 25 → 15 moderate (stare wywoływalne API w pozostałych narzędziach wymaga osobnej migracji). Lint i build przechodzą. Raport: checks/npm-audit-hardened.json.
+- Poprawiono runner live: pojedyncza sesja teach/transfer, niezależne sprawdzenie wyników propozycji, zatrzymanie po błędzie, filtr --case, limit --max-calls i kody wyjścia odróżniające awarię od wykonania. Dodano cztery testy runnera; ostatni pełny wynik: 156 PASS.
+- Rozszerzono smoke Electron o uruchamianie spakowanego EXE, błędną pierwszą próbę, korektę, rzeczywiste zamknięcie i ponowny start oraz porównanie zapisu. Lokalny test macOS PASS, także po rzeczywistym ponownym uruchomieniu; Windows nadal NOT RUN.
+- Dodano ręczny workflow GitHub Actions Windows/Linux (wersje akcji przypięte do sprawdzonych SHA), protokół pilotażu i ręcznego odbioru Windows. Brak remote; workflow NOT RUN.
+- Konfiguracja live: pusty .env przygotowany lokalnie; użytkownik otrzymał instrukcję bezpiecznego wklejenia klucza. Do czasu potwierdzenia konfiguracji nie wykonywano płatnych wywołań.
+
+- Odbiór końcowy tej kontynuacji: npm ci, typecheck, lint, 156 testów, build, pakowanie Windows, kontrola wydania, kontener Docker, smoke Electron i 7 E2E — PASS. Poprawiono założenie portu losowego w smoke Docker po restarcie kontenera. Workflow YAML sprawdzono parserem; wykonanie Windows pozostaje NOT RUN.
+- Sprawdzono aktualną oficjalną stronę i tekst regulaminu/załączników: termin 29.11.2026, film do 5 minut, opis do 1 strony. Lokalny download oryginałów otrzymał 403, bez fikcyjnych plików; adresy i status w checks/contest-sources.json oraz docs/konkurs/README.md.
+- Odświeżono PDF kompilacji i raportu; oba mają po 2 strony, render sprawdzony wzrokowo. Pozostałe PDF-y i film demo zachowano. Publiczny backend nie został wdrożony, formularze nie są podpisane, pilotaż nie został przeprowadzony.
+- Najbliższy krok: po zapisaniu przez użytkownika klucza w ignorowanym .env i potwierdzeniu „gotowe”, zatrzymać lokalny dev server i wykonać `npm run test:ai:live -- --case M01 --max-calls 4`. Odczytać prawdziwe odpowiedzi i dopiero wtedy zdecydować o pełnym zestawie. Do tego czasu status live NOT RUN, bez płatnych wywołań.
