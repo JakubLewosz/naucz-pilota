@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-03T11:41:32.167917+00:00",
+  "status": "PASS",
+  "requiredFiles": 12,
+  "sourceFiles": 121,
+  "sourceZipCRC": "PASS",
+  "sourceExcludesSecretsAndNodeModules": true,
+  "windowsZipCRC": "PASS",
+  "windowsSHA256Matches": true,
+  "windowsRuntime": "NOT RUN",
+  "forms": "Missing, explicit placeholder only",
+  "live": "NOT RUN"
+}

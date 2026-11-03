@@ -1,0 +1,14 @@
+.git
+node_modules
+.env
+.env.*
+!.env.example
+var
+release
+checks
+**/dist
+**/staging
+test-results
+playwright-report
+output
+tmp

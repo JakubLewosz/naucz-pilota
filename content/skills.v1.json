@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "1.0.0",
+  "skills": [
+    {
+      "id": "line_intercept",
+      "missionId": "M01",
+      "title": "Wysokość lotu",
+      "learningGoal": "Ustawiam wysokość wykresu za pomocą wyrazu wolnego b.",
+      "prerequisites": [],
+      "targetParameter": "b w y=b lub y=ax+b",
+      "canonicalRuleId": "RULE_LINE_INTERCEPT",
+      "canonicalRuleText": "W funkcji y=ax+b dodanie do b liczby d przesuwa cały wykres o d w pionie. Dla a=0 wykres y=b jest poziomy i ma wszędzie wysokość b.",
+      "misconceptionId": "MIS_INTERCEPT_IGNORED",
+      "commonMisconceptions": [
+        "Uznanie, że stała nie zmienia wysokości.",
+        "Próba zastąpienia przesunięcia pionowego zmianą nachylenia."
+      ],
+      "numericEvidence": {
+        "sceneRole": "teach",
+        "checkpointIds": [
+          "G1",
+          "G2"
+        ],
+        "tolerance": 1e-06,
+        "instruction": "Podaj f(x) dla wskazanych x na podstawie swojego poprawnego wzoru. Dla każdego checkpointId serwer pobiera x z danej sceny; odpowiedzi nie ocenia model językowy."
+      },
+      "verification": {
+        "humanPrerequisite": "Udany lot w teach, własna próba wyjaśnienia, potwierdzenie reguły kanonicznej i poprawne dwa sprawdzenia liczbowe.",
+        "robotEvidence": "Wynik niezależnego sprawdzenia propozycji Piko na robot_transfer.",
+        "humanEvidence": "Udany lot na nieoglądanej wcześniej scenie human_check bez podpowiedzi; pierwsza próba i liczba prób są zapisywane oddzielnie.",
+        "interpretation": "Wyniki opisują tę sesję. Nie dowodzą trwałej zmiany wiedzy ani skuteczności edukacyjnej."
+      }
+    },
+    {
+      "id": "line_slope",
+      "missionId": "M02",
+      "title": "Kierunek i nachylenie",
+      "learningGoal": "Przewiduję wpływ znaku i wartości współczynnika a na prostą y=ax+b.",
+      "prerequisites": [
+        "line_intercept"
+      ],
+      "targetParameter": "a w y=ax+b",
+      "canonicalRuleId": "RULE_LINE_SLOPE",
+      "canonicalRuleText": "W y=ax+b zmiana x o 1 zmienia y o a. Dla a>0 prosta rośnie w prawo, dla a<0 maleje. Większe |a| oznacza większą stromość; punkt (0,b) pozostaje ten sam.",
+      "misconceptionId": "MIS_SLOPE_SIGN",
+      "commonMisconceptions": [
+        "Dodatni współczynnik dla prostej malejącej.",
+        "Mylenie wartości a z położeniem punktu przecięcia osi y."
+      ],
+      "numericEvidence": {
+        "sceneRole": "teach",
+        "checkpointIds": [
+          "G1",
+          "G2"
+        ],
+        "tolerance": 1e-06,
+        "instruction": "Podaj f(x) dla wskazanych x na podstawie swojego poprawnego wzoru. Dla każdego checkpointId serwer pobiera x z danej sceny; odpowiedzi nie ocenia model językowy."
+      },
+      "verification": {
+        "humanPrerequisite": "Udany lot w teach, własna próba wyjaśnienia, potwierdzenie reguły kanonicznej i poprawne dwa sprawdzenia liczbowe.",
+        "robotEvidence": "Wynik niezależnego sprawdzenia propozycji Piko na robot_transfer.",
+        "humanEvidence": "Udany lot na nieoglądanej wcześniej scenie human_check bez podpowiedzi; pierwsza próba i liczba prób są zapisywane oddzielnie.",
+        "interpretation": "Wyniki opisują tę sesję. Nie dowodzą trwałej zmiany wiedzy ani skuteczności edukacyjnej."
+      }
+    },
+    {
+      "id": "quadratic_vertical_shift",
+      "missionId": "M03",
+      "title": "Parabola w pionie",
+      "learningGoal": "Przesuwam parabolę pionowo, nie zmieniając jej kształtu ani osi symetrii.",
+      "prerequisites": [
+        "line_intercept"
+      ],
+      "targetParameter": "q w y=0.25x^2+q",
+      "canonicalRuleId": "RULE_QUAD_VERTICAL",
+      "canonicalRuleText": "W y=a(x-p)^2+q zwiększenie q przesuwa parabolę w górę, a zmniejszenie q w dół. Wierzchołek ma wysokość q; a i p pozostają niezmienione.",
+      "misconceptionId": "MIS_VERTICAL_SHIFT_SIGN",
+      "commonMisconceptions": [
+        "Odwrócony znak przesunięcia pionowego.",
+        "Zmiana kształtu zamiast podniesienia całej paraboli."
+      ],
+      "numericEvidence": {
+        "sceneRole": "teach",
+        "checkpointIds": [
+          "G1",
+          "G2"
+        ],
+        "tolerance": 1e-06,
+        "instruction": "Podaj f(x) dla wskazanych x na podstawie swojego poprawnego wzoru. Dla każdego checkpointId serwer pobiera x z danej sceny; odpowiedzi nie ocenia model językowy."
+      },
+      "verification": {
+        "humanPrerequisite": "Udany lot w teach, własna próba wyjaśnienia, potwierdzenie reguły kanonicznej i poprawne dwa sprawdzenia liczbowe.",
+        "robotEvidence": "Wynik niezależnego sprawdzenia propozycji Piko na robot_transfer.",
+        "humanEvidence": "Udany lot na nieoglądanej wcześniej scenie human_check bez podpowiedzi; pierwsza próba i liczba prób są zapisywane oddzielnie.",
+        "interpretation": "Wyniki opisują tę sesję. Nie dowodzą trwałej zmiany wiedzy ani skuteczności edukacyjnej."
+      }
+    },
+    {
+      "id": "quadratic_horizontal_shift",
+      "missionId": "M04",
+      "title": "Parabola w poziomie",
+      "learningGoal": "Odczytuję położenie wierzchołka z nawiasu x-p i dobieram przesunięcie poziome.",
+      "prerequisites": [
+        "quadratic_vertical_shift"
+      ],
+      "targetParameter": "p w y=0.25(x-p)^2",
+      "canonicalRuleId": "RULE_QUAD_HORIZONTAL",
+      "canonicalRuleText": "W y=a(x-p)^2+q wierzchołek ma współrzędną x równą p. Nawias (x-2) przesuwa parabolę w prawo o 2, a (x+2) w lewo o 2.",
+      "misconceptionId": "MIS_HORIZONTAL_SHIFT_SIGN",
+      "commonMisconceptions": [
+        "Czytanie znaku w nawiasie wprost: x-2 jako przesunięcie w lewo.",
+        "Dodanie stałej zamiast przesunięcia poziomego."
+      ],
+      "numericEvidence": {
+        "sceneRole": "teach",
+        "checkpointIds": [
+          "G1",
+          "G2"
+        ],
+        "tolerance": 1e-06,
+        "instruction": "Podaj f(x) dla wskazanych x na podstawie swojego poprawnego wzoru. Dla każdego checkpointId serwer pobiera x z danej sceny; odpowiedzi nie ocenia model językowy."
+      },
+      "verification": {
+        "humanPrerequisite": "Udany lot w teach, własna próba wyjaśnienia, potwierdzenie reguły kanonicznej i poprawne dwa sprawdzenia liczbowe.",
+        "robotEvidence": "Wynik niezależnego sprawdzenia propozycji Piko na robot_transfer.",
+        "humanEvidence": "Udany lot na nieoglądanej wcześniej scenie human_check bez podpowiedzi; pierwsza próba i liczba prób są zapisywane oddzielnie.",
+        "interpretation": "Wyniki opisują tę sesję. Nie dowodzą trwałej zmiany wiedzy ani skuteczności edukacyjnej."
+      }
+    },
+    {
+      "id": "quadratic_curvature",
+      "missionId": "M05",
+      "title": "Szerokość paraboli",
+      "learningGoal": "Dobieram dodatni współczynnik a i wyjaśniam jego wpływ na szerokość paraboli.",
+      "prerequisites": [
+        "quadratic_horizontal_shift"
+      ],
+      "targetParameter": "a w y=ax^2",
+      "canonicalRuleId": "RULE_QUAD_CURVATURE",
+      "canonicalRuleText": "Dla dodatniego a w y=a(x-p)^2+q większe a daje większy przyrost wysokości w tej samej odległości od osi symetrii, więc parabola jest węższa. Mniejsze dodatnie a daje parabolę szerszą.",
+      "misconceptionId": "MIS_CURVATURE_WIDTH",
+      "commonMisconceptions": [
+        "Większe dodatnie a uznane za szerszą parabolę.",
+        "Ocenianie szerokości tylko z wysokości jednego punktu bez kontroli położenia wierzchołka."
+      ],
+      "numericEvidence": {
+        "sceneRole": "teach",
+        "checkpointIds": [
+          "G1",
+          "G2"
+        ],
+        "tolerance": 1e-06,
+        "instruction": "Podaj f(x) dla wskazanych x na podstawie swojego poprawnego wzoru. Dla każdego checkpointId serwer pobiera x z danej sceny; odpowiedzi nie ocenia model językowy."
+      },
+      "verification": {
+        "humanPrerequisite": "Udany lot w teach, własna próba wyjaśnienia, potwierdzenie reguły kanonicznej i poprawne dwa sprawdzenia liczbowe.",
+        "robotEvidence": "Wynik niezależnego sprawdzenia propozycji Piko na robot_transfer.",
+        "humanEvidence": "Udany lot na nieoglądanej wcześniej scenie human_check bez podpowiedzi; pierwsza próba i liczba prób są zapisywane oddzielnie.",
+        "interpretation": "Wyniki opisują tę sesję. Nie dowodzą trwałej zmiany wiedzy ani skuteczności edukacyjnej."
+      }
+    },
+    {
+      "id": "combine_transformations",
+      "missionId": "M06",
+      "title": "Połącz reguły",
+      "learningGoal": "Dobieram a, p i q razem oraz sprawdzam ich wspólny wpływ na całą trasę.",
+      "prerequisites": [
+        "line_slope",
+        "quadratic_vertical_shift",
+        "quadratic_horizontal_shift",
+        "quadratic_curvature"
+      ],
+      "targetParameter": "a, p, q w y=a(x-p)^2+q",
+      "canonicalRuleId": "RULE_COMBINE",
+      "canonicalRuleText": "W y=a(x-p)^2+q wierzchołek to (p,q), a współczynnik a wpływa na kształt. Trzeba sprawdzić cały tor: poprawny wierzchołek sam nie gwarantuje trafienia w dalsze bramki.",
+      "misconceptionId": "MIS_COMBINED_PARAMETERS",
+      "commonMisconceptions": [
+        "Sprawdzenie wyłącznie wierzchołka.",
+        "Zmiana jednego parametru bez ponownego sprawdzenia pozostałych bramek i przeszkód."
+      ],
+      "numericEvidence": {
+        "sceneRole": "teach",
+        "checkpointIds": [
+          "G1",
+          "G2"
+        ],
+        "tolerance": 1e-06,
+        "instruction": "Podaj f(x) dla wskazanych x na podstawie swojego poprawnego wzoru. Dla każdego checkpointId serwer pobiera x z danej sceny; odpowiedzi nie ocenia model językowy."
+      },
+      "verification": {
+        "humanPrerequisite": "Udany lot w teach, własna próba wyjaśnienia, potwierdzenie reguły kanonicznej i poprawne dwa sprawdzenia liczbowe.",
+        "robotEvidence": "Wynik niezależnego sprawdzenia propozycji Piko na robot_transfer.",
+        "humanEvidence": "Udany lot na nieoglądanej wcześniej scenie human_check bez podpowiedzi; pierwsza próba i liczba prób są zapisywane oddzielnie.",
+        "interpretation": "Wyniki opisują tę sesję. Nie dowodzą trwałej zmiany wiedzy ani skuteczności edukacyjnej."
+      }
+    }
+  ]
+}

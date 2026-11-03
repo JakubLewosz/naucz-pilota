@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:naucz-pilota:ai-request:v1",
+  "title": "Naucz Pilota — POST /api/learner-turn body v1",
+  "description": "Żądanie aplikacji do jej własnego backendu. Nie jest bezpośrednim wejściem OpenAI. Cookie/token sesji wyłącznie w warstwie transportu.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "sessionRevision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "turnId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "missionId": {
+      "type": "string",
+      "enum": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06"
+      ]
+    },
+    "sceneRole": {
+      "type": "string",
+      "enum": [
+        "teach",
+        "robot_transfer"
+      ]
+    },
+    "requestedMode": {
+      "type": "string",
+      "enum": [
+        "live",
+        "demo"
+      ]
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "teach_explain",
+        "teach_repair",
+        "robot_propose"
+      ]
+    },
+    "userMessage": {
+      "type": "string",
+      "maxLength": 600
+    },
+    "candidateExpression": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "attemptHistory": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "attemptId": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+          },
+          "sceneId": {
+            "type": "string",
+            "pattern": "^M0[1-6]-(teach|robot_transfer)$"
+          },
+          "expression": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "attemptId",
+          "sceneId",
+          "expression"
+        ]
+      }
+    },
+    "learnedRuleIds": {
+      "type": "array",
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "RULE_LINE_INTERCEPT",
+          "RULE_LINE_SLOPE",
+          "RULE_QUAD_VERTICAL",
+          "RULE_QUAD_HORIZONTAL",
+          "RULE_QUAD_CURVATURE",
+          "RULE_COMBINE"
+        ]
+      }
+    },
+    "numericEvidence": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "checkpointId": {
+            "type": "string",
+            "enum": [
+              "G1",
+              "G2"
+            ]
+          },
+          "submittedY": {
+            "type": "number",
+            "minimum": -100000000,
+            "maximum": 100000000
+          },
+          "sceneId": {
+            "type": "string",
+            "pattern": "^M0[1-6]-teach$"
+          }
+        },
+        "required": [
+          "sceneId",
+          "checkpointId",
+          "submittedY"
+        ]
+      }
+    },
+    "ruleEvidence": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "missionId": {
+            "type": "string",
+            "enum": [
+              "M01",
+              "M02",
+              "M03",
+              "M04",
+              "M05",
+              "M06"
+            ]
+          },
+          "candidateExpression": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "numericEvidence": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "checkpointId": {
+                  "type": "string",
+                  "enum": [
+                    "G1",
+                    "G2"
+                  ]
+                },
+                "submittedY": {
+                  "type": "number",
+                  "minimum": -100000000,
+                  "maximum": 100000000
+                },
+                "sceneId": {
+                  "type": "string",
+                  "pattern": "^M0[1-6]-teach$"
+                }
+              },
+              "required": [
+                "sceneId",
+                "checkpointId",
+                "submittedY"
+              ]
+            }
+          }
+        },
+        "required": [
+          "missionId",
+          "candidateExpression",
+          "numericEvidence"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "sessionId",
+    "sessionRevision",
+    "turnId",
+    "missionId",
+    "sceneRole",
+    "requestedMode",
+    "phase",
+    "userMessage",
+    "candidateExpression",
+    "attemptHistory",
+    "learnedRuleIds",
+    "numericEvidence",
+    "ruleEvidence"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "sceneRole": {
+            "const": "teach"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase": {
+            "enum": [
+              "teach_explain",
+              "teach_repair"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "sceneRole": {
+            "const": "robot_transfer"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase": {
+            "const": "robot_propose"
+          },
+          "candidateExpression": {
+            "type": "null"
+          },
+          "numericEvidence": {
+            "maxItems": 0
+          },
+          "userMessage": {
+            "maxLength": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "const": "teach_repair"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "candidateExpression": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "numericEvidence": {
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "const": "teach_explain"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "userMessage": {
+            "minLength": 1
+          },
+          "numericEvidence": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

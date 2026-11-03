@@ -1,0 +1,31 @@
+{
+  "appId": "pl.nauczpilota.app",
+  "productName": "Naucz Pilota",
+  "directories": {
+    "app": "apps/desktop/staging",
+    "output": "release/bin"
+  },
+  "files": [
+    "main.cjs",
+    "preload.cjs",
+    "distribution.json",
+    "relay-validator.cjs",
+    "web/**/*",
+    "package.json",
+    "!node_modules{,/**/*}"
+  ],
+  "asar": true,
+  "npmRebuild": false,
+  "win": {
+    "target": [
+      {
+        "target": "zip",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "signAndEditExecutable": false
+  },
+  "artifactName": "Naucz_Pilota_${version}_Windows_${arch}.${ext}"
+}

@@ -1,0 +1,7 @@
+{
+  "date": "2026-11-03T11:28:20.626Z",
+  "platform": "darwin",
+  "status": "PASS",
+  "scope": "Electron local app:// assets, sandbox, isolation, no Node in renderer, offline M01 four stages",
+  "windowsStatus": "NOT RUN"
+}

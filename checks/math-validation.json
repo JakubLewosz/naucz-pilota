@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "schemaVersion": "1.0.0",
+  "missions": 6,
+  "scenes": 24,
+  "successfulWitnesses": 24,
+  "checkedKnownFailures": 37,
+  "parserAndGeometryChecks": 42,
+  "schemaValid": true,
+  "expressionsMatchCoefficients": true,
+  "humanChecksDistinctFromRobotTransfer": true
+}

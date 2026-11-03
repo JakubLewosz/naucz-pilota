@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0.0",
+  "language": "pl",
+  "policy": {
+    "allowedSceneRole": "practice",
+    "revealOrder": "sequential",
+    "recordUsage": true,
+    "containsWitnessExpressions": false
+  },
+  "missions": [
+    {
+      "missionId": "M01",
+      "sceneId": "M01-practice",
+      "skillId": "line_intercept",
+      "hints": [
+        {
+          "level": 1,
+          "titlePL": "Stała wysokość",
+          "textPL": "Funkcja stała ma tę samą wartość dla każdego x. Jej wykres jest poziomy. W tej misji zmieniasz tylko wysokość toru."
+        },
+        {
+          "level": 2,
+          "titlePL": "Spójrz na wszystkie otwory",
+          "textPL": "Start, obie bramki i cel są na tej samej wysokości. Poszukaj liczby leżącej wewnątrz każdego otworu i zostaw miejsce na rozmiar Piko."
+        },
+        {
+          "level": 3,
+          "titlePL": "Znajdź środek",
+          "textPL": "Otwór startowy rozciąga się od y = 0,62 do y = 1,38. Oblicz średnią tych dwóch liczb. Jaką stałą wysokość warto sprawdzić?"
+        }
+      ]
+    },
+    {
+      "missionId": "M02",
+      "sceneId": "M02-practice",
+      "skillId": "line_slope",
+      "hints": [
+        {
+          "level": 1,
+          "titlePL": "Jak szybko wznosi się tor?",
+          "textPL": "Współczynnik przy x mówi, o ile zmienia się y, gdy x wzrasta o 1. Dodatni współczynnik prowadzi w górę w prawo."
+        },
+        {
+          "level": 2,
+          "titlePL": "Zachowaj punkt startowy",
+          "textPL": "Wyraz wolny jest tu równy 0 i nie można go zmieniać. Początkowy tor wznosi się zbyt szybko. Zmień współczynnik przy x, zachowując jego dodatni znak."
+        },
+        {
+          "level": 3,
+          "titlePL": "Przyrost na jedną jednostkę",
+          "textPL": "Środek startu to (0; 0), a środek celu to (6; 3). Wysokość ma wzrosnąć o 3 na drodze 6 jednostek x. Jaki przyrost y przypada na jedną jednostkę x?"
+        }
+      ]
+    },
+    {
+      "missionId": "M03",
+      "sceneId": "M03-practice",
+      "skillId": "quadratic_vertical_shift",
+      "hints": [
+        {
+          "level": 1,
+          "titlePL": "Przesuń całą parabolę",
+          "textPL": "Dodanie liczby poza kwadratem zmienia wysokość każdego punktu o tę samą wartość. Kształt paraboli pozostaje taki sam."
+        },
+        {
+          "level": 2,
+          "titlePL": "Jeden swobodny parametr",
+          "textPL": "Współczynnik przy x² jest ustalony na 0,25, a przy x na 0. Możesz zmienić wyraz wolny. Sprawdź, czy początkowy tor trzeba przesunąć w górę, czy w dół."
+        },
+        {
+          "level": 3,
+          "titlePL": "Oblicz wartość przy bramce",
+          "textPL": "Przy G1 mamy x = −1. Sam składnik 0,25x² daje wtedy 0,25, a otwór bramki obejmuje y od 0,87 do 1,63. Co trzeba zmienić, aby cały robot zmieścił się w otworze?"
+        }
+      ]
+    },
+    {
+      "missionId": "M04",
+      "sceneId": "M04-practice",
+      "skillId": "quadratic_horizontal_shift",
+      "hints": [
+        {
+          "level": 1,
+          "titlePL": "Gdzie jest wierzchołek?",
+          "textPL": "W zapisie a(x − p)² kwadrat jest równy 0 dla x = p. Tam leży wierzchołek. Uważaj na znak liczby zapisanej wewnątrz nawiasu."
+        },
+        {
+          "level": 2,
+          "titlePL": "Wykorzystaj symetrię",
+          "textPL": "Nie zmieniaj wysokości wierzchołka ani współczynnika 0,25 przy kwadracie. Start i cel mają tę samą wysokość; poszukaj osi symetrii pomiędzy nimi."
+        },
+        {
+          "level": 3,
+          "titlePL": "Dwie jednakowe bramki",
+          "textPL": "Bramki G1 i G2 są przy x = 0 oraz x = 2 i mają takie same otwory. Która wartość x leży dokładnie pośrodku? Jak zapisać nawias, aby właśnie tam kwadrat znikał?"
+        }
+      ]
+    },
+    {
+      "missionId": "M05",
+      "sceneId": "M05-practice",
+      "skillId": "quadratic_curvature",
+      "hints": [
+        {
+          "level": 1,
+          "titlePL": "Szerzej czy węziej?",
+          "textPL": "Dla dodatniego współczynnika przy x² większa wartość oznacza szybszy wzrost i węższą parabolę. Mniejsza dodatnia wartość daje szerszy tor."
+        },
+        {
+          "level": 2,
+          "titlePL": "Nie przesuwaj wierzchołka",
+          "textPL": "W tej misji zmieniasz tylko współczynnik przy x². Wyrazy przy x i stały pozostają zerowe. Początkowy tor rośnie zbyt szybko i zahacza o przeszkodę."
+        },
+        {
+          "level": 3,
+          "titlePL": "Sprawdź wysokość przy celu",
+          "textPL": "Cel jest przy x = 4, więc x² = 16. Jaką liczbę trzeba pomnożyć przez 16, aby uzyskać wysokość wewnątrz otworu od 3,62 do 4,38? Pamiętaj o rozmiarze Piko."
+        }
+      ]
+    },
+    {
+      "missionId": "M06",
+      "sceneId": "M06-practice",
+      "skillId": "combine_transformations",
+      "hints": [
+        {
+          "level": 1,
+          "titlePL": "Podziel zadanie na parametry",
+          "textPL": "W postaci a(x − p)² + q parametr p ustala położenie wierzchołka w poziomie, q jego wysokość, a parametr a szerokość paraboli. Zmieniaj je świadomie."
+        },
+        {
+          "level": 2,
+          "titlePL": "Najpierw oś symetrii",
+          "textPL": "Start przy x = −2 i cel przy x = 4 mają tę samą wysokość. Bramki przy x = 0 i x = 2 też mają jednakowe otwory. Poszukaj wspólnej osi symetrii tych par."
+        },
+        {
+          "level": 3,
+          "titlePL": "Dwa warunki na jeden tor",
+          "textPL": "Po ustaleniu osi symetrii porównaj środek G1: y = 1,25, ze środkiem startu: y = 3,25. Zapisz warunek dla każdej z tych wysokości. Jak dobrać szerokość i wysokość wierzchołka, aby oba warunki pasowały?"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naucz-pilota.example/schemas/missions.v1.json",
+  "title": "Naucz Pilota — zadania MVP 1.0.0",
+  "description": "Dane autorskie. Wzajemne zależności pól oraz rozwiązywalność sprawdza tools/validate_missions.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "collisionRules",
+    "missions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "collisionRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hitboxHalfSize",
+        "epsilon",
+        "contactIsCollision"
+      ],
+      "properties": {
+        "hitboxHalfSize": {
+          "type": "number",
+          "const": 0.12
+        },
+        "epsilon": {
+          "type": "number",
+          "const": 1e-09
+        },
+        "contactIsCollision": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "missions": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/$defs/mission"
+      }
+    }
+  },
+  "$defs": {
+    "formula": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expression",
+        "c2",
+        "c1",
+        "c0"
+      ],
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "c2": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "c1": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "c0": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expression",
+        "c2",
+        "c1",
+        "c0",
+        "expectedCode"
+      ],
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "c2": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "c1": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "c0": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "expectedCode": {
+          "type": "string",
+          "enum": [
+            "FAMILY_MISMATCH",
+            "CONSTRAINT_VIOLATION",
+            "START_MISS",
+            "OUT_OF_BOUNDS",
+            "OBSTACLE_COLLISION",
+            "GATE_MISS"
+          ]
+        }
+      }
+    },
+    "portal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "yMin",
+        "yMax"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "yMin": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "yMax": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "x",
+        "yMin",
+        "yMax"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^G[1-9][0-9]*$"
+        },
+        "x": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "yMin": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "yMax": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        }
+      }
+    },
+    "obstacle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "xMin",
+        "xMax",
+        "yMin",
+        "yMax"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^O[1-9][0-9]*$"
+        },
+        "xMin": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "xMax": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "yMin": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "yMax": {
+          "type": "number",
+          "minimum": -10000,
+          "maximum": 10000
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "instruction",
+        "role",
+        "domain",
+        "allowedFamilies",
+        "coefficientLocks",
+        "start",
+        "goal",
+        "gates",
+        "obstacles",
+        "initialExpression",
+        "witness",
+        "knownFailures"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^M0[1-6]-(practice|teach|robot_transfer|human_check)$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "practice",
+            "teach",
+            "robot_transfer",
+            "human_check"
+          ]
+        },
+        "domain": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "xMin",
+            "xMax",
+            "yMin",
+            "yMax"
+          ],
+          "properties": {
+            "xMin": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            },
+            "xMax": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            },
+            "yMin": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            },
+            "yMax": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            }
+          }
+        },
+        "allowedFamilies": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "constant",
+              "linear",
+              "quadratic"
+            ]
+          }
+        },
+        "coefficientLocks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "properties": {
+            "c2": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            },
+            "c1": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            },
+            "c0": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            }
+          }
+        },
+        "vertexLock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "properties": {
+            "x": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            },
+            "y": {
+              "type": "number",
+              "minimum": -10000,
+              "maximum": 10000
+            }
+          },
+          "minProperties": 1
+        },
+        "start": {
+          "$ref": "#/$defs/portal"
+        },
+        "goal": {
+          "$ref": "#/$defs/portal"
+        },
+        "gates": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/gate"
+          }
+        },
+        "obstacles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/obstacle"
+          }
+        },
+        "initialExpression": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "witness": {
+          "$ref": "#/$defs/formula"
+        },
+        "knownFailures": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/failure"
+          }
+        }
+      }
+    },
+    "mission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "order",
+        "title",
+        "skillId",
+        "learningGoal",
+        "misconceptionId",
+        "canonicalRuleId",
+        "ruleText",
+        "scriptedRobotUtterance",
+        "scenes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^M0[1-6]$"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skillId": {
+          "type": "string",
+          "enum": [
+            "line_intercept",
+            "line_slope",
+            "quadratic_vertical_shift",
+            "quadratic_horizontal_shift",
+            "quadratic_curvature",
+            "combine_transformations"
+          ]
+        },
+        "learningGoal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "misconceptionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonicalRuleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ruleText": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scriptedRobotUtterance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scenes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "practice",
+            "teach",
+            "robot_transfer",
+            "human_check"
+          ],
+          "properties": {
+            "practice": {
+              "$ref": "#/$defs/scene"
+            },
+            "teach": {
+              "$ref": "#/$defs/scene"
+            },
+            "robot_transfer": {
+              "$ref": "#/$defs/scene"
+            },
+            "human_check": {
+              "$ref": "#/$defs/scene"
+            }
+          }
+        }
+      }
+    }
+  }
+}

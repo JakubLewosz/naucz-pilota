@@ -1,0 +1,1356 @@
+{
+  "schemaVersion": "1.0.0",
+  "collisionRules": {
+    "hitboxHalfSize": 0.12,
+    "epsilon": 1e-9,
+    "contactIsCollision": true
+  },
+  "missions": [
+    {
+      "id": "M01",
+      "order": 1,
+      "title": "Wysokość lotu",
+      "skillId": "line_intercept",
+      "learningGoal": "Ustawiam wysokość wykresu za pomocą wyrazu wolnego b.",
+      "misconceptionId": "MIS_INTERCEPT_IGNORED",
+      "canonicalRuleId": "RULE_LINE_INTERCEPT",
+      "ruleText": "W funkcji y=ax+b dodanie do b liczby d przesuwa cały wykres o d w pionie. Dla a=0 wykres y=b jest poziomy i ma wszędzie wysokość b.",
+      "scriptedRobotUtterance": "Chcę lecieć na wysokości 2. Zostawię y=0, bo liczba bez x nie zmienia położenia wykresu.",
+      "scenes": {
+        "practice": {
+          "id": "M01-practice",
+          "title": "Pierwszy lot",
+          "instruction": "Dobierz wzór, który prowadzi Piko od startu przez wszystkie bramki do mety. Możesz prosić o wskazówki. W tej misji używaj stałej y=b.",
+          "role": "practice",
+          "domain": {
+            "xMin": 0,
+            "xMax": 6,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "constant"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c1": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "goal": {
+            "x": 6,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 2,
+              "yMin": 0.62,
+              "yMax": 1.38
+            },
+            {
+              "id": "G2",
+              "x": 4,
+              "yMin": 0.62,
+              "yMax": 1.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 2.6,
+              "xMax": 3.6,
+              "yMin": 2.1,
+              "yMax": 3.4
+            }
+          ],
+          "initialExpression": "0"
+        },
+        "teach": {
+          "id": "M01-teach",
+          "title": "Wyjaśnij Piko",
+          "instruction": "Popraw błędny wzór, wykonaj udany lot, a następnie wyjaśnij Piko regułę. Podaj też wartości funkcji w dwóch wskazanych punktach.",
+          "role": "teach",
+          "domain": {
+            "xMin": 0,
+            "xMax": 6,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "constant"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c1": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": 1.62,
+            "yMax": 2.38
+          },
+          "goal": {
+            "x": 6,
+            "yMin": 1.62,
+            "yMax": 2.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 2,
+              "yMin": 1.62,
+              "yMax": 2.38
+            },
+            {
+              "id": "G2",
+              "x": 4,
+              "yMin": 1.62,
+              "yMax": 2.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 2.5,
+              "xMax": 3.5,
+              "yMin": 0.3,
+              "yMax": 1.4
+            }
+          ],
+          "initialExpression": "0"
+        },
+        "robot_transfer": {
+          "id": "M01-robot_transfer",
+          "title": "Nowa trasa Piko",
+          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "role": "robot_transfer",
+          "domain": {
+            "xMin": -1,
+            "xMax": 5,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "constant"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c1": 0
+          },
+          "start": {
+            "x": -1,
+            "yMin": 2.62,
+            "yMax": 3.38
+          },
+          "goal": {
+            "x": 5,
+            "yMin": 2.62,
+            "yMax": 3.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1,
+              "yMin": 2.62,
+              "yMax": 3.38
+            },
+            {
+              "id": "G2",
+              "x": 3,
+              "yMin": 2.62,
+              "yMax": 3.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 1,
+              "xMax": 2,
+              "yMin": 1,
+              "yMax": 2.4
+            }
+          ],
+          "initialExpression": "1"
+        },
+        "human_check": {
+          "id": "M01-human_check",
+          "title": "Twój samodzielny lot",
+          "instruction": "Rozwiąż nową trasę samodzielnie. W tej scenie nie ma podpowiedzi ani wcześniejszego rozwiązania Piko.",
+          "role": "human_check",
+          "domain": {
+            "xMin": 0,
+            "xMax": 7,
+            "yMin": -3,
+            "yMax": 3
+          },
+          "allowedFamilies": [
+            "constant"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c1": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": -1.38,
+            "yMax": -0.62
+          },
+          "goal": {
+            "x": 7,
+            "yMin": -1.38,
+            "yMax": -0.62
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1.5,
+              "yMin": -1.38,
+              "yMax": -0.62
+            },
+            {
+              "id": "G2",
+              "x": 5,
+              "yMin": -1.38,
+              "yMax": -0.62
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 3,
+              "xMax": 4,
+              "yMin": 0.1,
+              "yMax": 1.5
+            }
+          ],
+          "initialExpression": "0"
+        }
+      }
+    },
+    {
+      "id": "M02",
+      "order": 2,
+      "title": "Kierunek i nachylenie",
+      "skillId": "line_slope",
+      "learningGoal": "Przewiduję wpływ znaku i wartości współczynnika a na prostą y=ax+b.",
+      "misconceptionId": "MIS_SLOPE_SIGN",
+      "canonicalRuleId": "RULE_LINE_SLOPE",
+      "ruleText": "W y=ax+b zmiana x o 1 zmienia y o a. Dla a>0 prosta rośnie w prawo, dla a<0 maleje. Większe |a| oznacza większą stromość; punkt (0,b) pozostaje ten sam.",
+      "scriptedRobotUtterance": "Trasa opada w prawo, więc wpiszę dodatni współczynnik przy x.",
+      "scenes": {
+        "practice": {
+          "id": "M02-practice",
+          "title": "Pierwszy lot",
+          "instruction": "Dobierz wzór, który prowadzi Piko od startu przez wszystkie bramki do mety. Możesz prosić o wskazówki.",
+          "role": "practice",
+          "domain": {
+            "xMin": 0,
+            "xMax": 6,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "linear"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c0": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "goal": {
+            "x": 6,
+            "yMin": 2.62,
+            "yMax": 3.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 2,
+              "yMin": 0.62,
+              "yMax": 1.38
+            },
+            {
+              "id": "G2",
+              "x": 4,
+              "yMin": 1.62,
+              "yMax": 2.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 2.8,
+              "xMax": 3.5,
+              "yMin": -0.2,
+              "yMax": 0.7
+            }
+          ],
+          "initialExpression": "x"
+        },
+        "teach": {
+          "id": "M02-teach",
+          "title": "Wyjaśnij Piko",
+          "instruction": "Popraw błędny wzór, wykonaj udany lot, a następnie wyjaśnij Piko regułę. Podaj też wartości funkcji w dwóch wskazanych punktach.",
+          "role": "teach",
+          "domain": {
+            "xMin": 0,
+            "xMax": 6,
+            "yMin": -1,
+            "yMax": 7
+          },
+          "allowedFamilies": [
+            "linear"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c0": 3
+          },
+          "start": {
+            "x": 0,
+            "yMin": 2.62,
+            "yMax": 3.38
+          },
+          "goal": {
+            "x": 6,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 2,
+              "yMin": 1.62,
+              "yMax": 2.38
+            },
+            {
+              "id": "G2",
+              "x": 4,
+              "yMin": 0.62,
+              "yMax": 1.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 2.4,
+              "xMax": 3.5,
+              "yMin": 4,
+              "yMax": 5
+            }
+          ],
+          "initialExpression": "0.5x+3"
+        },
+        "robot_transfer": {
+          "id": "M02-robot_transfer",
+          "title": "Nowa trasa Piko",
+          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "role": "robot_transfer",
+          "domain": {
+            "xMin": 0,
+            "xMax": 8,
+            "yMin": 0,
+            "yMax": 6
+          },
+          "allowedFamilies": [
+            "linear"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c0": 1
+          },
+          "start": {
+            "x": 0,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "goal": {
+            "x": 8,
+            "yMin": 2.62,
+            "yMax": 3.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 2,
+              "yMin": 1.12,
+              "yMax": 1.88
+            },
+            {
+              "id": "G2",
+              "x": 6,
+              "yMin": 2.12,
+              "yMax": 2.88
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 3,
+              "xMax": 5,
+              "yMin": 2.9,
+              "yMax": 3.8
+            }
+          ],
+          "initialExpression": "0.5x+1"
+        },
+        "human_check": {
+          "id": "M02-human_check",
+          "title": "Twój samodzielny lot",
+          "instruction": "Rozwiąż nową trasę samodzielnie. W tej scenie nie ma podpowiedzi ani wcześniejszego rozwiązania Piko.",
+          "role": "human_check",
+          "domain": {
+            "xMin": 0,
+            "xMax": 4,
+            "yMin": 0,
+            "yMax": 7
+          },
+          "allowedFamilies": [
+            "linear"
+          ],
+          "coefficientLocks": {
+            "c2": 0,
+            "c0": 5
+          },
+          "start": {
+            "x": 0,
+            "yMin": 4.62,
+            "yMax": 5.38
+          },
+          "goal": {
+            "x": 4,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1,
+              "yMin": 3.62,
+              "yMax": 4.38
+            },
+            {
+              "id": "G2",
+              "x": 3,
+              "yMin": 1.62,
+              "yMax": 2.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 1.3,
+              "xMax": 2.4,
+              "yMin": 4.6,
+              "yMax": 5.6
+            }
+          ],
+          "initialExpression": "x+5"
+        }
+      }
+    },
+    {
+      "id": "M03",
+      "order": 3,
+      "title": "Parabola w pionie",
+      "skillId": "quadratic_vertical_shift",
+      "learningGoal": "Przesuwam parabolę pionowo, nie zmieniając jej kształtu ani osi symetrii.",
+      "misconceptionId": "MIS_VERTICAL_SHIFT_SIGN",
+      "canonicalRuleId": "RULE_QUAD_VERTICAL",
+      "ruleText": "W y=a(x-p)^2+q zwiększenie q przesuwa parabolę w górę, a zmniejszenie q w dół. Wierzchołek ma wysokość q; a i p pozostają niezmienione.",
+      "scriptedRobotUtterance": "Chcę przesunąć parabolę w dół o 1, więc dopiszę +1 poza kwadratem.",
+      "scenes": {
+        "practice": {
+          "id": "M03-practice",
+          "title": "Pierwszy lot",
+          "instruction": "Dobierz wzór, który prowadzi Piko od startu przez wszystkie bramki do mety. Możesz prosić o wskazówki.",
+          "role": "practice",
+          "domain": {
+            "xMin": -3,
+            "xMax": 3,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25,
+            "c1": 0
+          },
+          "start": {
+            "x": -3,
+            "yMin": 2.87,
+            "yMax": 3.63
+          },
+          "goal": {
+            "x": 3,
+            "yMin": 2.87,
+            "yMax": 3.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -1,
+              "yMin": 0.87,
+              "yMax": 1.63
+            },
+            {
+              "id": "G2",
+              "x": 1,
+              "yMin": 0.87,
+              "yMax": 1.63
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -0.6,
+              "xMax": 0.6,
+              "yMin": -0.4,
+              "yMax": 0.4
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        },
+        "teach": {
+          "id": "M03-teach",
+          "title": "Wyjaśnij Piko",
+          "instruction": "Popraw błędny wzór, wykonaj udany lot, a następnie wyjaśnij Piko regułę. Podaj też wartości funkcji w dwóch wskazanych punktach.",
+          "role": "teach",
+          "domain": {
+            "xMin": -3,
+            "xMax": 3,
+            "yMin": -3,
+            "yMax": 4
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25,
+            "c1": 0
+          },
+          "start": {
+            "x": -3,
+            "yMin": 0.87,
+            "yMax": 1.63
+          },
+          "goal": {
+            "x": 3,
+            "yMin": 0.87,
+            "yMax": 1.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -1.5,
+              "yMin": -0.8175,
+              "yMax": -0.0575
+            },
+            {
+              "id": "G2",
+              "x": 1,
+              "yMin": -1.13,
+              "yMax": -0.37
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -0.7,
+              "xMax": 0.7,
+              "yMin": 0.1,
+              "yMax": 1.2
+            }
+          ],
+          "initialExpression": "0.25x^2+1"
+        },
+        "robot_transfer": {
+          "id": "M03-robot_transfer",
+          "title": "Nowa trasa Piko",
+          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "role": "robot_transfer",
+          "domain": {
+            "xMin": -4,
+            "xMax": 2,
+            "yMin": -1,
+            "yMax": 8
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25,
+            "c1": 0
+          },
+          "start": {
+            "x": -4,
+            "yMin": 5.62,
+            "yMax": 6.38
+          },
+          "goal": {
+            "x": 2,
+            "yMin": 2.62,
+            "yMax": 3.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -2,
+              "yMin": 2.62,
+              "yMax": 3.38
+            },
+            {
+              "id": "G2",
+              "x": 0,
+              "yMin": 1.62,
+              "yMax": 2.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -0.6,
+              "xMax": 0.6,
+              "yMin": 0.5,
+              "yMax": 1.4
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        },
+        "human_check": {
+          "id": "M03-human_check",
+          "title": "Twój samodzielny lot",
+          "instruction": "Rozwiąż nową trasę samodzielnie. W tej scenie nie ma podpowiedzi ani wcześniejszego rozwiązania Piko.",
+          "role": "human_check",
+          "domain": {
+            "xMin": -2,
+            "xMax": 4,
+            "yMin": -4,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25,
+            "c1": 0
+          },
+          "start": {
+            "x": -2,
+            "yMin": -1.38,
+            "yMax": -0.62
+          },
+          "goal": {
+            "x": 4,
+            "yMin": 1.62,
+            "yMax": 2.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 0,
+              "yMin": -2.38,
+              "yMax": -1.62
+            },
+            {
+              "id": "G2",
+              "x": 2,
+              "yMin": -1.38,
+              "yMax": -0.62
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -0.6,
+              "xMax": 0.6,
+              "yMin": -1,
+              "yMax": 0
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        }
+      }
+    },
+    {
+      "id": "M04",
+      "order": 4,
+      "title": "Parabola w poziomie",
+      "skillId": "quadratic_horizontal_shift",
+      "learningGoal": "Odczytuję położenie wierzchołka z nawiasu x-p i dobieram przesunięcie poziome.",
+      "misconceptionId": "MIS_HORIZONTAL_SHIFT_SIGN",
+      "canonicalRuleId": "RULE_QUAD_HORIZONTAL",
+      "ruleText": "W y=a(x-p)^2+q wierzchołek ma współrzędną x równą p. Nawias (x-2) przesuwa parabolę w prawo o 2, a (x+2) w lewo o 2.",
+      "scriptedRobotUtterance": "Żeby przesunąć parabolę w lewo o 1, użyję nawiasu (x-1).",
+      "scenes": {
+        "practice": {
+          "id": "M04-practice",
+          "title": "Pierwszy lot",
+          "instruction": "Dobierz wzór, który prowadzi Piko od startu przez wszystkie bramki do mety. Możesz prosić o wskazówki.",
+          "role": "practice",
+          "domain": {
+            "xMin": -2,
+            "xMax": 4,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25
+          },
+          "start": {
+            "x": -2,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "goal": {
+            "x": 4,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 0,
+              "yMin": -0.13,
+              "yMax": 0.63
+            },
+            {
+              "id": "G2",
+              "x": 2,
+              "yMin": -0.13,
+              "yMax": 0.63
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 0.5,
+              "xMax": 1.5,
+              "yMin": 1,
+              "yMax": 2
+            }
+          ],
+          "initialExpression": "0.25(x+1)^2",
+          "vertexLock": {
+            "y": 0
+          }
+        },
+        "teach": {
+          "id": "M04-teach",
+          "title": "Wyjaśnij Piko",
+          "instruction": "Popraw błędny wzór, wykonaj udany lot, a następnie wyjaśnij Piko regułę. Podaj też wartości funkcji w dwóch wskazanych punktach.",
+          "role": "teach",
+          "domain": {
+            "xMin": -4,
+            "xMax": 2,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25
+          },
+          "start": {
+            "x": -4,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "goal": {
+            "x": 2,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -2,
+              "yMin": -0.13,
+              "yMax": 0.63
+            },
+            {
+              "id": "G2",
+              "x": 0,
+              "yMin": -0.13,
+              "yMax": 0.63
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -1.5,
+              "xMax": -0.5,
+              "yMin": 1,
+              "yMax": 2
+            }
+          ],
+          "initialExpression": "0.25(x-1)^2",
+          "vertexLock": {
+            "y": 0
+          }
+        },
+        "robot_transfer": {
+          "id": "M04-robot_transfer",
+          "title": "Nowa trasa Piko",
+          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "role": "robot_transfer",
+          "domain": {
+            "xMin": -1,
+            "xMax": 5,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25
+          },
+          "start": {
+            "x": -1,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "goal": {
+            "x": 5,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1,
+              "yMin": -0.13,
+              "yMax": 0.63
+            },
+            {
+              "id": "G2",
+              "x": 3,
+              "yMin": -0.13,
+              "yMax": 0.63
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 1.5,
+              "xMax": 2.5,
+              "yMin": 1,
+              "yMax": 2
+            }
+          ],
+          "initialExpression": "0.25(x+2)^2",
+          "vertexLock": {
+            "y": 0
+          }
+        },
+        "human_check": {
+          "id": "M04-human_check",
+          "title": "Twój samodzielny lot",
+          "instruction": "Rozwiąż nową trasę samodzielnie. W tej scenie nie ma podpowiedzi ani wcześniejszego rozwiązania Piko.",
+          "role": "human_check",
+          "domain": {
+            "xMin": -4,
+            "xMax": 1,
+            "yMin": -1,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c2": 0.25
+          },
+          "start": {
+            "x": -4,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "goal": {
+            "x": 1,
+            "yMin": 1.87,
+            "yMax": 2.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -3,
+              "yMin": -0.13,
+              "yMax": 0.63
+            },
+            {
+              "id": "G2",
+              "x": -0.5,
+              "yMin": 0.1825,
+              "yMax": 0.9425
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -2.3,
+              "xMax": -1.4,
+              "yMin": 0.8,
+              "yMax": 1.7
+            }
+          ],
+          "initialExpression": "0.25x^2",
+          "vertexLock": {
+            "y": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "M05",
+      "order": 5,
+      "title": "Szerokość paraboli",
+      "skillId": "quadratic_curvature",
+      "learningGoal": "Dobieram dodatni współczynnik a i wyjaśniam jego wpływ na szerokość paraboli.",
+      "misconceptionId": "MIS_CURVATURE_WIDTH",
+      "canonicalRuleId": "RULE_QUAD_CURVATURE",
+      "ruleText": "Dla dodatniego a w y=a(x-p)^2+q większe a daje większy przyrost wysokości w tej samej odległości od osi symetrii, więc parabola jest węższa. Mniejsze dodatnie a daje parabolę szerszą.",
+      "scriptedRobotUtterance": "Żeby parabola była węższa i rosła szybciej od wierzchołka, zmniejszę dodatnie a.",
+      "scenes": {
+        "practice": {
+          "id": "M05-practice",
+          "title": "Pierwszy lot",
+          "instruction": "Dobierz wzór, który prowadzi Piko od startu przez wszystkie bramki do mety. Możesz prosić o wskazówki.",
+          "role": "practice",
+          "domain": {
+            "xMin": 0,
+            "xMax": 4,
+            "yMin": -1,
+            "yMax": 9
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c1": 0,
+            "c0": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "goal": {
+            "x": 4,
+            "yMin": 3.62,
+            "yMax": 4.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1.5,
+              "yMin": 0.1825,
+              "yMax": 0.9425
+            },
+            {
+              "id": "G2",
+              "x": 3,
+              "yMin": 1.87,
+              "yMax": 2.63
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 2.2,
+              "xMax": 2.8,
+              "yMin": 3.2,
+              "yMax": 4.6
+            }
+          ],
+          "initialExpression": "0.5x^2"
+        },
+        "teach": {
+          "id": "M05-teach",
+          "title": "Wyjaśnij Piko",
+          "instruction": "Popraw błędny wzór, wykonaj udany lot, a następnie wyjaśnij Piko regułę. Podaj też wartości funkcji w dwóch wskazanych punktach.",
+          "role": "teach",
+          "domain": {
+            "xMin": 0,
+            "xMax": 3,
+            "yMin": -1,
+            "yMax": 7
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c1": 0,
+            "c0": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "goal": {
+            "x": 3,
+            "yMin": 4.12,
+            "yMax": 4.88
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1,
+              "yMin": 0.12,
+              "yMax": 0.88
+            },
+            {
+              "id": "G2",
+              "x": 2,
+              "yMin": 1.62,
+              "yMax": 2.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 1.8,
+              "xMax": 2.3,
+              "yMin": 0.2,
+              "yMax": 0.8
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        },
+        "robot_transfer": {
+          "id": "M05-robot_transfer",
+          "title": "Nowa trasa Piko",
+          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "role": "robot_transfer",
+          "domain": {
+            "xMin": 0,
+            "xMax": 2.5,
+            "yMin": -1,
+            "yMax": 8
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c1": 0,
+            "c0": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "goal": {
+            "x": 2.5,
+            "yMin": 5.87,
+            "yMax": 6.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 0.75,
+              "yMin": 0.1825,
+              "yMax": 0.9425
+            },
+            {
+              "id": "G2",
+              "x": 1.75,
+              "yMin": 2.6825,
+              "yMax": 3.4425
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 1.4,
+              "xMax": 1.9,
+              "yMin": 0.2,
+              "yMax": 1.2
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        },
+        "human_check": {
+          "id": "M05-human_check",
+          "title": "Twój samodzielny lot",
+          "instruction": "Rozwiąż nową trasę samodzielnie. W tej scenie nie ma podpowiedzi ani wcześniejszego rozwiązania Piko.",
+          "role": "human_check",
+          "domain": {
+            "xMin": 0,
+            "xMax": 5,
+            "yMin": -1,
+            "yMax": 8
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {
+            "c1": 0,
+            "c0": 0
+          },
+          "start": {
+            "x": 0,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "goal": {
+            "x": 5,
+            "yMin": 2.745,
+            "yMax": 3.505
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 1.5,
+              "yMin": -0.09875,
+              "yMax": 0.66125
+            },
+            {
+              "id": "G2",
+              "x": 3.5,
+              "yMin": 1.15125,
+              "yMax": 1.91125
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 2.5,
+              "xMax": 3.4,
+              "yMin": 2.1,
+              "yMax": 3.4
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        }
+      }
+    },
+    {
+      "id": "M06",
+      "order": 6,
+      "title": "Połącz reguły",
+      "skillId": "combine_transformations",
+      "learningGoal": "Dobieram a, p i q razem oraz sprawdzam ich wspólny wpływ na całą trasę.",
+      "misconceptionId": "MIS_COMBINED_PARAMETERS",
+      "canonicalRuleId": "RULE_COMBINE",
+      "ruleText": "W y=a(x-p)^2+q wierzchołek to (p,q), a współczynnik a wpływa na kształt. Trzeba sprawdzić cały tor: poprawny wierzchołek sam nie gwarantuje trafienia w dalsze bramki.",
+      "scriptedRobotUtterance": "Jeśli wierzchołek jest blisko właściwego miejsca, szerokość paraboli nie ma już znaczenia dla dalszych bramek.",
+      "scenes": {
+        "practice": {
+          "id": "M06-practice",
+          "title": "Pierwszy lot",
+          "instruction": "Dobierz wzór, który prowadzi Piko od startu przez wszystkie bramki do mety. Możesz prosić o wskazówki.",
+          "role": "practice",
+          "domain": {
+            "xMin": -2,
+            "xMax": 4,
+            "yMin": -1,
+            "yMax": 6
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {},
+          "start": {
+            "x": -2,
+            "yMin": 2.87,
+            "yMax": 3.63
+          },
+          "goal": {
+            "x": 4,
+            "yMin": 2.87,
+            "yMax": 3.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 0,
+              "yMin": 0.87,
+              "yMax": 1.63
+            },
+            {
+              "id": "G2",
+              "x": 2,
+              "yMin": 0.87,
+              "yMax": 1.63
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 0.4,
+              "xMax": 1.6,
+              "yMin": 2.2,
+              "yMax": 3.6
+            }
+          ],
+          "initialExpression": "0.25x^2+1"
+        },
+        "teach": {
+          "id": "M06-teach",
+          "title": "Wyjaśnij Piko",
+          "instruction": "Popraw błędny wzór, wykonaj udany lot, a następnie wyjaśnij Piko regułę. Podaj też wartości funkcji w dwóch wskazanych punktach.",
+          "role": "teach",
+          "domain": {
+            "xMin": -3,
+            "xMax": 1,
+            "yMin": -3,
+            "yMax": 5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {},
+          "start": {
+            "x": -3,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "goal": {
+            "x": 1,
+            "yMin": 0.62,
+            "yMax": 1.38
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -2,
+              "yMin": -0.88,
+              "yMax": -0.12
+            },
+            {
+              "id": "G2",
+              "x": 0,
+              "yMin": -0.88,
+              "yMax": -0.12
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -1.5,
+              "xMax": -0.5,
+              "yMin": 0.1,
+              "yMax": 1.4
+            }
+          ],
+          "initialExpression": "0.25(x+1)^2"
+        },
+        "robot_transfer": {
+          "id": "M06-robot_transfer",
+          "title": "Nowa trasa Piko",
+          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "role": "robot_transfer",
+          "domain": {
+            "xMin": -4,
+            "xMax": 1,
+            "yMin": -1,
+            "yMax": 7
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {},
+          "start": {
+            "x": -4,
+            "yMin": 1.62,
+            "yMax": 2.38
+          },
+          "goal": {
+            "x": 1,
+            "yMin": 2.87,
+            "yMax": 3.63
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": -2,
+              "yMin": 0.62,
+              "yMax": 1.38
+            },
+            {
+              "id": "G2",
+              "x": 0,
+              "yMin": 1.62,
+              "yMax": 2.38
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": -2.5,
+              "xMax": -1.5,
+              "yMin": 2,
+              "yMax": 3.5
+            }
+          ],
+          "initialExpression": "0.5(x+2)^2"
+        },
+        "human_check": {
+          "id": "M06-human_check",
+          "title": "Twój samodzielny lot",
+          "instruction": "Rozwiąż nową trasę samodzielnie. W tej scenie nie ma podpowiedzi ani wcześniejszego rozwiązania Piko.",
+          "role": "human_check",
+          "domain": {
+            "xMin": -1,
+            "xMax": 3.5,
+            "yMin": -4,
+            "yMax": 4.5
+          },
+          "allowedFamilies": [
+            "quadratic"
+          ],
+          "coefficientLocks": {},
+          "start": {
+            "x": -1,
+            "yMin": -0.38,
+            "yMax": 0.38
+          },
+          "goal": {
+            "x": 3.5,
+            "yMin": 0.745,
+            "yMax": 1.505
+          },
+          "gates": [
+            {
+              "id": "G1",
+              "x": 0,
+              "yMin": -1.88,
+              "yMax": -1.12
+            },
+            {
+              "id": "G2",
+              "x": 2.5,
+              "yMin": -1.255,
+              "yMax": -0.495
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "O1",
+              "xMin": 0.5,
+              "xMax": 1.5,
+              "yMin": -0.95,
+              "yMax": 0.6
+            }
+          ],
+          "initialExpression": "0.25x^2"
+        }
+      }
+    }
+  ]
+}

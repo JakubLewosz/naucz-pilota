@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-03T11:30:14.696Z",
+  "mode": "demo",
+  "source": "var/video/page@f872743a6bf2df2644852ced22cd8762.webm",
+  "mission": "M04",
+  "automated": true,
+  "note": "Actual UI recording. Scripted demo; no live AI claim.",
+  "mp4": "release/media/Naucz_Pilota_demo.mp4",
+  "duration": "00:00:37.56"
+}

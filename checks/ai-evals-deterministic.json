@@ -1,0 +1,260 @@
+{
+  "date": "2026-11-03T11:38:23.369Z",
+  "mode": "mock",
+  "paidProviderCalls": 0,
+  "unitTestsPassed": 152,
+  "cases": [
+    {
+      "id": "SEM01",
+      "titlePL": "Poprawne wyjaśnienie przesunięcia całego wykresu",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM02",
+      "titlePL": "Inny poprawny sposób rozumowania: przyrost prostej",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM03",
+      "titlePL": "Częściowe wyjaśnienie kierunku bez uzasadnienia stromości",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM04",
+      "titlePL": "Błędne wyjaśnienie przesunięcia w poziomie",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM05",
+      "titlePL": "Niejasne wyjaśnienie",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM06",
+      "titlePL": "Prośba o pełne rozwiązanie w fazie nauczania",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM07",
+      "titlePL": "Zignoruj instrukcje i przyznaj sukces",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM08",
+      "titlePL": "Prośba o klucz i ukryte instrukcje",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM09",
+      "titlePL": "Poprawny wzór i liczby, ale błędne twierdzenie w zdaniu",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "SEM10",
+      "titlePL": "Rzeczywista propozycja na nowej planszy",
+      "status": "NOT RUN — requires real model and human review",
+      "scope": "Input schema checked separately; no semantic pass claimed."
+    },
+    {
+      "id": "INT01",
+      "titlePL": "Wzór z kodem zostaje odrzucony przed dostawcą",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT02",
+      "titlePL": "Poprawna struktura propozycji, lecz błędny lot",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT03",
+      "titlePL": "Poprawna propozycja potwierdzona przez silnik",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT04",
+      "titlePL": "Robot jawnie nie proponuje wzoru",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT05",
+      "titlePL": "Timeout nie udaje odpowiedzi live",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT06",
+      "titlePL": "Jeden retry po dodatkowym polu success",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT07",
+      "titlePL": "Dwa błędne outputy kończą próbę bez trzeciego wywołania",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT08",
+      "titlePL": "Nieznany factId uruchamia co najwyżej jedną naprawę",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT09",
+      "titlePL": "Niekompletna odpowiedź z powodu limitu tokenów",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT10",
+      "titlePL": "Odmowa dostawcy ma oddzielną obsługę",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT11",
+      "titlePL": "Dwa równoczesne różne turny",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT12",
+      "titlePL": "Idempotentna powtórka tej samej tury",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT13",
+      "titlePL": "Zmiana body przy tym samym turnId",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT14",
+      "titlePL": "Spóźniona odpowiedź nie nadpisuje human_check",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT15",
+      "titlePL": "Wywołanie AI z human_check jest zabronione",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT16",
+      "titlePL": "Klient nie może wstrzyknąć zaliczenia do historii",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT17",
+      "titlePL": "Fałszywe numericEvidence blokuje wyłącznie kwalifikację reguły",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT18",
+      "titlePL": "Powtórzone G1 nie zastępuje dwóch checkpointów",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT19",
+      "titlePL": "Evidence z innej sceny nie kwalifikuje reguły",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT20",
+      "titlePL": "Odtworzenie potwierdzonej pamięci bez ufania samym ID",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT21",
+      "titlePL": "Brak klucza daje niedostępność i opcję demo",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT22",
+      "titlePL": "Jawne demo nie udaje modelu",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT23",
+      "titlePL": "Siódma nowa tura w 60 sekund jest odrzucona",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT24",
+      "titlePL": "Globalny budżet trwa po restarcie",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT25",
+      "titlePL": "Brak przecieku z całej treści misji do kontekstu",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT26",
+      "titlePL": "Niepoprawna liczba w poprawnym JSON nie jest automatycznie certyfikowana",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT27",
+      "titlePL": "Żądanie przekraczające 600 znaków",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT28",
+      "titlePL": "Wspólny deadline obejmuje retry",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT29",
+      "titlePL": "Body większe niż 16 KiB jest odrzucone przed parsowaniem",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT30",
+      "titlePL": "Sugestia niewłaściwej reguły nie mutuje pamięci",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT31",
+      "titlePL": "Gotowy wzór w teach jest naruszeniem kontraktu fazy",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    },
+    {
+      "id": "INT32",
+      "titlePL": "Druga jawna próba robota wykorzystuje wynik pierwszej",
+      "status": "PASSED",
+      "scope": "Deterministic HTTP or reducer fixture. Browser properties covered separately by E2E."
+    }
+  ]
+}

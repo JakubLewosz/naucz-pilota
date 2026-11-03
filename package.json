@@ -1,0 +1,66 @@
+{
+  "name": "naucz-pilota",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "build:content": "tsx tools/build-content.ts",
+    "dev": "npm run build:content && concurrently -k -n api,web \"tsx watch apps/server/src/index.ts\" \"vite --config apps/web/vite.config.ts\"",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:content": "vitest run tests/content.test.ts",
+    "test:e2e": "playwright test",
+    "test:ai:live": "tsx tests/live/run.ts",
+    "build": "npm run build:content && npm run typecheck && vite build --config apps/web/vite.config.ts && tsx tools/build-server.ts",
+    "start": "node dist/server/index.mjs",
+    "desktop:dev": "npm run build && electron apps/desktop/main.cjs",
+    "desktop:dist": "npm run build && tsx tools/prepare-desktop.ts && electron-builder --config apps/desktop/builder.json --win zip --x64",
+    "release:check": "tsx tools/release-check.ts",
+    "release:prepare": "tsx tools/prepare-release.ts"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "cookie-parser": "1.4.7",
+    "dotenv": "18.0.9",
+    "express": "5.3.0",
+    "helmet": "8.3.0",
+    "openai": "7.47.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@types/cookie-parser": "1.4.10",
+    "@types/express": "5.0.6",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/supertest": "7.2.1",
+    "@vitejs/plugin-react": "6.2.1",
+    "concurrently": "10.0.6",
+    "electron": "45.2.1",
+    "electron-builder": "26.18.0",
+    "esbuild": "0.28.2",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "json-schema-to-typescript": "16.0.0",
+    "supertest": "7.3.1",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}

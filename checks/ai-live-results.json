@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-03T11:26:43.964Z",
+  "provider": "openai",
+  "model": null,
+  "promptVersion": "1.0.0",
+  "status": "NOT RUN",
+  "results": [],
+  "reason": "Brak OPENAI_API_KEY i/lub AI_MODEL w lokalnym środowisku. Nie wykonano żadnego wywołania dostawcy."
+}

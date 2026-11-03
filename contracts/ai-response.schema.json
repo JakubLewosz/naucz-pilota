@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:naucz-pilota:ai-model-response:v1",
+  "title": "Naucz Pilota — strict model payload v1",
+  "description": "Wyłącznie treść zwracana przez model. Status trybu, wynik silnika i metadane należą do osobnej koperty aplikacji.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "utterancePL": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 450,
+      "description": "Krótka wypowiedź Piko po polsku. Zwykły tekst, bez HTML i bez deklaracji zaliczenia."
+    },
+    "followUpPL": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Jedno krótkie pytanie lub null."
+    },
+    "explanationAssessment": {
+      "type": "string",
+      "enum": [
+        "sound",
+        "partial",
+        "incorrect",
+        "unclear",
+        "not_applicable"
+      ],
+      "description": "Orientacyjny komentarz do wyjaśnienia; nigdy próg zaliczenia."
+    },
+    "proposedExpression": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "W teach zawsze null. W robot_transfer wzór do niezależnego sprawdzenia lub null, gdy Piko zgłasza niepewność."
+    },
+    "suggestedRuleId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "RULE_LINE_INTERCEPT",
+        "RULE_LINE_SLOPE",
+        "RULE_QUAD_VERTICAL",
+        "RULE_QUAD_HORIZONTAL",
+        "RULE_QUAD_CURVATURE",
+        "RULE_COMBINE",
+        null
+      ],
+      "description": "Wyłącznie sugestia dotycząca reguły bieżącej misji; nie zmienia pamięci."
+    },
+    "usedFactIds": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      },
+      "description": "Identyfikatory faktów z bieżącego kontekstu; backend sprawdza, czy istnieją."
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "ask_question",
+        "explain_back",
+        "propose_attempt",
+        "acknowledge_uncertainty"
+      ]
+    }
+  },
+  "required": [
+    "utterancePL",
+    "followUpPL",
+    "explanationAssessment",
+    "proposedExpression",
+    "suggestedRuleId",
+    "usedFactIds",
+    "action"
+  ]
+}

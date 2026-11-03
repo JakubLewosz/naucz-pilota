@@ -1,0 +1,13 @@
+import 'dotenv/config';
+import express from 'express';
+import path from 'node:path';
+import {createApp} from './app';
+import {Store} from './store';
+import {openAIProvider} from './provider';
+const integer=(name:string,fallback:number,min=1,max=1000000)=>{const n=Number(process.env[name]??fallback);if(!Number.isInteger(n)||n<min||n>max)throw new Error(`Invalid configuration: ${name}`);return n;};
+const mode=process.env.AI_MODE==='live'?'live':'demo',model=process.env.AI_MODEL??'',key=process.env.OPENAI_API_KEY??'';
+const store=new Store(process.env.STATE_DB_PATH??'var/piko.sqlite');
+const app=createApp({store,provider:key&&model?openAIProvider(key,model,integer('AI_MAX_OUTPUT_TOKENS',1200)):undefined,config:{mode,model,production:process.env.NODE_ENV==='production',publicOrigin:process.env.PUBLIC_ORIGIN??'http://127.0.0.1:5173',dailyBudget:integer('AI_DAILY_REQUEST_BUDGET',200,0),timeoutMs:integer('AI_TURN_TIMEOUT_MS',15000,1,15000),sessionLimit:integer('AI_SESSION_TURNS_PER_MINUTE',6),maxProviderRequests:integer('AI_MAX_PROVIDER_REQUESTS_PER_TURN',2,1,2),bodyBytes:integer('AI_REQUEST_BODY_BYTES',16384,1024,16384)}});
+app.use(express.static(path.resolve('apps/web/dist')));
+const server=app.listen(integer('SERVER_PORT',3001),()=>console.log(`Naucz Pilota API on port ${process.env.SERVER_PORT??3001}; mode=${mode}; configured=${Boolean(key&&model)}`));
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>server.close(()=>{store.close();process.exit(0);}));

@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-03T11:38:30.712Z",
+  "status": "PASS LOCAL CHECKS",
+  "checks": [
+    {
+      "name": "public data author-only fields absent",
+      "status": "PASS",
+      "detail": "Recursive removal of author-only fields."
+    },
+    {
+      "name": "public scene keys limited",
+      "status": "PASS",
+      "detail": "No alternate embedded author corpus."
+    },
+    {
+      "name": "renderer index-Co_vyb4y.js",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer index-DhJidGZ7.css",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer index.html",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "desktop package allowlist",
+      "status": "PASS",
+      "detail": "Local frontend, main, preload, distribution and bundled DTO validator only."
+    },
+    {
+      "name": "desktop sandbox",
+      "status": "PASS",
+      "detail": "Static configuration plus separate macOS runtime smoke."
+    },
+    {
+      "name": "jury live endpoint",
+      "status": "NOT READY",
+      "detail": "No HTTPS endpoint supplied; offline demo only."
+    },
+    {
+      "name": "Windows PE executable",
+      "status": "PASS",
+      "detail": "Cross-built PE; not a Windows runtime test."
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
+      "size": 153313090,
+      "sha256": "f9e7714b0b7c5ff48f0a5086e2cf7dcc27ddc451dff706bdb576c8ff6ec27689"
+    }
+  ],
+  "live": "NOT RUN",
+  "windowsRuntime": "NOT RUN"
+}
