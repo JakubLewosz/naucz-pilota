@@ -93,3 +93,9 @@ Lokalna implementacja i techniczny test live zakończone. Następne są akceptac
 - Przeglądarkowy pokaz live M04 wykonał kolejne 2 rzeczywiste żądania, zachował oryginalną błędną propozycję Piko i pierwszą nieudaną próbę gracza po korekcie oraz odświeżeniu. Nagranie MP4 45,28 s i raport checks/browser-live.json są gotowe.
 - Po zmianach: 158 testów w 7 plikach, 7 E2E, typecheck, lint, kontrola wydania i ponownie zbudowany/sprawdzony kontener Docker — PASS. Publicznego hostingu nadal nie wdrożono. Lokalny backend jest uruchomiony z działającym kluczem.
 - Końcowy build i lint po aktualizacji narzędzi wydania: PASS. Kontrola wydania uwzględnia wyłącznie pełny zestaw 22 tur dla bieżącej wersji promptu; test pojedynczej misji nie oznaczy całego live jako odebranego. Odświeżono trzy PDF-y i obejrzano 6 stron. Sprawdzono oba ZIP-y, aktualność 149 plików w źródłach i 13 wymaganych artefaktów. Skan 151 plików oraz ASAR nie wykrył sekretu; .env nie jest śledzony w Git.
+
+## Repozytorium GitHub — 2026-11-03
+- Na wyraźne polecenie użytkownika dodano origin https://github.com/JakubLewosz/naucz-pilota.git. Repozytorium zdalne było puste. Wysłano pełną historię projektu (do 95067e1) na main i codex/release-readiness, bez force push.
+- Przed wysłaniem przeskanowano wszystkie 200 blobów w historii obu gałęzi: PASS, bez kluczy API i kluczy prywatnych. .env pozostaje ignorowany.
+- Do repozytorium dołączono oba rzeczywiste nagrania MP4. ZIP Windows ma 153313090 bajtów i pozostaje poza Git; dostępne są kod, konfiguracja i komenda odtworzenia. Nie utworzono GitHub Release ani nie wdrożono hostingu.
+- Workflow GitHub Actions nadal NOT RUN; można uruchomić go ręcznie w Actions. Wcześniejsze raporty opisujące brak remote dotyczą stanu sprzed tego pushu.
