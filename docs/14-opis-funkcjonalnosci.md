@@ -12,4 +12,4 @@ Adapter OpenAI Responses API ze Structured Outputs jest zaimplementowany. W popr
 
 Samodzielne zadanie ma nową geometrię i przed pierwszym zatwierdzeniem ukrywa podgląd trasy, obliczenia, AI i dziennik. Pierwszy parsowalny wynik pozostaje zapisany oddzielnie od późniejszych prób i wyniku robota. Wynik opisuje wykonanie konkretnego zadania, bez obietnicy trwałego przyrostu wiedzy.
 
-Implementacja: React, TypeScript, Vite, SVG, Express i Electron. Kampania demo przeszła pełny test przeglądarkowy; silnik sprawdzono na 24 rozwiązaniach i 37 błędnych przykładach. Utworzono paczkę Windows x64, ale jej uruchomienie na Windows, publiczny backend live i pilotaż wymagają osobnego odbioru. Dokumentacja zawiera rzeczywiste wyniki i pozostałe ograniczenia.
+Implementacja: React, TypeScript, Vite, SVG, Express i Electron. Kampania demo przeszła pełny test przeglądarkowy; silnik sprawdzono na 24 rozwiązaniach i 37 błędnych przykładach. Paczka Windows x64 przeszła start i wznowienie na runnerze Windows. Osobny komputer odbiorcy, publiczny backend i pilotaż wymagają odbioru. Dokumentacja zawiera rzeczywiste wyniki i pozostałe ograniczenia.

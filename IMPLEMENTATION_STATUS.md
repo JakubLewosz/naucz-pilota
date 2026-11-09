@@ -1,13 +1,14 @@
 # Stan implementacji — Naucz Pilota
 Aktualizacja: 2026-11-09. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
-Wykonano wszystkie części E0–E6 dostępne lokalnie, w tym rzeczywiste wywołania AI po wymianie klucza: 22 tury końcowego zestawu oraz 2 tury testu M04 w przeglądarce. Odbiór techniczny live przeszedł; jakość dialogu ma opisane uwagi i wymaga akceptacji człowieka. Windows, publiczny HTTPS, pilotaż i formalności pozostają otwarte. Repozytorium było puste; wskazany ZIP rozpakowano do katalogu głównego, zachowując specyfikacje, dane i walidator autora. Nie publikowano ani nie wysyłano zgłoszenia.
+Poprawki po audycie przeszły lokalne testy i GitHub Actions na Windows oraz Linuksie. Pakiet ZIP z runnera Windows zawiera demo. Dane płatnego odbioru z 3 listopada dotyczą starszego promptu 1.0.2. Stan promptu 1.1.0 i zakres testów wydania są poniżej.
 
 ## Poprawki po audycie fef5e22 (9 listopada 2026)
 
 - **Odzyskiwanie AI.** Błędy transportu i koperty unavailable nie zużywają dwóch miejsc na propozycje. Dwie nieudane tury live na lot Piko ograniczają ponowienia także po odświeżeniu. Gracz może jawnie wybrać demo lub pominąć lot. Udana odpowiedź przywraca plakietkę live. Poprzednie wypowiedzi zachowują oznaczenie źródła.
 - **Rozmowa i zapis.** Przycisk czyszczenia w web i Electron resetuje kontekst tej sceny w aktywnej sesji SQLite oraz usuwa tekst z jej kopert. Dowody, liczniki i zapisane wyniki pozostają. Zapis wersji 2 waliduje zagnieżdżone pola i migruje wersję 1. Przy błędnym odczycie lub zapisie aplikacja pokazuje odzyskiwanie i chroni oryginał.
 - **Lekcja Piko.** Potwierdzona notatka zawiera słowa gracza i opcjonalną parafrazę. Bieżący transfer otrzymuje notatkę obok zweryfikowanej reguły. Oba cytaty są danymi użytkownika. Ocena tekstu nie wpływa na sprawdzenie wzoru i prognoz. Porównanie kontekstu z notatką i bez niej oraz test roli wiadomości przeszły z atrapą.
+- **Electron.** Pierwsza próba lokalnej rozmowy ujawniła preflight kończący się 403 przed ustanowieniem sesji. Proces główny wysyła teraz bezpośrednie żądania z ustalonym nagłówkiem i tokenem. Regresja IPC przeszła na macOS i Windows z trzema odpowiedziami atrapy i bez płatnego API.
 - **Interfejs.** Widoczne etapy naprawy, prognoz, wyjaśnienia i zapisu lekcji, obie strony rozmowy, współczynniki a/b/c, polskie nazwy zdarzeń. Utrzymano brak podpowiedzi przed pierwszą samodzielną próbą.
 
 | Sprawdzenie | Wynik dla poprawek |
@@ -17,8 +18,12 @@ Wykonano wszystkie części E0–E6 dostępne lokalnie, w tym rzeczywiste wywoł
 | Walidator i niezależny audyt treści | PASS, 24 rozwiązania, 37 błędów, 42 kontrole, 18 wskazówek. |
 | Build, Docker, Electron macOS | PASS. Kontener zachowuje sesję po restarcie z wolumenem. Electron przeszedł M01 i ponowny start. |
 | Cross-build Windows i kontrola wydania | PASS. ZIP x64, PE i ASAR zweryfikowane lokalnie. |
+| Ekran teach na laptopie i przy 200% | PASS. Sprawdzono widok 1366×768 i zrzut karty. Axe WCAG A/AA na teach bez wykrytych naruszeń. Zatwierdzenie klawiaturą i brak przewijania w poziomie przy 200%. |
+| GitHub Actions Windows i Linux | PASS. Pierwszy przebieg 42684434332 dla 9293056. Powtórzenie 42685071630 dla 52ac710 po poprawce transportu przeszło oba zadania, w tym start i restart spakowanego EXE oraz nowy test relay z lokalną atrapą. Próba na osobnym komputerze odbiorcy ma status NOT RUN. |
 | Płatny test promptu 1.1.0 | NOT RUN, 0 wywołań. Poniższy raport 22 tur i dwa filmy odnoszą się do wersji sprzed audytu. |
 | HTTPS z innego urządzenia, pilotaż | NOT RUN. Endpoint w distribution.json pozostaje pusty. |
+
+Kod sprawdzony w Actions jest na gałęzi `codex/audit-fixes`. [Końcowy przebieg Windows i Linux](https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630). Zmieniono moduły stanu i zapisu w `apps/web/src`, kontrakt i kontekst w `contracts` oraz `packages/contracts`, reset w `apps/server/src/app.ts` i `store.ts`, relay i preload Electrona oraz regresje w `tests` i `tools/smoke-desktop-relay.ts`. Szczegółowe dane wydania są w `checks/windows-actions-audit.json`. Oba filmy pozostają dokumentacją wcześniejszego interfejsu.
 
 ## Etapy pierwotnego wdrożenia (3 listopada 2026)
 | Etap | Stan i dowód |

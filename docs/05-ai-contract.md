@@ -132,6 +132,7 @@ type LearnerContext = {
   learnedRules: { id: string; textPL: string }[];
   eligibleRuleIds: string[];
   recentExchanges: { userPL: string; pikoPL: string; followUpPL: string | null }[];
+  lessonNote: NonNullable<LearnerRequest["ruleEvidence"][number]["lessonNote"]> | null;
 };
 ```
 
@@ -271,7 +272,7 @@ Użyj oficjalnego SDK OpenAI dla Node oraz **Responses API**. Konfiguracja przez
 Kontrakt wywołania (fragment konfiguracyjny, nie kompletna implementacja):
 
 ```typescript
-const { recentExchanges, ...trustedContext } = learnerContext;
+const { recentExchanges, lessonNote, ...trustedContext } = learnerContext;
 const currentUserText = request.userMessage || (request.phase === "robot_propose"
   ? "Zaproponuj własną próbę dla bieżącej planszy."
   : "Odnieś się do aktualnej naprawy i sprawdzonych prognoz liczbowych; pozostań uczniem.");
@@ -282,6 +283,7 @@ const payload = {
   input: [
     { role: "developer", content: JSON.stringify(trustedContext) },
     ...expandHistory(recentExchanges),
+    ...(lessonNote ? [{ role: "user", content: JSON.stringify({ untrustedLessonNote: lessonNote }) }] : []),
     { role: "user", content: currentUserText }
   ],
   text: {

@@ -1,8 +1,17 @@
 # Raport weryfikacji
 
-Naucz Pilota 1.0.0, 3 listopada 2026. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1; Chromium Playwright. Jest to raport techniczny lokalnego wykonania, nie badanie skuteczności nauczania.
+Naucz Pilota 1.0.0. Odbiór poprawek po audycie 9 listopada 2026. macOS arm64, Node 24.11.0, npm 11.6.1, Playwright oraz runner GitHub Actions Windows i Linux.
 
-## Wyniki wykonane
+## Wyniki po audycie
+
+- Typecheck, lint, build, 174 testy jednostkowe i integracyjne oraz 10 E2E przeszły. Odtworzono dwie awarie z osobnym przejściem do demo i pominięciem lotu po odświeżeniu. Testy obejmują przywrócenie statusu live, czyszczenie kontekstu, uszkodzone zapisy i migrację wersji 1.
+- Porównanie identycznej planszy z notatką i bez notatki wykazało te same sprawdzone fakty i regułę. Warianty poprawnego, niepełnego oraz błędnego wyjaśnienia zachowują tekst jako cytat. Test HTTP potwierdził pozycję obu cytatów w roli user oraz brak przyszłej geometrii. Zaliczenie oblicza silnik.
+- W teach przy 1366 x 768 axe nie wykrył naruszeń A/AA. Zatwierdzono notatkę klawiaturą przy tekście 200% i sprawdzono brak poziomego przewijania. Pełna kampania i pierwsza samodzielna próba po korekcie oraz wznowieniu przeszły.
+- Przed poprawką transportu Electron otrzymywał 403 przy preflight. Bezpośrednie żądania z procesu głównego przeszły trzy tury z lokalną atrapą na macOS i Windows. Po czyszczeniu model zastępczy otrzymał pustą historię. Kontener z wolumenem zachował stan po restarcie.
+- GitHub Actions Windows i Linux przeszły dla 52ac710, przebieg 42685071630. Windows uruchomił spakowane EXE, przeszedł M01 offline i zachował pierwszą próbę po zamknięciu oraz ponownym starcie. Raport i sumę paczki zapisano w checks/windows-actions-audit.json.
+- NOT RUN dla promptu 1.1.0 z rzeczywistym modelem, oceny tonu i użycia notatki przez model, pomiaru jego czasu odpowiedzi, HTTPS na innym urządzeniu i pilotażu. Testy aktualnej wersji zużyły 0 żądań płatnego API. Osobny komputer odbiorcy Windows wymaga odbioru.
+
+## Wyniki historyczne z 3 listopada
 
 - Silnik TypeScript: 24 rozwiązania witness dają SUCCESS; 37 knownFailures odrzucanych dokładnie oczekiwanym kodem. Przeniesiono 42 kontrole parsera i geometrii z walidatora Python, w tym dokładne skracanie dziesiętne, limity, cienką przeszkodę i wewnętrzny wierzchołek.
 - Testy jednostkowe/integracyjne: 158 PASS w siedmiu plikach Vitest. Obejmują silnik, maszynę stanów, 32 deterministyczne scenariusze INT z ai-evals i oficjalny SDK na lokalnej atrapie HTTP. Dodano regresję błędu zaobserwowanego w SEM05: schemat dostawcy nie pozwala wskazać reguły bez dowodu ani nieistniejących faktów.

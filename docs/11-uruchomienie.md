@@ -16,7 +16,7 @@ Zwykłe sprawdzenia: `npm run typecheck`, `npm run lint`, `npm test`, `npm run t
 
 Rozpakuj cały Naucz_Pilota_Windows.zip i uruchom Naucz Pilota.exe z rozpakowanego folderu. Zachowaj towarzyszące pliki i resources/. Node nie jest potrzebny. Gra zapisuje postęp w profilu lokalnym aplikacji.
 
-Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznanym wydawcy; autor powinien sprawdzić integralność pobranej paczki i przetestować uruchomienie na osobnym komputerze. Nie wykonano jeszcze tego testu. Aktualna paczka ma pusty adres backendu i działa w jawnym demo; nie zapewnia live dla jury.
+Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznanym wydawcy; autor powinien sprawdzić integralność pobranej paczki i przetestować uruchomienie na osobnym komputerze. Automatyczny start i wznowienie spakowanego EXE przeszły w GitHub Actions. Odbiór na osobnym komputerze pozostaje do wykonania. Adres backendu w paczce jest pusty, więc dystrybucja uruchamia jawne demo.
 
 ## Konfiguracja modelu
 
@@ -48,7 +48,7 @@ SQLite przechowuje bieżące wiadomości, sprawdzone dowody, przekazane notatki 
 
 `npm run desktop:dev` buduje i otwiera Electrona. `npm run desktop:dist` przygotowuje minimalny staging i ZIP Windows x64. `npm run release:check` sprawdza PE, zawartość ASAR, publiczne dane i renderer. `npm run release:prepare` kopiuje materiały do folderu zgłoszeniowego i tworzy źródłowy ZIP z lockfile, bez .env, var, node_modules i lokalnego postępu.
 
-Sprawdź ZIP na czystym Windows: start offline, M01, ponowny start z zapisem, próba live z przygotowanym HTTPS, jawna awaria sieci. Dopiero po takim teście oznacz Windows jako PASS. Publikacja, podpisy i wysłanie zgłoszenia pozostają po stronie autora.
+Na komputerze odbiorcy rozpakuj ZIP, sprawdź start offline, M01 i ponowne uruchomienie z zapisem. Po skonfigurowaniu HTTPS sprawdź live i jawną awarię sieci. Raport oddziela ten odbiór od testu na runnerze Windows. Publikacja, podpisy i wysłanie zgłoszenia pozostają po stronie autora.
 
 ## Źródła implementacyjne
 
@@ -59,7 +59,7 @@ Oficjalne źródła sprawdzone podczas implementacji: https://developers.openai.
 
 Dockerfile został lokalnie zbudowany, a kontener przeszedł test zdrowia, braku sekretów i danych autora, użytkownika bez root oraz trwałości sesji SQLite po restarcie. npm run docker:build oraz npm run docker:smoke odtwarzają te sprawdzenia bez klucza AI.
 
-Pierwszą próbę live można ograniczyć poleceniem npm run test:ai:live -- --case M01 --max-calls 4. Runner zatrzymuje się po pierwszym błędzie i zachowuje osobne NOT RUN dla pozostałych scenariuszy. Przejścia teach/transfer tej misji używają jednej sesji. Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md.
+Pierwszą próbę live można ograniczyć poleceniem npm run test:ai:live -- --case M01 --max-calls 4. Runner zatrzymuje się po pierwszym błędzie i zachowuje osobne NOT RUN dla pozostałych scenariuszy. Przejścia teach/transfer tej misji używają jednej sesji. Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md. Workflow 42685071630 potwierdził start i wznowienie spakowanego EXE oraz czyszczenie kontekstu na lokalnej atrapie Electrona.
 
 
 Historyczny odbiór live z 3 listopada obejmował 22 tury i M04 w UI z promptem 1.0.2 oraz modelem gpt-5.4-mini-2026-03-17. Dla promptu 1.1.0 z notatką lekcji płatne testy mają status NOT RUN. Pozostają uwagi do semantyki, publiczny HTTPS i odbiór Windows. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.

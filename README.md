@@ -49,7 +49,7 @@ npm run release:check
 npm run release:prepare
 ```
 
-`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje ZIP Windows x64 w `release/bin`. Po rozpakowaniu uruchamia się `Naucz Pilota.exe`, bez Node. Dostarczona paczka jest niepodpisana; test na czystym Windows pozostaje do wykonania. Nie uruchamiaj samego EXE poza całym rozpakowanym katalogiem.
+`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje ZIP Windows x64 w `release/bin`. Po rozpakowaniu uruchamia się `Naucz Pilota.exe`, bez Node. Paczka jest niepodpisana. Automatyczny test spakowanego EXE przeszedł na runnerze Windows. Odbiór na osobnym komputerze użytkownika ma status NOT RUN. Nie uruchamiaj samego EXE poza całym rozpakowanym katalogiem.
 
 Aby przygotować live dla odbiorcy, skonfiguruj zaufany origin HTTPS w `apps/desktop/distribution.json` i ponownie zbuduj paczkę. Klucz pozostaje wyłącznie na backendzie. Obecnie adres jest pusty, dlatego paczka ma działające demo, ale nie ma gotowości live dla jury. Szczegóły wdrożenia: [docs/11-uruchomienie.md](docs/11-uruchomienie.md).
 
@@ -86,7 +86,7 @@ Pierwsza komenda jest płatnym testem teach → transfer M01. Używa jednej sesj
 
 Kontener został lokalnie zbudowany i uruchomiony; testowane są health, brak .env/rozwiązań autora w obrazie, użytkownik bez uprawnień root i trwałość sesji po restarcie. Publiczny hosting HTTPS nadal nie jest skonfigurowany. Test kontenera nie uruchamia płatnego API.
 
-Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Ręczny workflow GitHub Actions dla Windows i Linux jest przygotowany w .github/workflows/verify.yml; można go uruchomić w zakładce Actions repozytorium. Dotychczasowy status wykonania: NOT RUN.
+Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Ręczny workflow GitHub Actions dla Windows i Linux jest przygotowany w .github/workflows/verify.yml; można go uruchomić w zakładce Actions repozytorium. Przebieg dla poprawek przeszedł na Windows i Linuksie, w tym start i wznowienie spakowanego EXE oraz reset rozmowy Electrona z atrapą. [Wynik GitHub Actions](https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630).
 
 
 ## Historyczny odbiór live promptu 1.0.2

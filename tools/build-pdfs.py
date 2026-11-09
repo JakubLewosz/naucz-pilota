@@ -1,5 +1,6 @@
 """Author tool only. Uses reportlab; the game itself never requires Python."""
 from pathlib import Path
+from datetime import date
 import html,re,os,sys
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -26,7 +27,7 @@ def safe(text):
 
 def footer(canvas,doc):
  canvas.setStrokeColor(colors.HexColor('#dce3ef'));canvas.line(48,43,547,43)
- canvas.setFont('Body',8);canvas.setFillColor(colors.HexColor('#49576d'));canvas.drawString(48,29,'NAUCZ PILOTA / 1.0.0 / 03.11.2026');canvas.drawRightString(547,29,str(doc.page))
+ canvas.setFont('Body',8);canvas.setFillColor(colors.HexColor('#49576d'));canvas.drawString(48,29,'NAUCZ PILOTA / 1.0.0 / '+date.today().strftime('%d.%m.%Y'));canvas.drawRightString(547,29,str(doc.page))
 
 def make(name,text):
  if SELECTED and name not in SELECTED:return None
@@ -56,7 +57,7 @@ Naucz Pilota 1.0.0. Aktualna paczka jest demonstracją lokalną; backend live ni
 4. Kliknij Zacznij. Szczegóły czterech etapów znajdziesz w instrukcji użytkownika.
 5. Zamknij okno. Przy kolejnym uruchomieniu postęp pozostaje na tym urządzeniu. W Ustawieniach możesz usunąć go po potwierdzeniu.
 
-Paczka jest niepodpisana. Nie wykonano testu jej uruchomienia na czystym Windows; jest to obowiązkowy krok odbioru autora przed udostępnieniem. Cross-build z macOS i inspekcja pliku PE nie zastępują tego testu.
+Paczka jest niepodpisana. Test automatyczny w GitHub Actions potwierdził start spakowanego EXE i ponowne otwarcie zapisu na Windows. Odbiór na osobnym komputerze użytkownika pozostaje do wykonania.
 
 ## Kod źródłowy na komputerze autora
 

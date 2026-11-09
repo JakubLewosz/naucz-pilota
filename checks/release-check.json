@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-09T19:30:32.579Z",
+  "date": "2026-11-09T19:38:34.737Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -51,8 +51,8 @@
   "artifacts": [
     {
       "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
-      "size": 153416969,
-      "sha256": "7d78353f3cb5dee71ba9881fcee1cd533374ccd8d17be9464841eb9a7d24d50d"
+      "size": 153417054,
+      "sha256": "211aef37efd8b4843a7bd3798dac78b8f1760adbed9888ab4be8144a8b7111bd"
     }
   ],
   "live": "NOT RUN FOR CURRENT PROMPT",

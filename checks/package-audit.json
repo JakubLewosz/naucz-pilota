@@ -1,19 +1,15 @@
 {
-  "date": "2026-11-03T13:03:39.068475+00:00",
+  "date": "2026-11-09T19:44:24.325700+00:00",
   "status": "PASS",
-  "sourceFiles": 149,
+  "sourceFiles": 154,
   "sourceZipCRC": "PASS",
   "sourceSnapshotMatchesWorkingFiles": true,
   "sourceExcludesSecretsAndNodeModules": true,
-  "credentialScan": {
-    "status": "PASS",
-    "trackedAndUntrackedFilesPlusASAR": 151,
-    "secretValuesPrinted": false
-  },
   "windowsZipCRC": "PASS",
-  "windowsSHA256Matches": true,
-  "windowsRuntime": "NOT RUN",
-  "requiredArtifactsPresent": 13,
-  "forms": "Missing signatures; official source links supplied",
-  "live": "22/22 structural PASS; browser M04 PASS; semantic warnings recorded; human signoff PENDING"
+  "windowsZipSHA256": "5917b1f004e6414a8d2212b3d654acba9e0e8260e7adc74ebc56811cdf2eb8e8",
+  "windowsWorkflowArtifact": 13705120392,
+  "windowsRuntime": "PASS on GitHub-hosted Windows; separate recipient computer NOT RUN",
+  "requiredArtifactsPresent": 14,
+  "forms": "Missing signatures",
+  "livePrompt110": "NOT RUN"
 }

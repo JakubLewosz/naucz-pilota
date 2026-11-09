@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "workflow": {
+    "id": 42685071630,
+    "head": "52ac710dba77f6cc421440d5748310fd8c53def1",
+    "url": "https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "linux-backend",
+        "status": "completed",
+        "conclusion": "success",
+        "step": null
+      },
+      {
+        "name": "windows",
+        "status": "completed",
+        "conclusion": "success",
+        "step": null
+      }
+    ]
+  },
+  "artifactId": 13705120392,
+  "zip": {
+    "path": "release/bin/ci/Naucz_Pilota_1.0.0_Windows_x64.zip",
+    "bytes": 153229396,
+    "sha256": "5917b1f004e6414a8d2212b3d654acba9e0e8260e7adc74ebc56811cdf2eb8e8",
+    "crc": "PASS"
+  },
+  "windowsRuntime": {
+    "date": "2026-11-09T19:40:32.248Z",
+    "platform": "win32",
+    "packaged": true,
+    "executable": "Naucz Pilota.exe",
+    "status": "PASS",
+    "scope": "app://, sandbox, isolation, offline M01, immutable first attempt and restart persistence",
+    "windowsStatus": "PASS"
+  },
+  "windowsRelayStub": {
+    "date": "2026-11-09T19:40:36.657Z",
+    "status": "PASS",
+    "platform": "win32",
+    "stubCalls": 3,
+    "paidProviderCalls": 0,
+    "transport": "Electron IPC to local HTTP relay",
+    "oldContextCleared": true
+  },
+  "separateRecipientComputer": "NOT RUN",
+  "providerLivePrompt110": "NOT RUN"
+}
