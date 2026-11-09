@@ -4,7 +4,7 @@ import {Store} from '../apps/server/src/store';
 import {ProviderError,type Provider} from '../apps/server/src/provider';
 import {buildLiveCases,buildM04LessonCases,M04_LESSON_VARIANTS,selectLiveCases} from './live/cases';
 import {executeLiveCases,observeProvider} from './live/runner';
-import {buildContext} from '@piko/contracts';
+import {buildContext,demoTurn} from '@piko/contracts';
 import evals from '../content/ai-evals.v1.json';
 it('live evaluator groups 22 cases and keeps teach/transfer in the same session',async()=>{
  const updates:number[][]=[];const cases=buildLiveCases();expect(cases).toHaveLength(22);const selected=cases.filter(c=>c.sequence==='M01'),contexts:unknown[]=[];
@@ -91,4 +91,25 @@ it('a valid envelope cannot pass structurally if the provider did not receive th
   expect(result.results[1].checks).toContainEqual({name:'Provider received the exact confirmed lesson note',passed:false});
   expect(result.results[1].semanticReview).toBe('NOT REVIEWED');
  }finally{store.close();}
+});
+
+it('M04 demo labels scripted comments and keeps the same mechanical result for all three notes',()=>{
+ const cases=buildM04LessonCases();
+ const demos=cases.map(test=>demoTurn({...test.body,requestedMode:'demo'}));
+ const teach=demos.filter((_,index)=>index%2===0);
+ const transfer=demos.filter((_,index)=>index%2===1);
+ for(const turn of demos){
+  expect(turn.mode).toBe('demo');
+  expect(turn.model.requestCount).toBe(0);
+  expect(turn.learner?.explanationAssessment).toBe('not_applicable');
+ }
+ for(const turn of teach){
+  expect(turn.learner).toEqual(teach[0].learner);
+  expect(turn.learner?.utterancePL).toContain('przygotowany komentarz demonstracyjny');
+ }
+ for(const turn of transfer){
+  expect(turn.learner).toEqual(transfer[0].learner);
+  expect(turn.learner?.utterancePL).toContain('przygotowany lot demonstracyjny');
+  expect(turn.proposalValidation).toEqual(transfer[0].proposalValidation);
+ }
 });

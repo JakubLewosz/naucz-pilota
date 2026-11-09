@@ -82,12 +82,10 @@ export function demoTurn(request:LearnerRequest):Envelope {
  const robot=request.phase==='robot_propose';
  const mission=missionById(request.missionId);
  const utterancePL=robot
-  ? context.lessonNote
-   ? `Spróbuję użyć sprawdzonej zasady z notatki: ${mission.ruleText} Sprawdź mój tor.`
-   : 'Spróbuję zastosować zapisaną zasadę. Sprawdź mój pomysł na nowej trasie.'
+  ? 'To przygotowany lot demonstracyjny. Przewidź wynik tego wzoru, a silnik sprawdzi tor.'
   : request.phase==='teach_repair' && context.eligibleRuleIds.includes(mission.canonicalRuleId)
-   ? `Zapamiętam zasadę: ${mission.ruleText}`
-   : 'W demonstracji mogę powtórzyć zasadę. Najpierw sprawdź swój wzór i prognozy.';
+   ? `To przygotowany komentarz demonstracyjny. Sprawdzona zasada brzmi: ${mission.ruleText}`
+   : 'To przygotowany komentarz demonstracyjny. Najpierw sprawdź swój wzór i prognozy.';
  const learner:ModelPayload={utterancePL,followUpPL:null,explanationAssessment:'not_applicable',proposedExpression:robot?demoProposals[request.missionId]:null,suggestedRuleId:null,usedFactIds:[],action:robot?'propose_attempt':'explain_back'};
  if(!checkModel(learner,context)) throw new Error('Invalid demo fixture');
  return makeEnvelope(request,memory,learner,'demo');

@@ -20,7 +20,7 @@ function eventLabel(event:Event){
 function LessonText({explanation,paraphrase,source}:{explanation:string;paraphrase:string|null;source?:string}){
  return <dl className="lesson-text">
   <dt>Twoje wyjaśnienie</dt><dd>{explanation}</dd>
-  <dt>Tak zrozumiałem — Piko{source==='demo'?' (demo)':source==='live'?' (live)':''}</dt>
+  <dt>{source==='demo'?'Przygotowany komentarz Piko (demo)':source==='live'?'Tak zrozumiałem — Piko (live)':'Odpowiedź Piko'}</dt>
   <dd>{paraphrase??'Pominięto odpowiedź Piko. Zapis obejmuje Twoje słowa.'}</dd>
  </dl>;
 }
@@ -103,9 +103,11 @@ export function App(){
   <h3>4. Przeczytaj i zapisz notatkę z lekcji</h3>
   <strong>Tor i prognozy sprawdzone</strong><p>{m.ruleText}</p>
   <LessonText explanation={r.explanation} paraphrase={r.lessonReply?.text??null} source={r.lessonReply?.source}/>
-  {r.lessonReply
+  {r.lessonReply?.source==='live'
    ? <p className="muted">Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i wybierz ponownie „Powiedz Piko”.</p>
-   : <p className="muted">Możesz poprosić Piko o odpowiedź albo zapisać notatkę bez parafrazy.</p>}
+   : <p className="muted">{r.lessonReply?.source==='demo'
+     ? 'W demo zapisujesz własne słowa obok przygotowanego komentarza.'
+     : 'Możesz poprosić Piko o odpowiedź albo zapisać notatkę bez parafrazy.'}</p>}
   <p className="muted">Potwierdzasz treść notatki do kolejnego lotu. Silnik sprawdził wzór i prognozy. Wyjaśnienie i parafraza pozostają wypowiedziami z lekcji.</p>
   <button disabled={s.busy} onClick={()=>dispatch({type:'CONFIRM_RULE'})}>Zapisz tę zasadę dla Piko →</button>
  </div>}{!canRule&&<p className="muted">Sprawdź bezpieczny tor, obie prognozy i wpisz własne wyjaśnienie, aby przygotować notatkę.</p>}</>}
