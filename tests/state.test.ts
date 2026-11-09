@@ -1,6 +1,7 @@
 import {it,expect} from 'vitest';
-import {initialState,reducer,loadState,persistState,SAVE_KEY,type GameState} from '../apps/web/src/state';
+import {initialState,newRun,reducer,loadState,persistState,SAVE_KEY,type GameState} from '../apps/web/src/state';
 import {demoTurn,type LearnerRequest} from '@piko/contracts';
+import {rulesForAiTurn} from '../apps/web/src/review';
 function reduce(s:GameState,...actions:Parameters<typeof reducer>[1][]){return actions.reduce(reducer,s);}
 export function taughtM01(){let s=initialState();s=reduce(s,{type:'EDIT',field:'expression',value:'1'},{type:'CHECK'},{type:'NEXT'},{type:'EDIT',field:'expression',value:'2'},{type:'EDIT',field:'prediction0',value:'2'},{type:'EDIT',field:'prediction1',value:'2'},{type:'EDIT',field:'explanation',value:'Stała określa wysokość całego toru.'},{type:'CHECK'},{type:'CONFIRM_RULE'});return s;}
 function humanState(){const s=taughtM01();s.runs.M01.unavailable=true;return reducer(s,{type:'NEXT'});}
@@ -134,4 +135,20 @@ it('migrates v1 including first human attempt and a transfer blocked by old fail
  const migrated=loadState({...storage,getItem:()=>makeV1(blocked)});
  expect(migrated.runs.M01).toMatchObject({robotTurns:0,robotFailures:2});
  expect(startTurn(migrated).started.busy).toBe(true);
+});
+
+it('Piko in another mission receives only previously unlocked canonical rules',()=>{
+ let s=taughtM01();
+ const confirmed=s.runs.M01.rule;
+ expect(rulesForAiTurn(s,'robot_transfer')).toEqual([confirmed]);
+ s.runs.M02=newRun('M02');
+ s.missionId='M02';
+ expect(rulesForAiTurn(s,'teach')).toEqual([]);
+ s.missionId='M01';
+ s.runs.M01.unavailable=true;
+ s=reduce(s,{type:'NEXT'},{type:'EDIT',field:'expression',value:'0'},{type:'CHECK'});
+ s.missionId='M02';
+ const {lessonNote,...proof}=confirmed!;
+ expect(lessonNote).toBeDefined();
+ expect(rulesForAiTurn(s,'teach')).toEqual([proof]);
 });

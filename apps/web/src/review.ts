@@ -16,6 +16,17 @@ export function visibleJournalRules(state:GameState){
  return state.rules.filter(rule=>hasIndependentAttempt(state,rule.missionId));
 }
 
+export function rulesForAiTurn(state:GameState,role:'teach'|'robot_transfer'){
+ const prior=visibleJournalRules(state).map(({missionId,candidateExpression,numericEvidence})=>(
+  {missionId,candidateExpression,numericEvidence}
+ ));
+ const current=state.runs[state.missionId].rule;
+ if(role==='robot_transfer'&&current){
+  return [...prior.filter(rule=>rule.missionId!==state.missionId),current];
+ }
+ return prior;
+}
+
 export function markJournalReview(state:GameState){
  for(const rule of visibleJournalRules(state))state.runs[rule.missionId].afterReview=true;
 }

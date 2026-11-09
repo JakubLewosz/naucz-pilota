@@ -3,7 +3,7 @@ import {hints,missionById,missions} from '@piko/content';
 import {deriveRuleEvidence,parseExpression,type EngineResult,type Event} from '@piko/core';
 import type {LearnerRequest} from '@piko/contracts';
 import {Board} from './Board';
-import {canOpenPage,hasIndependentAttempt,visibleJournalRules} from './review';
+import {canOpenPage,hasIndependentAttempt,rulesForAiTurn,visibleJournalRules} from './review';
 import {clearConversation,getStatus,sendTurn,startSession} from './transport';
 import {backupSave,canAskRobot,canLeaveRobot,hasCompleted,loadState,numericEvidence,persistState,reducer,removeSave,roles,roleLabels,type GameState,type Run} from './state';
 const modeText={demo:'Demo — odpowiedzi scenariuszowe',live:'Live — prawdziwy model',unavailable:'AI niedostępne — brak odpowiedzi'};
@@ -50,10 +50,8 @@ export function App(){
    const numeric=numericEvidence(s),qualified=role==='teach'&&deriveRuleEvidence(m,r.drafts.teach,numeric);
    let candidateExpression:string|null=null;
    if(role==='teach')try{parseExpression(r.drafts.teach);candidateExpression=r.drafts.teach;}catch{/* The explanation can be sent before a parseable repair. */}
-   const evidence=s.rules.map(({missionId,candidateExpression,numericEvidence})=>
-    role==='robot_transfer'&&missionId===m.id&&r.rule?r.rule:{missionId,candidateExpression,numericEvidence}
-   );
-   const request:LearnerRequest={schemaVersion:'1.0.0',...session,turnId,missionId:m.id as LearnerRequest['missionId'],sceneRole:role,requestedMode:mode,phase:role==='robot_transfer'?'robot_propose':qualified?'teach_repair':'teach_explain',userMessage:role==='teach'?r.explanation:'',candidateExpression,attemptHistory:(r.attempts[role]??[]).slice(-6).map(a=>({attemptId:a.id,sceneId:a.sceneId,expression:a.expression})),learnedRuleIds:s.rules.map(e=>missionById(e.missionId).canonicalRuleId) as LearnerRequest['learnedRuleIds'],numericEvidence:qualified?numeric:[],ruleEvidence:evidence as LearnerRequest['ruleEvidence']};
+   const evidence=rulesForAiTurn(s,role);
+   const request:LearnerRequest={schemaVersion:'1.0.0',...session,turnId,missionId:m.id as LearnerRequest['missionId'],sceneRole:role,requestedMode:mode,phase:role==='robot_transfer'?'robot_propose':qualified?'teach_repair':'teach_explain',userMessage:role==='teach'?r.explanation:'',candidateExpression,attemptHistory:(r.attempts[role]??[]).slice(-6).map(a=>({attemptId:a.id,sceneId:a.sceneId,expression:a.expression})),learnedRuleIds:evidence.map(e=>missionById(e.missionId).canonicalRuleId) as LearnerRequest['learnedRuleIds'],numericEvidence:qualified?numeric:[],ruleEvidence:evidence as LearnerRequest['ruleEvidence']};
    const envelope=await sendTurn(request,controller.signal);
    dispatch({type:'AI_RESULT',turnId,revision,sceneId,envelope});
   }catch(e){if(!controller.signal.aborted)dispatch({type:'AI_ERROR',turnId,revision,message:e instanceof Error?e.message:'Brak odpowiedzi. Wzór i wyjaśnienie są zachowane.'});}
