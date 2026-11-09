@@ -178,3 +178,29 @@ it('clearing a live teach conversation removes exchanges and cached output, but 
  expect((await send({...second,turnId:crypto.randomUUID(),sessionRevision:3,ruleEvidence:[]})).status).toBe(200);
  expect(seen.at(-1)?.recentExchanges).toEqual([]);
 });
+
+it('transfer never inherits a lesson note from old evidence when its current proof or confirmation is missing',()=>{
+ const previous=confirmedEvidence('Notatka ze starego podejścia.');
+ const current=confirmedEvidence('Notatka do aktualnej próby.');
+ const {lessonNote,...proof}=current;
+ expect(buildContext(transferRequest(current),[previous]).context.lessonNote).toEqual(lessonNote);
+ for(const evidence of [proof,{...current,candidateExpression:'99'}]){
+  const result=buildContext(transferRequest(evidence),[previous]);
+  expect(result.context.lessonNote).toBeNull();
+  expect(result.context.learnedRules.map(rule=>rule.id)).toEqual(['RULE_LINE_INTERCEPT']);
+ }
+ expect(buildContext({...transferRequest(current),learnedRuleIds:[]}).context.lessonNote).toBeNull();
+ expect(buildContext(transferRequest({
+  ...current,lessonNote:{...lessonNote!,ruleId:'RULE_COMBINE'}
+ })).context.lessonNote).toBeNull();
+});
+it.each([
+ {confirmation:'confirmed_by_model'},
+ {source:'skipped'},
+ {version:2},
+ {pikoParaphrasePL:null}
+])('rejects an invalid lesson note before calling the provider: %j',patch=>{
+ const evidence=confirmedEvidence('Własny tekst gracza.');
+ const body=transferRequest({...evidence,lessonNote:{...evidence.lessonNote!,...patch} as LearnerRequest['ruleEvidence'][number]['lessonNote']});
+ expect(()=>buildContext(body)).toThrow('INVALID_REQUEST');
+});

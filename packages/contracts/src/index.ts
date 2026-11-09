@@ -22,19 +22,23 @@ export function buildContext(request:LearnerRequest,previousEvidence:LearnedEvid
  if(request.numericEvidence.some(e=>e.sceneId!==s.id)||new Set(request.numericEvidence.map(e=>e.checkpointId)).size!==request.numericEvidence.length) throw new ContractError('INVALID_REQUEST');
  const qualified=new Map<string,LearnedEvidence>(),rejected:string[]=[];
  const seen=new Set<string>();
- for(const evidence of [...previousEvidence,...request.ruleEvidence]) {
+ let submittedLesson:LessonNote|null=null;
+ for(const [index,evidence] of [...previousEvidence,...request.ruleEvidence].entries()) {
   if(seen.has(evidence.missionId) && request.ruleEvidence.filter(e=>e.missionId===evidence.missionId).length>1) throw new ContractError('INVALID_REQUEST');
   seen.add(evidence.missionId);
   const m=missionById(evidence.missionId);
   if(deriveRuleEvidence(m,evidence.candidateExpression,evidence.numericEvidence)){
    const {lessonNote,...proof}=evidence;
-   qualified.set(m.canonicalRuleId,lessonNote?.ruleId===m.canonicalRuleId?{...proof,lessonNote}:proof);
+   if(lessonNote?.ruleId===m.canonicalRuleId){
+    qualified.set(m.canonicalRuleId,{...proof,lessonNote});
+    if(index>=previousEvidence.length&&m.id===mission.id)submittedLesson=lessonNote;
+   }else qualified.set(m.canonicalRuleId,proof);
   }else rejected.push(m.id);
  }
  if(request.phase==='teach_repair'&&request.candidateExpression&&verifyNumericEvidence(s,request.candidateExpression,request.numericEvidence).qualified) qualified.set(mission.canonicalRuleId,{missionId:mission.id,candidateExpression:request.candidateExpression,numericEvidence:request.numericEvidence});
  const learned=request.learnedRuleIds.filter(id=>qualified.has(id));
  const lessonNote=request.phase==='robot_propose'&&learned.some(id=>id===mission.canonicalRuleId)
-  ? qualified.get(mission.canonicalRuleId)?.lessonNote??null : null;
+  ? submittedLesson : null;
  const facts:Fact[]=request.candidateExpression?buildSceneFacts(s,request.candidateExpression):[];
  if(request.numericEvidence.length&&request.candidateExpression) for (const check of verifyNumericEvidence(s,request.candidateExpression,request.numericEvidence).checks) facts.push({id:`F_NUMERIC_${check.checkpointId}_MATCH`,kind:'numeric',subject:request.candidateExpression,value:check.matched,textPL:`Prognoza ${check.checkpointId}: ${check.matched?'zgodna':'niezgodna'} z obliczeniem.`});
  for (const [index,a] of request.attemptHistory.entries()) for (const fact of buildSceneFacts(s,a.expression)) facts.push({...fact,id:`F_HISTORY_${index}_${fact.id}`});

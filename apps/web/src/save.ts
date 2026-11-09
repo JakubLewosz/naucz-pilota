@@ -2,6 +2,7 @@ import {missionById,missions} from '@piko/content';
 import {validateModel,validateRuleEvidence} from '@piko/contracts';
 import {deriveRuleEvidence} from '@piko/core';
 import {initialState,roles,type GameState,type Run} from './state';
+import {canOpenPage,markJournalReview} from './review';
 
 // Keep the storage key stable so version 1 saves can be migrated in place.
 export const SAVE_KEY='naucz-pilota.v1';
@@ -75,7 +76,7 @@ function run(v:unknown,missionId:string):v is Run{
  }))return false;
  const r=v as Run;
  return (!r.completed||Boolean(r.firstHuman))
-  &&(!r.firstHuman||r.firstHuman.index===1)
+  &&(!r.firstHuman||(r.firstHuman.index===1&&r.firstHuman.result.parseable))
   &&(!r.robotChecked||Boolean(r.attempts.robot_transfer?.length))
   &&roles.every(role=>(r.counts[role]??0)>=(r.attempts[role]?.length??0));
 }
@@ -129,7 +130,10 @@ export function loadState(storage?:SaveStorage):GameState{
   if((data.saveVersion!==1&&data.saveVersion!==2)||data.contentVersion!=='1.0.0')throw new Error('Nieznana wersja zapisu');
   if(data.saveVersion===1)data=migrateV1(data);
   if(!validState(data))throw new Error('Uszkodzony zapis');
-  return {...data,busy:false,activeTurnId:null,liveAvailable:false,viewRevision:data.viewRevision+1,recovery:null};
+  const state:GameState={...data,busy:false,activeTurnId:null,liveAvailable:false,viewRevision:data.viewRevision+1,recovery:null};
+  if(!canOpenPage(state,state.page))state.page='game';
+  if(state.page==='journal')markJournalReview(state);
+  return state;
  }catch(error){
   return {...initialState(),recovery:error instanceof Error&&error.message==='Nieznana wersja zapisu'?'Nieznana wersja zapisu':'Uszkodzony zapis'};
  }

@@ -50,6 +50,12 @@ test('E4 all six missions, 24 distinct scenes, M04 robot failure does not block 
  for(const m of data.missions){await practice(page,m);await teach(page,m);await transfer(page);await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.witness.expression);await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();if(m.order<6)await page.getByRole('button',{name:'Następna misja'}).click();}
  await expect(page.getByRole('heading',{name:'Dobra robota — ukończyłeś sześć misji'})).toBeVisible();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!));expect(Object.values(saved.runs).every((r:unknown)=>(r as {completed:boolean}).completed)).toBe(true);expect(saved.runs.M04.attempts.robot_transfer[0].result.ok).toBe(false);expect(apiCalls).toBe(0);
+ await openMission(page,data.missions[1].title);
+ await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();
+ await page.getByRole('button',{name:'Powtórz misję'}).click();
+ await openMission(page,data.missions[5].title);
+ await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();
+ await expect(page.getByText(data.missions[1].ruleText,{exact:true})).toHaveCount(0);
 });
 for(const size of [{width:1366,height:768},{width:1440,height:900},{width:390,height:844}])test(`E5 layout and accessibility ${size.width}x${size.height}`,async({page})=>{
  await page.setViewportSize(size);await page.goto('/');
@@ -168,4 +174,81 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  await expect(chat).not.toContainText('MODEL LIVE');
  await expect(page.getByLabel('Co Piko powinien zmienić i dlaczego?')).toHaveValue('Stała ustawia wysokość toru.');
  expect(resets).toBe(2);
+});
+
+async function openMission(page:Page,title:string){
+ await page.getByRole('button',{name:/^Misje/}).click();
+ const card=page.locator('article').filter({has:page.getByRole('heading',{name:title,exact:true})});
+ await card.getByRole('button',{name:/Otwórz misję|Zobacz misję/}).click();
+}
+const savedRun=(page:Page,missionId:string)=>page.evaluate(
+ id=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!).runs[id],missionId
+);
+
+test('global journal protects another mission before its first attempt, including reload, migration and replay',async({page})=>{
+ const [m1,m2]=data.missions;
+ const openJournal=()=>page.getByRole('button',{name:'Dziennik zasad'}).click();
+ const rule1=page.getByText(m1.ruleText,{exact:true}),rule2=page.getByText(m2.ruleText,{exact:true});
+ const checkHuman=async(expression:string)=>{
+  await page.getByLabel('Wzór funkcji',{exact:true}).fill(expression);
+  await page.getByRole('button',{name:'Sprawdź mój lot'}).click();
+ };
+ await page.goto('/');
+ await page.getByRole('button',{name:'Zacznij'}).click();
+ await practice(page,m1);await teach(page,m1);await transfer(page);
+ await checkHuman(m1.scenes.human_check.witness.expression);
+ await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();
+ await page.getByRole('button',{name:'Następna misja'}).click();
+ await practice(page,m2);await teach(page,m2);await transfer(page);await blind(page);
+
+ await openMission(page,m1.title);
+ await openJournal();
+ await expect(rule1).toBeVisible();
+ await expect(rule2).toHaveCount(0);
+ await page.reload();
+ await expect(rule1).toBeVisible();
+ await expect(rule2).toHaveCount(0);
+ expect((await savedRun(page,'M02')).afterReview).toBe(false);
+
+ // Legacy saves can contain a journal or summary route while this mission is still blind.
+ for(const target of ['journal','summary']){
+  await openMission(page,m2.title);
+  await page.evaluate(route=>{
+   const key='naucz-pilota.v1',save=JSON.parse(localStorage.getItem(key)!);
+   save.saveVersion=1;
+   save.page=route;
+   const removed=['lessonNote','robotFailures','liveChat','lessonReply','speaker'];
+   localStorage.setItem(key,JSON.stringify(save,(field,value)=>removed.includes(field)?undefined:value));
+  },target);
+  await page.reload();
+  await expect(page.getByRole('button',{name:'Sprawdź mój lot'})).toBeEnabled();
+  await blind(page);
+  await expect(rule2).toHaveCount(0);
+ }
+ await checkHuman('sin(x)');
+ await expect(page.getByText(/Ta próba nie została zapisana/)).toBeVisible();
+ await blind(page);
+ await checkHuman('0');
+ await expect(page.getByTestId('engine-result')).toBeVisible();
+ const first=(await savedRun(page,'M02')).firstHuman;
+ expect(first).toMatchObject({expression:'0',index:1,afterReview:false});
+
+ await openMission(page,m1.title);
+ await openJournal();
+ await expect(rule1).toBeVisible();
+ await expect(rule2).toBeVisible();
+ expect((await savedRun(page,'M02')).afterReview).toBe(true);
+ await openMission(page,m2.title);
+ await checkHuman(m2.scenes.human_check.witness.expression);
+ await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();
+ await page.reload();
+ expect((await savedRun(page,'M02')).firstHuman).toEqual(first);
+ await page.getByRole('button',{name:'Powtórz misję'}).click();
+ await openMission(page,m1.title);
+ await openJournal();
+ await expect(rule1).toBeVisible();
+ await expect(rule2).toHaveCount(0);
+ const replay=await page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!));
+ expect(replay.archive.M02[0].firstHuman).toEqual(first);
+ expect(replay.runs.M02.firstHuman).toBeNull();
 });

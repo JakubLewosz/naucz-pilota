@@ -1,6 +1,7 @@
 import {missionById} from '@piko/content';
 import {deriveRuleEvidence,evaluateScene,type EngineResult,type NumericEvidence,type Role} from '@piko/core';
 import type {Envelope,LearnedEvidence} from '@piko/contracts';
+import {canOpenPage,markJournalReview} from './review';
 export {SAVE_KEY,loadState,persistState,backupSave,removeSave} from './save';
 export const roles:Role[]=['practice','teach','robot_transfer','human_check'];
 export const roleLabels:Record<Role,string>={practice:'Sprawdź tor',teach:'Naucz Piko',robot_transfer:'Lot Piko',human_check:'Twój samodzielny lot'};
@@ -45,8 +46,8 @@ export function reducer(state:GameState,action:Action):GameState {
  };
  switch(action.type){
   case 'OPEN':
-   if(action.page==='journal'&&r.role==='human_check'&&!r.firstHuman)return state;
-   if(action.page==='journal'&&r.role==='human_check')r.afterReview=true;
+   if(!canOpenPage(s,action.page))return state;
+   if(action.page==='journal')markJournalReview(s);
    invalidate();s.page=action.page;break;
   case 'MISSION':{
    const target=missionById(action.id);
