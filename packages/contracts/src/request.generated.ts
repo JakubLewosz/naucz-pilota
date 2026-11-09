@@ -47,6 +47,14 @@ export type LearnerRequest = {
   ruleEvidence: {
     missionId: "M01" | "M02" | "M03" | "M04" | "M05" | "M06";
     candidateExpression: string;
+    lessonNote?: {
+      version: 1;
+      ruleId: string;
+      explanationPL: string;
+      pikoParaphrasePL: string | null;
+      source: "live" | "demo" | "skipped";
+      confirmation: "saved_by_player";
+    };
     /**
      * @minItems 2
      * @maxItems 2

@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "checkedAtUTC": "2026-11-03T11:35:51.576197+00:00",
+  "checkedAtUTC": "2026-11-09T19:26:52.969358+00:00",
   "scope": "Independent fixture/content audit; not application tests or live AI.",
   "method": "Separate AST coefficient expansion and root-partition inequalities; no import of reference validator.",
   "scenes": 24,

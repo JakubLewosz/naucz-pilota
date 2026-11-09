@@ -165,6 +165,22 @@
             "minLength": 1,
             "maxLength": 120
           },
+          "lessonNote": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "version": { "const": 1 },
+              "ruleId": { "type": "string", "pattern": "^RULE_[A-Z_]+$", "maxLength": 40 },
+              "explanationPL": { "type": "string", "minLength": 1, "maxLength": 600 },
+              "pikoParaphrasePL": { "type": ["string", "null"], "minLength": 1, "maxLength": 450 },
+              "source": { "enum": ["live", "demo", "skipped"] },
+              "confirmation": { "const": "saved_by_player" }
+            },
+            "required": ["version", "ruleId", "explanationPL", "pikoParaphrasePL", "source", "confirmation"],
+            "if": { "properties": { "source": { "const": "skipped" } } },
+            "then": { "properties": { "pikoParaphrasePL": { "type": "null" } } },
+            "else": { "properties": { "pikoParaphrasePL": { "type": "string" } } }
+          },
           "numericEvidence": {
             "type": "array",
             "minItems": 2,

@@ -2,9 +2,8 @@ import {DatabaseSync} from 'node:sqlite';
 import {mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {createHash,randomUUID,randomBytes} from 'node:crypto';
-import type {RuleEvidence} from '@piko/core';
-import type {Envelope,Exchange} from '@piko/contracts';
-export type StoredSession={id:string;revision:number;tokenHash:string;expires:number;evidence:RuleEvidence[];exchanges:Exchange[];sceneId:string};
+import type {Envelope,Exchange,LearnedEvidence} from '@piko/contracts';
+export type StoredSession={id:string;revision:number;tokenHash:string;expires:number;evidence:LearnedEvidence[];exchanges:Exchange[];sceneId:string};
 const hash=(v:string)=>createHash('sha256').update(v).digest('hex');
 export class Store {
  db:DatabaseSync;
@@ -25,6 +24,23 @@ export class Store {
   return row?{...JSON.parse(row.data as string),revision:row.revision as number}:null;
  }
  updateSession(s:StoredSession){this.db.prepare('UPDATE sessions SET data=? WHERE id=?').run(JSON.stringify(s),s.id);}
+ clearConversation(session:StoredSession,sceneId:string){
+  this.db.exec('BEGIN IMMEDIATE');
+  try{
+   if(session.sceneId===sceneId){
+    const cleared={...session,revision:session.revision+1,exchanges:[],sceneId:''};
+    this.db.prepare('UPDATE sessions SET revision=?,data=? WHERE id=?')
+     .run(cleared.revision,JSON.stringify(cleared),session.id);
+   }
+   // Keep request counts and turn IDs so a reset cannot replay or refund a paid turn.
+   this.db.prepare("UPDATE turns SET response=NULL,status='cleared' WHERE session_id=? AND json_extract(response,'$.envelope.sceneId')=?")
+    .run(session.id,sceneId);
+   this.db.exec('COMMIT');
+  }catch(error){
+   this.db.exec('ROLLBACK');
+   throw error;
+  }
+ }
  getTurn(sid:string,tid:string){return this.db.prepare('SELECT * FROM turns WHERE session_id=? AND turn_id=?').get(sid,tid);}
  beginTurn(sid:string,tid:string,revision:number,body:string):boolean{
   this.db.exec('BEGIN IMMEDIATE');try{

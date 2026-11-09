@@ -24,6 +24,7 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
  });
  app.use(express.json({limit:config.bodyBytes,strict:true}));app.use(cookieParser());
  const transportToken=(req:express.Request)=>req.get('authorization')?.replace(/^Bearer /,'')??req.cookies.piko_session;
+ const turnInProgress=(id:string)=>[...pending.keys()].some(key=>key.startsWith(id+'/'));
  app.get('/api/health',(_req,res)=>res.json({ok:true,mode:config.mode,available:config.mode==='live'&&Boolean(options.provider&&config.model),provider:config.mode==='live'?'openai':null,model:config.mode==='live'?config.model:null}));
  app.post('/api/session',(req,res)=>{
   store.clean();const existing=store.authenticate(transportToken(req));
@@ -31,6 +32,19 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
   const {session,token}=store.createSession();
   if(req.get('x-piko-desktop')==='1'&&req.get('origin')==='app://piko')res.json({sessionId:session.id,sessionRevision:session.revision,token});
   else{res.cookie('piko_session',token,{httpOnly:true,sameSite:'strict',secure:config.production,maxAge:86400000,path:'/api'});res.json({sessionId:session.id,sessionRevision:session.revision});}
+ });
+ app.post('/api/conversation/reset',(req,res)=>{
+  const sceneId=req.body?.sceneId;
+  if(typeof sceneId!=='string'||!/^M0[1-6]-teach$/.test(sceneId)||Object.keys(req.body).length!==1){
+   res.status(400).json(minimal('INVALID_REQUEST'));return;
+  }
+  const session=store.authenticate(transportToken(req));
+  if(session&&turnInProgress(session.id)){
+   res.status(409).json({error:{code:'TURN_IN_PROGRESS',messagePL:'Piko kończy poprzednią turę. Za chwilę możesz wyczyścić rozmowę.',retryable:true}});
+   return;
+  }
+  if(session)store.clearConversation(session,sceneId);
+  res.json({ok:true});
  });
  app.post('/api/learner-turn',async(req,res)=>{
   const session=store.authenticate(transportToken(req));
@@ -40,11 +54,12 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
   const request=req.body as LearnerRequest,key=`${session.id}/${request.turnId}`,body=JSON.stringify(request),cached=store.getTurn(session.id,request.turnId);
   if(cached){
    if(cached.body_hash!==store.bodyHash(body)){res.status(409).json(minimal('TURN_ID_CONFLICT'));return;}
+   if(cached.status==='cleared'){res.status(409).json(minimal('CONVERSATION_CLEARED'));return;}
    if(cached.response){const saved=JSON.parse(cached.response as string) as {status:number;envelope:Envelope};res.status(saved.status).json(saved.envelope);return;}
    const promise=pending.get(key);if(promise){const result=await promise;res.status(result.status).json(result.envelope);return;}
    const {memory}=buildContext(request,session.evidence);const envelope=makeEnvelope(request,memory,null,'unavailable');envelope.error={...minimal('TURN_INTERRUPTED').error};res.status(503).json(envelope);return;
   }
-  if([...pending.keys()].some(k=>k.startsWith(session.id+'/'))){res.status(409).json(minimal('TURN_IN_PROGRESS'));return;}
+  if(turnInProgress(session.id)){res.status(409).json(minimal('TURN_IN_PROGRESS'));return;}
   if(request.sessionRevision!==session.revision){res.status(409).json(minimal('STALE_SESSION_REVISION'));return;}
   if(store.recentCount(session.id)>=config.sessionLimit){res.status(429).json(minimal('SESSION_RATE_LIMIT'));return;}
   let built:ReturnType<typeof buildContext>;

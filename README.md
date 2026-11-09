@@ -2,7 +2,7 @@
 
 Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkcje stopnia 0–2, robot Piko i osobna samodzielna próba gracza. Matematyka jest liczona analitycznie przez współdzielony silnik TypeScript. Demo działa bez klucza, serwera i internetu po załadowaniu zasobów aplikacji.
 
-**Stan:** pełna kampania demo i testy lokalne działają. Adapter prawdziwego AI przeszedł 22 tury live oraz rzeczywisty przebieg M04 w przeglądarce z modelem gpt-5.4-mini. Przegląd odpowiedzi wykazał uwagi do tonu i dwóch ocen tekstowych; opinia AI nie rozstrzyga zaliczeń. ZIP Windows jest cross-buildem z macOS; uruchomienie na Windows jest NOT RUN. Szczegóły i rzeczywiste wyniki: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+**Stan po audycie z 9 listopada 2026.** Gra odzyskuje przejście po błędach AI, zachowuje notatkę z lekcji i przekazuje ją Piko przed lotem. Historyczny odbiór live dotyczy promptu 1.0.2. Bieżący prompt 1.1.0 sprawdzono z atrapą. Wyniki i zakres odbioru są w [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## Szybki start
 
@@ -55,9 +55,9 @@ Aby przygotować live dla odbiorcy, skonfiguruj zaufany origin HTTPS w `apps/des
 
 ## Rozgrywka i zapis
 
-Każda misja: practice → teach → robot_transfer → human_check. W teach popraw wzór, przewidź G1/G2, napisz wyjaśnienie i potwierdź kanoniczną kartę zasady. Opinia AI nie steruje zaliczeniem. W samodzielnym zadaniu przed pierwszym lotem nie ma trajektorii, obliczeń, dziennika ani AI. Pierwszy parsowalny wynik jest zachowany również po poprawkach i odświeżeniu. Powtórzenie ukończonej misji zachowuje poprzednie podejście.
+Każda misja: practice → teach → robot_transfer → human_check. W teach popraw wzór, przewidź G1/G2, napisz wyjaśnienie, przeczytaj parafrazę Piko i potwierdź treść notatki z lekcji. Możesz zapisać lekcję bez odpowiedzi Piko. Transfer używa notatki wraz ze sprawdzoną zasadą. Opinia AI nie steruje zaliczeniem. W samodzielnym zadaniu przed pierwszym lotem nie ma trajektorii, obliczeń, dziennika ani AI. Pierwszy parsowalny wynik jest zachowany również po poprawkach i odświeżeniu. Powtórzenie ukończonej misji zachowuje poprzednie podejście.
 
-Postęp jest wersjonowany w localStorage. Nieznany/uszkodzony zapis nie jest automatycznie nadpisywany. Ustawienia pozwalają ograniczyć ruch, pokazać obrys Piko, powiększyć tekst i usunąć postęp po potwierdzeniu. Instrukcja: [docs/12-instrukcja-uzytkownika.md](docs/12-instrukcja-uzytkownika.md).
+Postęp jest wersjonowany w localStorage. Zapis wersji 1 migruje do wersji 2 z zachowaniem pierwszej próby i archiwum. Uszkodzony zapis wymaga zachowania kopii przed rozpoczęciem nowego. W live opcja „Wyczyść rozmowę” czyści także kontekst tej sceny w aktywnej sesji SQLite. Ustawienia pozwalają ograniczyć ruch, pokazać obrys Piko, powiększyć tekst i usunąć postęp po potwierdzeniu. Instrukcja: [docs/12-instrukcja-uzytkownika.md](docs/12-instrukcja-uzytkownika.md).
 
 ## Dane, testy i dokumenty
 
@@ -89,7 +89,7 @@ Kontener został lokalnie zbudowany i uruchomiony; testowane są health, brak .e
 Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Ręczny workflow GitHub Actions dla Windows i Linux jest przygotowany w .github/workflows/verify.yml; można go uruchomić w zakładce Actions repozytorium. Dotychczasowy status wykonania: NOT RUN.
 
 
-## Wynik rzeczywistego odbioru live
+## Historyczny odbiór live promptu 1.0.2
 
 3 listopada 2026: prompt 1.0.2, model gpt-5.4-mini-2026-03-17. Pełne 22 tury przeszły kontrolę schematu, pamięci i zgodności z niezależnym silnikiem, po jednym żądaniu dostawcy na turę. W sześciu transferach robot uzyskał 2 poprawne tory i 4 odrzucone przez silnik; błędne propozycje zachowano bez podstawiania rozwiązań. M04 przeszła też rzeczywisty test UI live z zachowaniem błędnej pierwszej próby po poprawce i odświeżeniu. Nagranie live ma 45,28 s.
 

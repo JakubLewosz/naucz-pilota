@@ -35,6 +35,11 @@ app.whenReady().then(()=>{
  const validateRequest=app.isPackaged?require('./relay-validator.cjs').validateRequest:require('../../dist/desktop/relay-validator.cjs').validateRequest;
  ipcMain.handle('piko:status',event=>{assertSender(event);return base?relay('/api/health').catch(()=>({mode:'unavailable',available:false})):{mode:'demo',available:false};});
  ipcMain.handle('piko:session',event=>{assertSender(event);return relay('/api/session',{});});
+ ipcMain.handle('piko:clear-chat',(event,sceneId)=>{
+  assertSender(event);
+  if(typeof sceneId!=='string'||!/^M0[1-6]-teach$/.test(sceneId))throw new Error('Nieprawidłowa scena rozmowy.');
+  return token?relay('/api/conversation/reset',{sceneId}):{ok:true};
+ });
  ipcMain.handle('piko:turn',(event,request)=>{assertSender(event);if(!validateRequest(request)||request.requestedMode!=='live')throw new Error('Nieprawidłowe żądanie.');return relay('/api/learner-turn',request);});
  windowRef=new BrowserWindow({width:1440,height:900,minWidth:390,minHeight:600,title:'Naucz Pilota',backgroundColor:'#f4f6fb',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
  windowRef.webContents.setWindowOpenHandler(()=>({action:'deny'}));

@@ -1,5 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import {demoTurn,makeEnvelope,buildContext,type LearnerRequest} from '@piko/contracts';
 import data from '../../content/missions.v1.json' with {type:'json'};
 async function practice(page:Page,mission:typeof data.missions[number]){
  await page.getByLabel('Wzór funkcji',{exact:true}).fill(mission.scenes.practice.witness.expression);
@@ -83,4 +84,88 @@ test('keyboard path, offline demo and 200% text keep primary actions available',
  for(const name of ['Sprawdź lot Piko','Teraz mój samodzielny lot']){await page.getByRole('button',{name}).focus();await page.keyboard.press('Enter');}
  await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill('-1');await page.keyboard.press('Enter');
  await expect(page.getByText(/Misja ukończona/)).toBeVisible();
+});
+
+async function selectMode(page:Page,mode:'live'|'demo'){
+ await page.getByRole('button',{name:'Ustawienia',exact:true}).click();
+ await page.getByRole('button',{name:`Wybierz ${mode}`,exact:true}).click();
+ await page.getByRole('button',{name:'Wróć do gry'}).click();
+}
+async function stubSession(page:Page){
+ await page.route('**/api/session',route=>route.fulfill({json:{sessionId:crypto.randomUUID(),sessionRevision:0}}));
+}
+function unavailable(request:LearnerRequest){
+ return {...makeEnvelope(request,buildContext(request).memory,null,'unavailable'),
+  error:{code:'AI_TIMEOUT',messagePL:'Przekroczono czas odpowiedzi.',retryable:true}};
+}
+for(const path of ['demo','skip'] as const)test(`two failed live turns, reload, then ${path}`,async({page})=>{
+ const mission=data.missions[0];
+ await page.goto('/');
+ await page.getByRole('button',{name:'Zacznij'}).click();
+ await practice(page,mission);
+ await teach(page,mission);
+ await selectMode(page,'live');
+ await stubSession(page);
+ const requests:LearnerRequest[]=[];
+ await page.route('**/api/learner-turn',route=>{
+  const body=route.request().postDataJSON() as LearnerRequest;
+  requests.push(body);
+  return path==='demo'?route.abort('failed'):route.fulfill({status:504,json:unavailable(body)});
+ });
+ await page.getByRole('button',{name:'Piko, spróbuj sam'}).click();
+ await expect(page.getByTestId('ai-mode')).toContainText('AI niedostępne');
+ await page.getByRole('button',{name:'Spróbuj ponownie'}).click();
+ await expect(page.getByRole('button',{name:'Spróbuj ponownie'})).toHaveCount(0);
+ await page.reload();
+ await page.getByText('Notatka z lekcji Piko',{exact:true}).click();
+ await expect(page.getByText('Twoje wyjaśnienie',{exact:true})).toBeVisible();
+ expect(requests).toHaveLength(2);
+ expect(requests[1].ruleEvidence[0].lessonNote).toMatchObject({explanationPL:mission.ruleText,source:'demo'});
+ if(path==='demo'){
+  await page.getByRole('button',{name:'Wybierz tryb demonstracyjny'}).click();
+  await expect(page.getByTestId('ai-mode')).toContainText('Demo');
+  await transfer(page);
+ }else await page.getByRole('button',{name:'Pomiń lot Piko'}).click();
+ await blind(page);
+ await expect(page.getByRole('button',{name:'Sprawdź mój lot'})).toBeEnabled();
+ expect(requests).toHaveLength(2);
+});
+test('live retry restores the badge and a later demo chat reset reaches the live session',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('button',{name:'Zacznij'}).click();
+ await practice(page,data.missions[0]);
+ await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała ustawia wysokość toru.');
+ await page.getByRole('button',{name:'Powiedz Piko'}).click();
+ const chat=page.getByLabel('Komentarz Piko');
+ await expect(chat).toContainText('DEMONSTRACJA');
+ await expect(chat).toContainText('Stała ustawia wysokość toru.');
+ await selectMode(page,'live');
+ await stubSession(page);
+ let calls=0;
+ await page.route('**/api/learner-turn',route=>{
+  const body=route.request().postDataJSON() as LearnerRequest;
+  if(++calls===1)return route.fulfill({status:504,json:unavailable(body)});
+  return route.fulfill({json:{...demoTurn(body),mode:'live'}});
+ });
+ await page.getByRole('button',{name:'Powiedz Piko'}).click();
+ await expect(page.getByTestId('ai-mode')).toContainText('AI niedostępne');
+ await page.getByRole('button',{name:'Spróbuj ponownie'}).click();
+ await expect(page.getByTestId('ai-mode')).toContainText('Live');
+ await expect(page.getByText('Brak odpowiedzi modelu. Twoje wpisy są zachowane.')).toHaveCount(0);
+ await expect(chat).toContainText('DEMONSTRACJA');
+ await expect(chat).toContainText('MODEL LIVE');
+ await selectMode(page,'demo');
+ let resets=0;
+ await page.route('**/api/conversation/reset',route=>{
+  expect(route.request().postDataJSON()).toEqual({sceneId:'M01-teach'});
+  if(++resets===1)return route.fulfill({status:409,json:{error:{messagePL:'Piko kończy poprzednią turę.'}}});
+  return route.fulfill({json:{ok:true}});
+ });
+ await page.getByRole('button',{name:'Wyczyść rozmowę'}).click();
+ await expect(page.getByText('Piko kończy poprzednią turę.')).toBeVisible();
+ await expect(chat).toContainText('MODEL LIVE');
+ await page.getByRole('button',{name:'Wyczyść rozmowę'}).click();
+ await expect(chat).not.toContainText('MODEL LIVE');
+ await expect(page.getByLabel('Co Piko powinien zmienić i dlaczego?')).toHaveValue('Stała ustawia wysokość toru.');
+ expect(resets).toBe(2);
 });

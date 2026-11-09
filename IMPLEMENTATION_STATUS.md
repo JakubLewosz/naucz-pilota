@@ -1,9 +1,26 @@
 # Stan implementacji — Naucz Pilota
-Aktualizacja: 2026-11-03. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
+Aktualizacja: 2026-11-09. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Wykonano wszystkie części E0–E6 dostępne lokalnie, w tym rzeczywiste wywołania AI po wymianie klucza: 22 tury końcowego zestawu oraz 2 tury testu M04 w przeglądarce. Odbiór techniczny live przeszedł; jakość dialogu ma opisane uwagi i wymaga akceptacji człowieka. Windows, publiczny HTTPS, pilotaż i formalności pozostają otwarte. Repozytorium było puste; wskazany ZIP rozpakowano do katalogu głównego, zachowując specyfikacje, dane i walidator autora. Nie publikowano ani nie wysyłano zgłoszenia.
 
-## Etapy
+## Poprawki po audycie fef5e22 (9 listopada 2026)
+
+- **Odzyskiwanie AI.** Błędy transportu i koperty unavailable nie zużywają dwóch miejsc na propozycje. Dwie nieudane tury live na lot Piko ograniczają ponowienia także po odświeżeniu. Gracz może jawnie wybrać demo lub pominąć lot. Udana odpowiedź przywraca plakietkę live. Poprzednie wypowiedzi zachowują oznaczenie źródła.
+- **Rozmowa i zapis.** Przycisk czyszczenia w web i Electron resetuje kontekst tej sceny w aktywnej sesji SQLite oraz usuwa tekst z jej kopert. Dowody, liczniki i zapisane wyniki pozostają. Zapis wersji 2 waliduje zagnieżdżone pola i migruje wersję 1. Przy błędnym odczycie lub zapisie aplikacja pokazuje odzyskiwanie i chroni oryginał.
+- **Lekcja Piko.** Potwierdzona notatka zawiera słowa gracza i opcjonalną parafrazę. Bieżący transfer otrzymuje notatkę obok zweryfikowanej reguły. Oba cytaty są danymi użytkownika. Ocena tekstu nie wpływa na sprawdzenie wzoru i prognoz. Porównanie kontekstu z notatką i bez niej oraz test roli wiadomości przeszły z atrapą.
+- **Interfejs.** Widoczne etapy naprawy, prognoz, wyjaśnienia i zapisu lekcji, obie strony rozmowy, współczynniki a/b/c, polskie nazwy zdarzeń. Utrzymano brak podpowiedzi przed pierwszą samodzielną próbą.
+
+| Sprawdzenie | Wynik dla poprawek |
+|---|---|
+| Typecheck, lint, Vitest | PASS, 174 testy w 7 plikach. |
+| Playwright | PASS, 10 testów. Obie ścieżki po dwóch awariach i odświeżeniu, odzyskany live, czyszczenie w demo po użyciu live. Pierwsze uruchomienie regresji ujawniło problem z importem JSON w runnerze, drugie niejednoznaczny selektor nagłówka. Pełne powtórzenie po poprawkach przeszło. |
+| Walidator i niezależny audyt treści | PASS, 24 rozwiązania, 37 błędów, 42 kontrole, 18 wskazówek. |
+| Build, Docker, Electron macOS | PASS. Kontener zachowuje sesję po restarcie z wolumenem. Electron przeszedł M01 i ponowny start. |
+| Cross-build Windows i kontrola wydania | PASS. ZIP x64, PE i ASAR zweryfikowane lokalnie. |
+| Płatny test promptu 1.1.0 | NOT RUN, 0 wywołań. Poniższy raport 22 tur i dwa filmy odnoszą się do wersji sprzed audytu. |
+| HTTPS z innego urządzenia, pilotaż | NOT RUN. Endpoint w distribution.json pozostaje pusty. |
+
+## Etapy pierwotnego wdrożenia (3 listopada 2026)
 | Etap | Stan i dowód |
 |---|---|
 | E0 | WYKONANY. npm workspaces, strict TypeScript, React/Vite, Express, wspólne core/content/contracts, lockfile. `npm ci` odtworzone od zera. `npm run dev` i produkcyjny `npm start` działają. |

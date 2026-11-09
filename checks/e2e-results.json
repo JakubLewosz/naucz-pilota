@@ -90,7 +90,7 @@
     "webServer": {
       "command": "npm run dev",
       "url": "http://127.0.0.1:5173",
-      "reuseExistingServer": true,
+      "reuseExistingServer": false,
       "timeout": 30000
     }
   },
@@ -117,12 +117,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1877,
+                  "duration": 1588,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:07.444Z",
+                  "startTime": "2026-11-09T19:29:02.564Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -132,7 +132,7 @@
           ],
           "id": "ba824951ebd2097fff00-7e80efb3970580335371",
           "file": "campaign.spec.ts",
-          "line": 37,
+          "line": 38,
           "column": 1
         },
         {
@@ -151,12 +151,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4333,
+                  "duration": 3422,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:09.609Z",
+                  "startTime": "2026-11-09T19:29:04.424Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -166,7 +166,7 @@
           ],
           "id": "ba824951ebd2097fff00-8aa2c601656b784dcb8d",
           "file": "campaign.spec.ts",
-          "line": 46,
+          "line": 47,
           "column": 1
         },
         {
@@ -185,12 +185,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1407,
+                  "duration": 1033,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:13.950Z",
+                  "startTime": "2026-11-09T19:29:07.852Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -200,7 +200,7 @@
           ],
           "id": "ba824951ebd2097fff00-5137c2b426eb4dcf53fe",
           "file": "campaign.spec.ts",
-          "line": 53,
+          "line": 54,
           "column": 92
         },
         {
@@ -219,12 +219,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1262,
+                  "duration": 1022,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:15.368Z",
+                  "startTime": "2026-11-09T19:29:08.890Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -234,7 +234,7 @@
           ],
           "id": "ba824951ebd2097fff00-0865622498f304667074",
           "file": "campaign.spec.ts",
-          "line": 53,
+          "line": 54,
           "column": 92
         },
         {
@@ -253,12 +253,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1226,
+                  "duration": 973,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:16.639Z",
+                  "startTime": "2026-11-09T19:29:09.917Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -268,7 +268,7 @@
           ],
           "id": "ba824951ebd2097fff00-882e705e73dcb64c3cbc",
           "file": "campaign.spec.ts",
-          "line": 53,
+          "line": 54,
           "column": 92
         },
         {
@@ -287,12 +287,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 826,
+                  "duration": 718,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:17.872Z",
+                  "startTime": "2026-11-09T19:29:10.895Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -302,7 +302,7 @@
           ],
           "id": "ba824951ebd2097fff00-3e5f524c0a3df7d13313",
           "file": "campaign.spec.ts",
-          "line": 62,
+          "line": 63,
           "column": 1
         },
         {
@@ -321,12 +321,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 870,
+                  "duration": 640,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T12:45:18.705Z",
+                  "startTime": "2026-11-09T19:29:11.618Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -336,7 +336,109 @@
           ],
           "id": "ba824951ebd2097fff00-6b9cf5119e836809aee6",
           "file": "campaign.spec.ts",
-          "line": 70,
+          "line": 71,
+          "column": 1
+        },
+        {
+          "title": "two failed live turns, reload, then demo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1316,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-09T19:29:12.264Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ba824951ebd2097fff00-f4a6fd062192d8b10685",
+          "file": "campaign.spec.ts",
+          "line": 101,
+          "column": 44
+        },
+        {
+          "title": "two failed live turns, reload, then skip",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1154,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-09T19:29:13.585Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ba824951ebd2097fff00-2648cfe1a4140c22a231",
+          "file": "campaign.spec.ts",
+          "line": 101,
+          "column": 44
+        },
+        {
+          "title": "live retry restores the badge and a later demo chat reset reaches the live session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 995,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-09T19:29:14.744Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ba824951ebd2097fff00-d882aef2b484b378da9e",
+          "file": "campaign.spec.ts",
+          "line": 133,
           "column": 1
         }
       ]
@@ -344,9 +446,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-03T12:45:06.886Z",
-    "duration": 12770.568,
-    "expected": 7,
+    "startTime": "2026-11-09T19:29:00.135Z",
+    "duration": 15715.682,
+    "expected": 10,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

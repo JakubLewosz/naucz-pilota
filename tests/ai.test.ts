@@ -119,3 +119,62 @@ it('response schema, fact membership and phase are enforced independently',()=>{
  expect(checkModel({...fixtures.teach_ack as object,usedFactIds:['invented']},context)).toBe(false);
  expect(checkModel({...fixtures.teach_ack as object,score:100},context)).toBe(false);
 });
+
+const repairRequest=semantic.find(c=>c.id==='SEM01')!.request as LearnerRequest;
+function confirmedEvidence(explanationPL:string):LearnerRequest['ruleEvidence'][number]{
+ return {
+  missionId:'M01',candidateExpression:'2',numericEvidence:[
+   {sceneId:'M01-teach',checkpointId:'G1',submittedY:2},
+   {sceneId:'M01-teach',checkpointId:'G2',submittedY:2}
+  ],
+  lessonNote:{version:1,ruleId:'RULE_LINE_INTERCEPT',explanationPL,pikoParaphrasePL:'Spróbuję użyć wyjaśnienia.',source:'live',confirmation:'saved_by_player'}
+ };
+}
+function transferRequest(evidence:LearnerRequest['ruleEvidence'][number]):LearnerRequest{
+ return {...repairRequest,sceneRole:'robot_transfer',phase:'robot_propose',userMessage:'',candidateExpression:null,
+  attemptHistory:[],numericEvidence:[],learnedRuleIds:['RULE_LINE_INTERCEPT'],ruleEvidence:[evidence]};
+}
+it.each(['Stała przesuwa cały poziomy tor.','Zmieniam stałą.','Stała zmienia nachylenie.'])('lesson preserves wording independently of verified math: %s',explanation=>{
+ const evidence=confirmedEvidence(explanation);
+ const {lessonNote,...proof}=evidence;
+ const without=buildContext(transferRequest(proof)).context;
+ const withNote=buildContext(transferRequest(evidence)).context;
+ expect(without.lessonNote).toBeNull();
+ expect(withNote.lessonNote).toEqual(lessonNote);
+ expect(withNote.learnedRules).toEqual(without.learnedRules);
+ expect(withNote.learnedRules[0].textPL).not.toBe('Stała zmienia nachylenie.');
+ expect(withNote.facts).toEqual(without.facts);
+ expect(withNote.scene.id).toBe('M01-robot_transfer');
+ expect(JSON.stringify(withNote)).not.toMatch(/human_check|witness|knownFailures/);
+ const invalid={...evidence,candidateExpression:'99'};
+ expect(buildContext(transferRequest(invalid)).context).toMatchObject({lessonNote:null,learnedRules:[]});
+});
+it('clearing a live teach conversation removes exchanges and cached output, but keeps evidence and the request count',async()=>{
+ const store=new Store(':memory:');stores.push(store);
+ const seen:Context[]=[];
+ const provider:Provider=async context=>{seen.push(context);return result(fixtures.teach_ack);};
+ const app=createApp({store,provider,config:{mode:'live',model:'stub'}});
+ const desktop=request.agent(app);
+ const session=(await desktop.post('/api/session').set('Origin','app://piko').set('X-Piko-Desktop','1').send({})).body;
+ const sessionHeaders={Authorization:`Bearer ${session.token}`,Origin:'app://piko','X-Piko-Desktop':'1'};
+ const evidence=confirmedEvidence('Moje potwierdzone słowa.');
+ const first={...repairRequest,sessionId:session.sessionId,sessionRevision:0,turnId:crypto.randomUUID(),userMessage:'Tekst do wyczyszczenia',ruleEvidence:[evidence]};
+ const send=(body:LearnerRequest)=>desktop.post('/api/learner-turn').set(sessionHeaders).send(body);
+ expect((await send(first)).status).toBe(200);
+ const second={...first,sessionRevision:1,turnId:crypto.randomUUID(),userMessage:'Jeszcze jedna wiadomość'};
+ expect((await send(second)).status).toBe(200);
+ expect(seen[1].recentExchanges[0].userPL).toBe(first.userMessage);
+ const other=request.agent(app);
+ const otherSession=(await other.post('/api/session').send({})).body;
+ expect((await other.post('/api/learner-turn').send({...first,sessionId:otherSession.sessionId,ruleEvidence:[]})).status).toBe(200);
+ expect(seen[2].recentExchanges).toEqual([]);
+ const reset=await desktop.post('/api/conversation/reset').set(sessionHeaders).send({sceneId:'M01-teach'});
+ expect(reset.body).toEqual({ok:true});
+ expect(store.recentCount(session.sessionId)).toBe(2);
+ expect(store.authenticate(session.token)?.evidence[0]).toMatchObject({missionId:'M01',candidateExpression:'2'});
+ expect(store.getTurn(session.sessionId,first.turnId)?.response).toBeNull();
+ expect((await send(first)).body.error.code).toBe('CONVERSATION_CLEARED');
+ expect((await send({...second,turnId:crypto.randomUUID(),sessionRevision:2})).body.error.code).toBe('STALE_SESSION_REVISION');
+ expect((await send({...second,turnId:crypto.randomUUID(),sessionRevision:3,ruleEvidence:[]})).status).toBe(200);
+ expect(seen.at(-1)?.recentExchanges).toEqual([]);
+});

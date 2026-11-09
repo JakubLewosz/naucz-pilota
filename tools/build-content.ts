@@ -18,13 +18,16 @@ for (const kind of ['request','response']) {
 console.log('Content schema OK; 6 missions / 24 scenes; public data stripped; DTO types generated.');
 
 const contractAjv=new Ajv2020({strict:false,allErrors:true,code:{source:true,esm:true}});
-contractAjv.addSchema(JSON.parse(await readFile('contracts/ai-request.schema.json','utf8')),'request');
+const requestSchema=JSON.parse(await readFile('contracts/ai-request.schema.json','utf8'));
+contractAjv.addSchema(requestSchema,'request');
+contractAjv.addSchema(requestSchema.properties.ruleEvidence.items,'ruleEvidence');
 contractAjv.addSchema(JSON.parse(await readFile('contracts/ai-response.schema.json','utf8')),'response');
-const validationCode=standaloneCode(contractAjv,{validateRequest:'request',validateModel:'response'});
+const validationCode=standaloneCode(contractAjv,{validateRequest:'request',validateModel:'response',validateRuleEvidence:'ruleEvidence'});
 await build({stdin:{contents:validationCode,resolveDir:process.cwd(),sourcefile:'validators.cjs'},bundle:true,format:'esm',platform:'browser',outfile:'packages/contracts/src/validators.generated.js'});
 await writeFile('packages/contracts/src/validators.generated.d.ts',`import type {ValidateFunction} from 'ajv';
 import type {LearnerRequest} from './request.generated';
 import type {ModelPayload} from './response.generated';
 export const validateRequest:ValidateFunction<LearnerRequest>;
 export const validateModel:ValidateFunction<ModelPayload>;
+export const validateRuleEvidence:ValidateFunction<LearnerRequest['ruleEvidence'][number]>;
 `);

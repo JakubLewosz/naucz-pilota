@@ -11,8 +11,8 @@ Na planszy x rośnie w prawo, y w górę. S oznacza start, G1 i G2 bramki, CEL m
 ## Cztery etapy misji
 
 1. Sprawdź tor: wpisz wzór i naciśnij Leć. Przerywana linia jest neutralnym podglądem. Wynik pojawia się po uruchomieniu. W razie trudności odsłaniaj kolejno trzy wskazówki. Po bezpiecznym locie wybierz Teraz naucz Piko.
-2. Naucz Piko: sprawdź jego scenariuszowy pomysł, popraw wzór, przewidź y dla x obu bramek i wyjaśnij zmianę w jednym lub dwóch zdaniach. Sprawdź naprawę przelicza tor i prognozy. Powiedz Piko świadomie wysyła rozmowę. Gdy warunki liczbowe są spełnione, potwierdź kanoniczną zasadę. Opinia Piko nie blokuje przejścia; awaria AI też nie odbiera poprawnej naprawy.
-3. Lot Piko: robot otrzymuje nową planszę i zatwierdzone zasady. Poproś o propozycję, wybierz Przeleci, Nie przeleci albo Jeszcze nie wiem, a potem sprawdź lot. Możesz zezwolić na jedną poprawkę. Porażka lub brak propozycji nie blokuje samodzielnego zadania.
+2. Naucz Piko: sprawdź jego scenariuszowy pomysł, popraw wzór, przewidź y dla x obu bramek i wyjaśnij zmianę w jednym lub dwóch zdaniach. Sprawdź naprawę przelicza tor i prognozy. Wybierz Powiedz Piko i przeczytaj parafrazę. Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i wyślij je ponownie. Po sprawdzeniu toru i prognoz potwierdź treść notatki z lekcji. Możesz też zapisać ją bez parafrazy.
+3. Lot Piko: robot otrzymuje nową planszę, sprawdzoną zasadę i zapisaną notatkę z lekcji. Poproś o propozycję, wybierz Przeleci, Nie przeleci albo Jeszcze nie wiem, a potem sprawdź lot. Możesz zezwolić na jedną poprawkę. Po problemach z odpowiedzią wybierz demo albo Pomiń lot Piko. Limit dwóch nieudanych tur live zostaje po odświeżeniu.
 4. Twój samodzielny lot: to kolejna, osobna plansza. Przed pierwszą próbą nie ma toru, automatycznych wartości y, rozmowy, wskazówek ani dziennika. Wpisz wzór i wybierz Sprawdź mój lot. Błąd składni nie liczy się jako próba. Pierwszy parsowalny wzór i jego wynik są niezmiennie zachowane. Po porażce możesz poprawiać wzór; podsumowanie rozróżnia pierwszą próbę i późniejsze ukończenie.
 
 ## Zapis wzoru
@@ -27,10 +27,10 @@ Tab przechodzi między polami i przyciskami. Enter w polu wzoru uruchamia lot; E
 
 Postęp zapisuje się lokalnie na urządzeniu. Zmiana przeglądarki/profilu lub usunięcie danych przeglądarki może go usunąć. Powtórzenie ukończonej misji archiwizuje poprzednie podejście; podsumowanie pozwala je rozwinąć. Samo odświeżenie nie resetuje pierwszej próby. Dziennik pokazuje kanoniczne zasady i oddzielne obserwacje lotów. Powrót do dziennika po pierwszej próbie oznacza późniejsze podejście jako po powtórce.
 
-Wyczyść rozmowę usuwa bieżący widok rozmowy bez kasowania reguł. Usuń lokalny postęp w ustawieniach wymaga osobnego potwierdzenia i usuwa wszystkie lokalne misje. Nie oznacza usunięcia danych z usługi modelu.
+Wyczyść rozmowę usuwa wiadomości tej lekcji z widoku i aktywnej sesji serwera. Wyniki i zapisane notatki pozostają w zapisie gry. Usuń lokalny postęp usuwa bieżący zapis na urządzeniu po potwierdzeniu.
 
-Przy nieznanej lub uszkodzonej wersji zapisu aplikacja nie nadpisuje go automatycznie. Można zachować kopię i rozpocząć nowy. Gdy przeglądarka nie ma miejsca na zapis, pokazany komunikat ostrzega, że bieżąca praca pozostaje tylko w pamięci.
+Aplikacja przenosi zapisy wersji 1 do wersji 2. Ekran odzyskiwania pozwala zachować kopię uszkodzonego lub nieznanego zapisu przed rozpoczęciem nowego. Gdy pamięć urządzenia odrzuca zapis, bieżący postęp pozostaje w otwartej karcie.
 
-W live do usługi AI trafia Twoje wyjaśnienie, bieżąca plansza i niezbędne sprawdzone reguły. Nie wpisuj danych osobowych. Brak sieci zachowuje wpisy i pokazuje błąd. Wybierz Ponów albo świadomie przejdź do demo. Demo nie wymaga płatnego API.
+W live do usługi AI trafia Twoje wyjaśnienie, notatka, bieżąca plansza i potrzebne reguły. Serwer gry przechowuje bieżącą rozmowę w sesji SQLite, która wygasa po 24 godzinach. Wyczyść rozmowę działa na serwerze gry. Dane wysłane do dostawcy podlegają ustawieniom konta API. W demo odpowiedzi są scenariuszowe i działają lokalnie.
 
 Piko odgrywa ucznia; nie trenujemy wag modelu. Wyniki opisują wykonanie zadań w tej sesji. Nie są diagnozą wiedzy ani dowodem trwałej skuteczności edukacyjnej.

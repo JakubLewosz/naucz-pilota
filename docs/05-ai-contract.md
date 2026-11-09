@@ -1,6 +1,6 @@
 # 05. Kontrakt AI: Piko jako symulowany uczeń
 
-Status: specyfikacja do wdrożenia. Ten pakiet nie zawiera działającego backendu ani potwierdzonych testów z płatnym modelem. Język interfejsu i odpowiedzi: polski.
+Kontrakt wdrożonej aplikacji. Historyczne wyniki płatnych testów dotyczą promptu 1.0.2. Bieżący prompt 1.1.0 sprawdzono lokalnie z atrapą. Język interfejsu i odpowiedzi to polski.
 
 ## 1. Rola i granice
 
@@ -61,7 +61,7 @@ Sesję ustanawia opisane w architekturze `POST /api/session`. Przy ważnym cooki
 | `numericEvidence` | Dwie wartości dla G1/G2 w `teach_repair`; każda zawiera sceneId+checkpointId; poza tą fazą pusta tablica |
 | `ruleEvidence` | Maks. 6 matematycznych dowodów wcześniejszych reguł; służy także odtworzeniu sesji po restarcie |
 
-`ruleEvidence` zawiera po jednym rekordzie na misję: `missionId`, `candidateExpression`, `numericEvidence`. Backend sam wybiera scenę `<missionId>-teach` i ponownie weryfikuje wszystkie dowody. Weryfikuje także zgodność sceneId z misją, unikalność misji i obu checkpointów. Nieprawidłowy dowód odrzuca z pamięci i raportuje w `memory.rejectedEvidenceMissionIds`; nie wysyła go modelowi jako reguły. Nie przyznaje z tego konta, miejsca w rankingu ani wiarygodnego dowodu samodzielnej pracy. W MVP nie ma kont ani takiego rankingu.
+`ruleEvidence` zawiera po jednym rekordzie na misję z polami `missionId`, `candidateExpression`, `numericEvidence` oraz opcjonalnym `lessonNote`. Backend sam wybiera scenę `<missionId>-teach` i ponownie weryfikuje wszystkie dowody. Weryfikuje także zgodność sceneId z misją, unikalność misji i obu checkpointów. Nieprawidłowy dowód odrzuca z pamięci i raportuje w `memory.rejectedEvidenceMissionIds`; nie wysyła go modelowi jako reguły. Nie przyznaje z tego konta, miejsca w rankingu ani wiarygodnego dowodu samodzielnej pracy. W MVP nie ma kont ani takiego rankingu.
 
 `attemptHistory` to wejście nieufne. Backend przelicza każdy wzór, wymaga identycznego `sceneId` jak aktualny i nie traktuje tych rekordów jako prawdziwego logu zachowania. Własne zarejestrowane próby serwera mają pierwszeństwo. Historia dialogu pochodzi wyłącznie z sesji serwera, nigdy z dowolnych wiadomości `assistant` dostarczonych przez klienta.
 
@@ -100,14 +100,14 @@ Backend wykonuje poniższe operacje deterministycznie:
 3. Parsuje kandydatów bez `eval`, oblicza wartości i uruchamia wspólny silnik. Kod z wyrażenia nie jest uruchamiany. Niepoprawny kandydat zwraca błąd wejścia, bez wywołania dostawcy.
 4. Weryfikuje `ruleEvidence`, ewentualnie bieżące `teach_repair`, a następnie tworzy listę kandydatów `qualifiedRuleIds` i potwierdzonych `learnedRuleIds` z treści kanonicznej. Nigdy nie używa zadeklarowanego ID bez poprawnego dowodu.
 5. Buduje obiekt przez **jawny wybór pól**. Zabronione `...mission` i `...scene`: dodane w przyszłości `witness` nie może przypadkiem trafić do AI.
-6. Dołącza maksymalnie 6 ostatnich krótkich par uczeń–Piko z tej samej sceny. Przejście do innej sceny czyści ten kontekst; między misjami przenoszone są tylko kanoniczne reguły. Limit par oznacza maks. 12 wiadomości, uczeń 600 znaków, Piko 450+200 znaków.
+6. Dołącza maksymalnie 6 ostatnich krótkich par uczeń–Piko z tej samej sceny. Przejście do innej sceny czyści historię dialogu. Transfer dostaje tylko notatkę tej misji wraz z kanoniczną regułą. Limit par oznacza maks. 12 wiadomości, uczeń 600 znaków, Piko 450+200 znaków.
 7. Bieżącą wiadomość umieszcza jako dane użytkownika; nie skleja jej z instrukcjami systemowymi. Całe wyrenderowane wejście ma dodatkowy limit 16 000 znaków: najpierw usuwa się najstarsze pary, potem nadmiar historii prób. Nie usuwa się bieżącej geometrii ani reguł; jeśli nadal za duże, błąd konfiguracji, bez płatnego wywołania.
 
 Dozwolony obiekt kontekstu:
 
 ```typescript
 type LearnerContext = {
-  contextVersion: "1.0.0";
+  contextVersion: "1.1.0";
   phase: "teach_explain" | "teach_repair" | "robot_propose";
   missionId: string;
   skillId: string;
@@ -388,3 +388,12 @@ Minimalna telemetria lokalna: turnId, missionId, sceneRole, mode, model, latency
 ### Odbiór implementacji 3 listopada 2026
 
 Kod używa promptu 1.0.2. Z kanonicznego schematu odpowiedzi wyprowadza na czas jednej tury węższy schemat dostawcy: tylko dozwolone w tej fazie akcje, istniejące factId i kwalifikowane suggestedRuleId; przy braku dowodów sugestia musi być null. Backend nadal sprawdza pełny kontrakt po odpowiedzi. To zawężenie istniejących pól, bez dodatkowego równoległego DTO. Testy live i zastrzeżenia jakościowe są w checks/ai-live-results.json i checks/ai-semantic-review.json.
+
+
+### Notatka i reset rozmowy po audycie
+
+Po sprawdzeniu wzoru i obu prognoz gracz zatwierdza treść notatki. `lessonNote.version=1` wiąże własne wyjaśnienie i opcjonalną parafrazę z identyfikatorem tej samej reguły i jej dowodem. `confirmation=saved_by_player` potwierdza czynność zapisu. Tryb odpowiedzi to `live`, `demo` albo `skipped`. Po zmianie draftu wcześniejsza parafraza wymaga odświeżenia. Regułę można potwierdzić także bez parafrazy.
+
+`buildContext` umieszcza notatkę w polu `lessonNote` tylko w bieżącym transferze i tylko po ponownej weryfikacji dowodu oraz ID reguły. Adapter umieszcza oba cytaty w osobnej wiadomości użytkownika `untrustedLessonNote`. Kanoniczna reguła i fakty silnika zachowują pierwszeństwo. Model ma wskazać krótko, jak próbuje zastosować zgodny element notatki.
+
+`POST /api/conversation/reset` przyjmuje obiekt z `sceneId` sceny teach oraz cookie web albo token Electron. Usuwa wymianę tej sceny z aktywnej sesji i jej zapamiętane koperty. Dowody, notatki, liczniki oraz identyfikatory tur pozostają. Powtórzenie wyczyszczonej tury zwraca 409, a aktywna tura odkłada czyszczenie do zakończenia. Reset zwiększa rewizję po wyczyszczeniu aktywnego kontekstu. Odczyt i usuwanie danych po stronie dostawcy zależą od ustawień konta.

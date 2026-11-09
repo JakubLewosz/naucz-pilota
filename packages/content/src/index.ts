@@ -1,5 +1,5 @@
-import data from '../generated/public-missions.json';
-import hintsData from '../../../content/hints.v1.json';
+import data from '../generated/public-missions.json' with {type:'json'};
+import hintsData from '../../../content/hints.v1.json' with {type:'json'};
 import type { Mission } from '@piko/core';
 export const missions = data.missions as Mission[];
 export const contentVersion = data.schemaVersion;

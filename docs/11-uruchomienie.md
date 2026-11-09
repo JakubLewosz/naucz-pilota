@@ -1,6 +1,6 @@
 # Uruchomienie, kompilacja i wdrożenie
 
-Wersja 1.0.0, 3 listopada 2026. Sprawdzony host: macOS arm64; Node 24.11.0, npm 11.6.1. Lockfile przypina faktyczne wersje pakietów. Runtime gry nie wymaga Pythona.
+Wersja 1.0.0, aktualizacja po audycie 9 listopada 2026. Sprawdzony host: macOS arm64; Node 24.11.0, npm 11.6.1. Lockfile przypina faktyczne wersje pakietów. Runtime gry nie wymaga Pythona.
 
 ## Autor: kod źródłowy
 
@@ -34,7 +34,15 @@ Uruchamiaj jedną instancję procesu i jeden trwały licznik SQLite. Nie skaluj 
 
 Cookie web jest HttpOnly/SameSite=Strict, Secure w produkcji. Desktop trzyma token w main process, przyjmuje tylko zaufany origin HTTPS i blokuje przekierowania. W dystrybucji ustaw apiBaseUrl w apps/desktop/distribution.json, potem wykonaj `npm run desktop:dist`. Wyjątek HTTP 127.0.0.1 dotyczy tylko desktop:dev. Nie wdrożono publicznego endpointu w tym zadaniu.
 
-Sesje, mała historia i dowody mają TTL 24h; usuwanie wygasłych rekordów wykonuje start nowej sesji. Globalny licznik jest trwały. Log produkcyjny zawiera identyfikatory techniczne, czas, model i kod błędu, bez pełnej rozmowy. Nie ma kont ani zewnętrznej analityki.
+## Dostęp i przechowywanie danych w live
+
+Przed udostępnieniem live ogranicz dostęp do backendu regułami sieci lub uwierzytelnianiem na reverse proxy. Przetestuj, czy wybrana metoda wpuszcza zarówno przeglądarkę, jak i klienta Electron. Od strony internetu udostępnij tylko proxy TLS i pozostaw port aplikacji w sieci prywatnej. Anonimowa sesja rozróżnia użytkowników aplikacji. Dostęp do budżetu zapewnia osobna kontrola na proxy.
+
+Ustaw limit żądań na adres klienta dla /api/session, /api/learner-turn i /api/conversation/reset oraz limit treści żądania. Proxy ma nadpisywać przekazywane nagłówki adresu klienta. Sprawdź z innego urządzenia przyjęcie dozwolonego ruchu, odrzucenie ruchu spoza listy, limit żądań oraz widoczną awarię po odłączeniu sieci. Dzienny licznik SQLite ogranicza liczbę żądań dostawcy. Koszt zależy od modelu i liczby tokenów.
+
+SQLite przechowuje bieżące wiadomości, sprawdzone dowody, przekazane notatki oraz koperty tur do obsługi ponowionych żądań. Sesja wygasa po 24 godzinach. Aplikacja usuwa wygasłe rekordy przy obsłudze /api/session. Przy stałym wdrożeniu zaplanuj retencję kopii wolumenu oraz czyszczenie wygasłych danych również podczas bezczynności.
+
+„Wyczyść rozmowę” usuwa historię tej sceny w aktywnej sesji i tekst z jej kopert. Zachowuje zapisane zasady, notatkę oraz liczniki. „Usuń lokalny postęp” działa na urządzeniu. Wysłane fragmenty trafiają też do dostawcy modelu. Retencja u dostawcy zależy od konfiguracji konta API. Log produkcyjny zapisuje identyfikatory techniczne, czas, model i kod błędu.
 
 ## Budowanie dystrybucji
 
@@ -54,4 +62,4 @@ Dockerfile został lokalnie zbudowany, a kontener przeszedł test zdrowia, braku
 Pierwszą próbę live można ograniczyć poleceniem npm run test:ai:live -- --case M01 --max-calls 4. Runner zatrzymuje się po pierwszym błędzie i zachowuje osobne NOT RUN dla pozostałych scenariuszy. Przejścia teach/transfer tej misji używają jednej sesji. Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md.
 
 
-Odbiór lokalny live został wykonany: prompt 1.0.2 i model gpt-5.4-mini-2026-03-17, 22 tury oraz M04 w UI. Pozostają uwagi do semantyki, publiczny HTTPS i odbiór Windows. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.
+Historyczny odbiór live z 3 listopada obejmował 22 tury i M04 w UI z promptem 1.0.2 oraz modelem gpt-5.4-mini-2026-03-17. Dla promptu 1.1.0 z notatką lekcji płatne testy mają status NOT RUN. Pozostają uwagi do semantyki, publiczny HTTPS i odbiór Windows. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.

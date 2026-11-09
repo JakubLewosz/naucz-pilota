@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-03T13:02:48.187Z",
+  "date": "2026-11-09T19:30:32.579Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -13,12 +13,12 @@
       "detail": "No alternate embedded author corpus."
     },
     {
-      "name": "renderer index-Co_vyb4y.js",
+      "name": "renderer index-NGa-D-ft.js",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
     {
-      "name": "renderer index-DhJidGZ7.css",
+      "name": "renderer index-sMLlcPif.css",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
@@ -51,21 +51,17 @@
   "artifacts": [
     {
       "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
-      "size": 153313090,
-      "sha256": "8bdd40f03ccbd667af375c8fd10ddbb0b5e03f19cec6f002052cc8de05adaafd"
+      "size": 153416969,
+      "sha256": "7d78353f3cb5dee71ba9881fcee1cd533374ccd8d17be9464841eb9a7d24d50d"
     }
   ],
-  "live": "PASS STRUCTURAL (22 cases); semantic warnings recorded",
+  "live": "NOT RUN FOR CURRENT PROMPT",
   "liveDetails": {
     "promptVersion": "1.0.2",
-    "currentPromptVersion": "1.0.2",
+    "currentPromptVersion": "1.1.0",
     "humanSignoff": "PENDING",
-    "limitations": [
-      "Model still sometimes speaks like a tutor and offers computations.",
-      "Two explanation assessments differ from the authored rubric; neither controls game progression.",
-      "This assistant review does not replace human semantic signoff or a usability pilot."
-    ],
-    "browser": "PASS"
+    "limitations": [],
+    "browser": "NOT RUN FOR CURRENT PROMPT"
   },
   "windowsRuntime": "NOT RUN"
 }
