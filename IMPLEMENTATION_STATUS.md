@@ -3,6 +3,8 @@ Aktualizacja: 2026-11-09. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Poprawki po audycie przeszły lokalne testy i GitHub Actions na Windows oraz Linuksie. Pakiet ZIP z runnera Windows zawiera demo. Dane płatnego odbioru z 3 listopada dotyczą starszego promptu 1.0.2. Stan promptu 1.1.0 i zakres testów wydania są poniżej.
 
+Wydanie `v1.0.0` na GitHubie obejmuje poprawki na `main`, dokładny ZIP z przebiegu Actions 42685071630, archiwum źródeł, pięć PDF-ów, dwa nagrania i maszynowy raport testu Windows. [Pliki wydania](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
+
 ## Poprawki po audycie fef5e22 (9 listopada 2026)
 
 - **Odzyskiwanie AI.** Błędy transportu i koperty unavailable nie zużywają dwóch miejsc na propozycje. Dwie nieudane tury live na lot Piko ograniczają ponowienia także po odświeżeniu. Gracz może jawnie wybrać demo lub pominąć lot. Udana odpowiedź przywraca plakietkę live. Poprzednie wypowiedzi zachowują oznaczenie źródła.

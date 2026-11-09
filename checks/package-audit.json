@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-09T19:44:24.325700+00:00",
+  "date": "2026-11-09T20:16:20.255619+00:00",
   "status": "PASS",
   "sourceFiles": 154,
   "sourceZipCRC": "PASS",
@@ -11,5 +11,6 @@
   "windowsRuntime": "PASS on GitHub-hosted Windows; separate recipient computer NOT RUN",
   "requiredArtifactsPresent": 14,
   "forms": "Missing signatures",
-  "livePrompt110": "NOT RUN"
+  "livePrompt110": "NOT RUN",
+  "sourceZipSHA256": "26240ede43096b23279c64c7f0dcedc0a48936627cf970c5dbfc85e507ee669b"
 }

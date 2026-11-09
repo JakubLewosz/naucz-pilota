@@ -4,6 +4,8 @@ Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkc
 
 **Stan po audycie z 9 listopada 2026.** Gra odzyskuje przejście po błędach AI, zachowuje notatkę z lekcji i przekazuje ją Piko przed lotem. Historyczny odbiór live dotyczy promptu 1.0.2. Bieżący prompt 1.1.0 sprawdzono z atrapą. Wyniki i zakres odbioru są w [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
+**Windows x64.** Pobierz ZIP, rozpakuj cały folder i uruchom `Naucz Pilota.exe`. Paczka zawiera tryb demo i pochodzi z przebiegu Actions, który sprawdził spakowaną aplikację na Windows. Kod źródłowy, instrukcje, raport i nagrania znajdziesz w tym samym wydaniu. [GitHub Releases 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
+
 ## Szybki start
 
 Wymagany Node 24.x (sprawdzono 24.11.0) i npm. Python nie jest wymagany do uruchomienia gry.
@@ -95,4 +97,4 @@ Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Rę
 
 Wyniki: checks/ai-live-results.json, checks/ai-semantic-review.json i checks/browser-live.json. Przegląd wykonany przez asystenta jest wstępny; SEM03 i SEM09 mają etykiety oceny różniące się od rubryki, a Piko czasem mówi zbyt nauczycielsko. Akceptacja jakości dialogu przez człowieka i pilotaż pozostają do wykonania. Lokalna konfiguracja klucza działa; klucz nie jest częścią repozytorium ani wydania.
 
-Repozytorium: [JakubLewosz/naucz-pilota](https://github.com/JakubLewosz/naucz-pilota). Zawiera kod, lockfile, dane autora, testy, raporty, PDF-y oraz nagrania [demo](release/media/Naucz_Pilota_demo.mp4) i [live](release/media/Naucz_Pilota_live.mp4). Duża paczka Windows pozostaje lokalnym artefaktem; odtwarza ją `npm run desktop:dist`. Klucz i lokalne zapisy nie są publikowane.
+Repozytorium zawiera kod, lockfile, dane autora, testy, raporty, PDF-y oraz nagrania [demo](release/media/Naucz_Pilota_demo.mp4) i [live](release/media/Naucz_Pilota_live.mp4). Komenda `npm run desktop:dist` pozwala odtworzyć paczkę Windows. Gotowy ZIP jest dostępny w [wydaniu 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0).
