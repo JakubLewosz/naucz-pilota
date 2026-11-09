@@ -19,10 +19,13 @@ Sprawdź, czy uczestnik:
 1. Rozpoznaje start, bramki, przeszkodę, cel i znaczenie rozmiaru robota.
 2. Znajduje pole wzoru, uruchamia lot i rozumie komunikat porażki.
 3. Potrafi podać dwie prognozy i odróżnia sprawdzone liczby od komentarza Piko.
-4. Rozumie, co zatwierdza przy zapisie kanonicznej reguły.
+4. Własnymi słowami rozróżnia zapis swojej notatki, przygotowany komentarz demo i regułę sprawdzoną liczbami.
 5. Przewiduje lot robota przed odsłonięciem wyniku.
 6. Odróżnia nową samodzielną planszę od transferu Piko i rozumie trwałość pierwszej próby.
-7. Odczytuje etykietę demo/live/unavailable i wie, kiedy rozmawia z modelem.
+7. Odczytuje etykietę demo/live/unavailable i potrafi wrócić do gry po niedostępności AI.
+8. Rozumie, dlaczego zasada jest ukryta przed pierwszą próbą i gdzie po próbie znajdzie dziennik.
+
+Dla punktów 2–8 zaznacz „samodzielnie”, „po pomocy” lub „nie ukończono”. Zapisz, czy osoba bez podpowiedzi odróżniła wynik silnika od komentarza Piko oraz demo od live. Priorytetem poprawki jest każda blokada, a następnie myląca etykieta powtórzona przez co najmniej dwie osoby. Raportuj liczby obserwacji i zakres zadania jako wynik użyteczności.
 
 ## Karta obserwacji — powiel dla każdej osoby
 

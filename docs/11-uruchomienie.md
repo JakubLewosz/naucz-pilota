@@ -24,7 +24,7 @@ Skopiuj .env.example do .env i uzupełnij AI_MODE=live, OPENAI_API_KEY, AI_MODEL
 
 Dla Vite PUBLIC_ORIGIN=http://127.0.0.1:5173. Dla lokalnego `npm start` ustaw http://127.0.0.1:3001. W produkcji ustaw pełny origin HTTPS, NODE_ENV=production i trwały STATE_DB_PATH. Brak klucza/modelu jest jawnym błędem, bez podstawiania demo. Zmianę na demo wykonuje gracz.
 
-`npm run test:ai:live` jest płatnym testem po ustawieniu klucza. Zatrzymaj wcześniej backend, aby nie uruchamiać drugiej instancji z tą samą bazą. Raport podaje prawdziwe metadane odpowiedzi; człowiek dopisuje ocenę semantyczną. Brak klucza daje NOT RUN i kod 2.
+Test dostawcy wymaga zgody, poświadczeń, flagi `--allow-paid` oraz jawnego `--max-calls`. Do sprawdzenia wejść użyj `npm run test:ai:live -- --dry-run --case M04-LESSONS`. Komendy dla operatora, budżet i rubryka są w [protokole odbioru live](17-odbior-live.md).
 
 ## Backend na hostingu: przygotowana konfiguracja
 
@@ -59,7 +59,7 @@ Oficjalne źródła sprawdzone podczas implementacji: https://developers.openai.
 
 Dockerfile został lokalnie zbudowany, a kontener przeszedł test zdrowia, braku sekretów i danych autora, użytkownika bez root oraz trwałości sesji SQLite po restarcie. npm run docker:build oraz npm run docker:smoke odtwarzają te sprawdzenia bez klucza AI.
 
-Pierwszą próbę live można ograniczyć poleceniem npm run test:ai:live -- --case M01 --max-calls 4. Runner zatrzymuje się po pierwszym błędzie i zachowuje osobne NOT RUN dla pozostałych scenariuszy. Przejścia teach/transfer tej misji używają jednej sesji. Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md. Workflow 42685071630 potwierdził start i wznowienie spakowanego EXE oraz czyszczenie kontekstu na lokalnej atrapie Electrona.
+Runner zatrzymuje się po pierwszym błędzie i zachowuje odrębne wyniki dla wybranych scenariuszy. Teach i transfer jednego wariantu współdzielą sesję. A/B/C M04 otrzymują trzy osobne sesje. Zobacz [plan HTTPS oraz test z innego urządzenia](17-odbior-live.md). Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md. Workflow 42685071630 potwierdził start i wznowienie spakowanego EXE oraz czyszczenie kontekstu na lokalnej atrapie Electrona.
 
 
 Historyczny odbiór live z 3 listopada obejmował 22 tury i M04 w UI z promptem 1.0.2 oraz modelem gpt-5.4-mini-2026-03-17. Dla promptu 1.1.0 z notatką lekcji płatne testy mają status NOT RUN. Pozostają uwagi do semantyki, publiczny HTTPS i odbiór Windows. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.

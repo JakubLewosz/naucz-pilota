@@ -34,13 +34,13 @@ Po buildzie `npm start` serwuje aplikację i API pod http://127.0.0.1:3001. Do l
 
 Skopiuj `.env.example` do `.env`. Ustaw na backendzie `AI_MODE=live`, `OPENAI_API_KEY` i dostępny `AI_MODEL` obsługujący Structured Outputs. Nie wpisuj klucza w czacie, frontendzie ani `VITE_*`. Restartuj backend, a w ustawieniach gry wybierz live.
 
-Osobny, świadomie uruchamiany test płatny:
+Weryfikacja zestawu M04 bez połączenia z dostawcą:
 
 ```sh
-npm run test:ai:live
+npm run test:ai:live -- --dry-run --case M04-LESSONS --max-calls 12
 ```
 
-Bez klucza/modelu zapisuje `NOT RUN` w `checks/ai-live-results.json` i kończy się kodem 2. Z kluczem wykonuje 10 scenariuszy semantycznych oraz po teach/transfer dla sześciu umiejętności (22 tury, maks. 44 wywołania). Przed nim zatrzymaj lokalny backend: SQLite jest magazynem jednej instancji. Obowiązuje trwały limit z `.env`. Wyniki struktury i silnika zapisują się automatycznie; jakość dialogu wymaga przeczytania odpowiedzi przez człowieka. Testy zwykłe nigdy nie wywołują płatnego API.
+Płatne uruchomienie wymaga `--allow-paid`, jawnego `--max-calls`, zgody operatora i poświadczeń. Standardowy zestaw ma 22 tury. M04-A/B/C to osobne sześć tur w trzech sesjach. Każdy przebieg ma oddzielny raport w `var/ai-live/`. Asercje sprawdzają dostarczenie notatki i matematykę. Jakość dialogu ocenia człowiek. [Instrukcja odbioru live i HTTPS](docs/17-odbior-live.md)
 
 ## Desktop i wydanie
 
@@ -57,7 +57,7 @@ Aby przygotować live dla odbiorcy, skonfiguruj zaufany origin HTTPS w `apps/des
 
 ## Rozgrywka i zapis
 
-Każda misja: practice → teach → robot_transfer → human_check. W teach popraw wzór, przewidź G1/G2, napisz wyjaśnienie, przeczytaj parafrazę Piko i potwierdź treść notatki z lekcji. Możesz zapisać lekcję bez odpowiedzi Piko. Transfer używa notatki wraz ze sprawdzoną zasadą. Opinia AI nie steruje zaliczeniem. W samodzielnym zadaniu przed pierwszym lotem nie ma trajektorii, obliczeń, dziennika ani AI. Pierwszy parsowalny wynik jest zachowany również po poprawkach i odświeżeniu. Powtórzenie ukończonej misji zachowuje poprzednie podejście.
+Każda misja: practice → teach → robot_transfer → human_check. W teach popraw wzór, przewidź G1/G2, napisz wyjaśnienie, przeczytaj parafrazę Piko i potwierdź treść notatki z lekcji. Możesz zapisać lekcję bez odpowiedzi Piko. Transfer używa notatki wraz ze sprawdzoną zasadą. Opinia AI nie steruje zaliczeniem. Przed pierwszą parsowalną próbą samodzielną zasada danej misji jest ukryta również w dzienniku otwartym z innej misji i w podsumowaniu kampanii. Powtórka wymaga własnej pierwszej próby. Pierwszy parsowalny wynik jest zachowany również po poprawkach i odświeżeniu. Powtórzenie ukończonej misji zachowuje poprzednie podejście.
 
 Postęp jest wersjonowany w localStorage. Zapis wersji 1 migruje do wersji 2 z zachowaniem pierwszej próby i archiwum. Uszkodzony zapis wymaga zachowania kopii przed rozpoczęciem nowego. W live opcja „Wyczyść rozmowę” czyści także kontekst tej sceny w aktywnej sesji SQLite. Ustawienia pozwalają ograniczyć ruch, pokazać obrys Piko, powiększyć tekst i usunąć postęp po potwierdzeniu. Instrukcja: [docs/12-instrukcja-uzytkownika.md](docs/12-instrukcja-uzytkownika.md).
 
@@ -77,14 +77,14 @@ Raporty w `checks/`. Weryfikacja ograniczeń: [docs/13-raport-weryfikacji.md](do
 Obecna wersja ma również:
 
 ```sh
-npm run test:ai:live -- --case M01 --max-calls 4
+npm run test:ai:live -- --dry-run --case M01 --max-calls 4
 npm run desktop:smoke
 npm run desktop:smoke -- --executable "release/bin/win-unpacked/Naucz Pilota.exe"
 npm run docker:build
 npm run docker:smoke
 ```
 
-Pierwsza komenda jest płatnym testem teach → transfer M01. Używa jednej sesji i zatrzymuje się po pierwszym błędzie, zachowując statusy pozostałych przypadków jako NOT RUN. Budżet tej próby wynosi maksymalnie 4 żądania dostawcy; nadal obowiązuje trwały limit dzienny. Pełny zestaw ma 22 tury i domyślny budżet 44 żądań. Wynik automatyczny dotyczy struktury i matematyki; semantyka wymaga przeczytania odpowiedzi.
+Pierwsza komenda sprawdza wejścia teach i transfer M01 bez wywołań dostawcy. Dla zatwierdzonej próby live zatrzymaj backend korzystający z tej samej bazy SQLite. Nadal obowiązuje limit dobowy.
 
 Kontener został lokalnie zbudowany i uruchomiony; testowane są health, brak .env/rozwiązań autora w obrazie, użytkownik bez uprawnień root i trwałość sesji po restarcie. Publiczny hosting HTTPS nadal nie jest skonfigurowany. Test kontenera nie uruchamia płatnego API.
 
@@ -95,6 +95,6 @@ Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Rę
 
 3 listopada 2026: prompt 1.0.2, model gpt-5.4-mini-2026-03-17. Pełne 22 tury przeszły kontrolę schematu, pamięci i zgodności z niezależnym silnikiem, po jednym żądaniu dostawcy na turę. W sześciu transferach robot uzyskał 2 poprawne tory i 4 odrzucone przez silnik; błędne propozycje zachowano bez podstawiania rozwiązań. M04 przeszła też rzeczywisty test UI live z zachowaniem błędnej pierwszej próby po poprawce i odświeżeniu. Nagranie live ma 45,28 s.
 
-Wyniki: checks/ai-live-results.json, checks/ai-semantic-review.json i checks/browser-live.json. Przegląd wykonany przez asystenta jest wstępny; SEM03 i SEM09 mają etykiety oceny różniące się od rubryki, a Piko czasem mówi zbyt nauczycielsko. Akceptacja jakości dialogu przez człowieka i pilotaż pozostają do wykonania. Lokalna konfiguracja klucza działa; klucz nie jest częścią repozytorium ani wydania.
+Historyczne raporty to checks/ai-live-final-v1.0.2.json, checks/ai-semantic-review.json i checks/browser-live.json. Przegląd wykonany przez asystenta jest wstępny; SEM03 i SEM09 mają etykiety oceny różniące się od rubryki, a Piko czasem mówi zbyt nauczycielsko. Akceptacja jakości dialogu przez człowieka i pilotaż pozostają do wykonania. Lokalna konfiguracja klucza działa; klucz nie jest częścią repozytorium ani wydania.
 
 Repozytorium zawiera kod, lockfile, dane autora, testy, raporty, PDF-y oraz nagrania [demo](release/media/Naucz_Pilota_demo.mp4) i [live](release/media/Naucz_Pilota_live.mp4). Komenda `npm run desktop:dist` pozwala odtworzyć paczkę Windows. Gotowy ZIP jest dostępny w [wydaniu 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0).

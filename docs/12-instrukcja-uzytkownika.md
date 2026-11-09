@@ -11,7 +11,7 @@ Na planszy x rośnie w prawo, y w górę. S oznacza start, G1 i G2 bramki, CEL m
 ## Cztery etapy misji
 
 1. Sprawdź tor: wpisz wzór i naciśnij Leć. Przerywana linia jest neutralnym podglądem. Wynik pojawia się po uruchomieniu. W razie trudności odsłaniaj kolejno trzy wskazówki. Po bezpiecznym locie wybierz Teraz naucz Piko.
-2. Naucz Piko: sprawdź jego scenariuszowy pomysł, popraw wzór, przewidź y dla x obu bramek i wyjaśnij zmianę w jednym lub dwóch zdaniach. Sprawdź naprawę przelicza tor i prognozy. Wybierz Powiedz Piko i przeczytaj parafrazę. Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i wyślij je ponownie. Po sprawdzeniu toru i prognoz potwierdź treść notatki z lekcji. Możesz też zapisać ją bez parafrazy.
+2. Naucz Piko: sprawdź jego scenariuszowy pomysł, popraw wzór, przewidź y dla x obu bramek i wyjaśnij zmianę w jednym lub dwóch zdaniach. Sprawdź naprawę przelicza tor i prognozy. Wybierz Powiedz Piko. W live możesz przeczytać parafrazę i poprawić wyjaśnienie. Demo pokazuje wcześniej przygotowany komentarz. Po sprawdzeniu toru i prognoz potwierdź treść notatki z lekcji. Możesz też zapisać ją bez parafrazy.
 3. Lot Piko: robot otrzymuje nową planszę, sprawdzoną zasadę i zapisaną notatkę z lekcji. Poproś o propozycję, wybierz Przeleci, Nie przeleci albo Jeszcze nie wiem, a potem sprawdź lot. Możesz zezwolić na jedną poprawkę. Po problemach z odpowiedzią wybierz demo albo Pomiń lot Piko. Limit dwóch nieudanych tur live zostaje po odświeżeniu.
 4. Twój samodzielny lot: to kolejna, osobna plansza. Przed pierwszą próbą nie ma toru, automatycznych wartości y, rozmowy, wskazówek ani dziennika. Wpisz wzór i wybierz Sprawdź mój lot. Błąd składni nie liczy się jako próba. Pierwszy parsowalny wzór i jego wynik są niezmiennie zachowane. Po porażce możesz poprawiać wzór; podsumowanie rozróżnia pierwszą próbę i późniejsze ukończenie.
 
@@ -25,7 +25,7 @@ Tab przechodzi między polami i przyciskami. Enter w polu wzoru uruchamia lot; E
 
 ## Postęp i dane
 
-Postęp zapisuje się lokalnie na urządzeniu. Zmiana przeglądarki/profilu lub usunięcie danych przeglądarki może go usunąć. Powtórzenie ukończonej misji archiwizuje poprzednie podejście; podsumowanie pozwala je rozwinąć. Samo odświeżenie nie resetuje pierwszej próby. Dziennik pokazuje kanoniczne zasady i oddzielne obserwacje lotów. Powrót do dziennika po pierwszej próbie oznacza późniejsze podejście jako po powtórce.
+Postęp zapisuje się lokalnie na urządzeniu. Zmiana przeglądarki/profilu lub usunięcie danych przeglądarki może go usunąć. Powtórzenie ukończonej misji archiwizuje poprzednie podejście; podsumowanie pozwala je rozwinąć. Samo odświeżenie nie resetuje pierwszej próby. Dziennik pokazuje zasadę danej misji od jej pierwszej parsowalnej próby. Dotyczy to także wejścia przez inną misję i podsumowania kampanii. W powtórce zasada tej samej misji jest ponownie ukryta do pierwszej próby. Zapis poprzedniego podejścia pozostaje w archiwum. Otwarty dziennik oznacza przegląd wyłącznie przy wyświetlonych zasadach.
 
 Wyczyść rozmowę usuwa wiadomości tej lekcji z widoku i aktywnej sesji serwera. Wyniki i zapisane notatki pozostają w zapisie gry. Usuń lokalny postęp usuwa bieżący zapis na urządzeniu po potwierdzeniu.
 
