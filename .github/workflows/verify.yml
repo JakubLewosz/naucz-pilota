@@ -28,6 +28,8 @@ jobs:
         run: |
           $exe = Join-Path $PWD 'release/bin/win-unpacked/Naucz Pilota.exe'
           npm run desktop:smoke -- --executable "$exe"
+      - name: Check desktop conversation reset against a local stub
+        run: npx tsx tools/smoke-desktop-relay.ts
       - run: npm run release:check
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()

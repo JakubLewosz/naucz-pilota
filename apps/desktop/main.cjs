@@ -16,7 +16,8 @@ function endpoint(route){
  return new URL(route,url).href;
 }
 async function relay(route,body){
- const response=await net.fetch(endpoint(route),{method:body?'POST':'GET',redirect:'error',headers:{'Origin':'app://piko','X-Piko-Desktop':'1',...(body?{'Content-Type':'application/json'}:{}),...(token?{'Authorization':`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(16000)});
+ // The relay runs in main. Node fetch sends the authenticated request directly.
+ const response=await fetch(endpoint(route),{method:body?'POST':'GET',redirect:'error',headers:{'Origin':'app://piko','X-Piko-Desktop':'1',...(body?{'Content-Type':'application/json'}:{}),...(token?{'Authorization':`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(16000)});
  const result=await response.json();
  if(result.token){token=result.token;delete result.token;}
  if(!response.ok&&!result.schemaVersion)throw new Error(result.error?.messagePL||'Serwer live jest niedostępny.');
