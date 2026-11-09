@@ -5,8 +5,8 @@ import {SYSTEM_PROMPT,FOLLOW_UP_POLICY,TEACH_ROLE_POLICY,LESSON_POLICY} from './
 export class ProviderError extends Error {constructor(public code:string,public status:number){super(code);}}
 export type ProviderResult={text:string;actualModel:string;responseId:string;inputTokens:number|null;outputTokens:number|null};
 export type Provider=(context:Context,userMessage:string,signal:AbortSignal,repair?:{output:string;issues:string})=>Promise<ProviderResult>;
-export function openAIProvider(key:string,model:string,maxTokens:number,baseURL?:string):Provider {
- const client=new OpenAI({apiKey:key,maxRetries:0,...(baseURL?{baseURL}:{})});
+export function openAIProvider(key:string,model:string,maxTokens:number,baseURL?:string,fetchImpl?:typeof fetch):Provider {
+ const client=new OpenAI({apiKey:key,maxRetries:0,...(baseURL?{baseURL}:{}),...(fetchImpl?{fetch:fetchImpl}:{})});
  return async(context,userMessage,signal,repair)=>{
   const {recentExchanges,lessonNote,...trusted}=context;
   const input:ResponseInputItem[]=[{role:'developer',content:JSON.stringify(trusted)}];
