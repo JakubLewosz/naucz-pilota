@@ -1,5 +1,13 @@
 # Raport weryfikacji
 
+## Gałąź przygotowania odbioru jury
+
+Kod f9efdbc przeszedł 183 testy Vitest i 12 testów Playwright na macOS arm64. Przeszły również lokalny build, Docker oraz uruchomienie i reset z atrapą w Electronie. Łańcuch notatki sprawdzono przez prawdziwy SDK na lokalnym HTTP stubie. Sprawdzenie próby samodzielnej objęło dziennik otwarty z innej misji, zapis v1, odświeżenie, podsumowanie kampanii i replay.
+
+Prawdziwy model, przegląd semantyczny, HTTPS z innej sieci i nowy odbiór Windows mają osobne statusy w raporcie. Lokalny ZIP pochodzi z wcześniejszej wersji. [Szczegółowe wyniki i zakres testów](../IMPLEMENTATION_STATUS.md)
+
+## Historia odbioru v1.0.0
+
 Naucz Pilota 1.0.0. Odbiór poprawek po audycie 9 listopada 2026. macOS arm64, Node 24.11.0, npm 11.6.1, Playwright oraz runner GitHub Actions Windows i Linux.
 
 ## Wyniki po audycie

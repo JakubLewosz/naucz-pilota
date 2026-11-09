@@ -1,9 +1,48 @@
 # Stan implementacji — Naucz Pilota
 Aktualizacja: 2026-11-09. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
-Poprawki po audycie przeszły lokalne testy i GitHub Actions na Windows oraz Linuksie. Pakiet ZIP z runnera Windows zawiera demo. Dane płatnego odbioru z 3 listopada dotyczą starszego promptu 1.0.2. Stan promptu 1.1.0 i zakres testów wydania są poniżej.
+Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Sprawdzony kod tego etapu ma SHA `f9efdbc22de7a4fc1a1c366e76cd00b882907642`.
 
-Wydanie `v1.0.0` na GitHubie obejmuje poprawki na `main`, dokładny ZIP z przebiegu Actions 42685071630, archiwum źródeł, pięć PDF-ów, dwa nagrania i maszynowy raport testu Windows. [Pliki wydania](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
+## Przygotowanie odbioru jury
+
+- **Lekcja.** Po zapisie i odświeżeniu aplikacja przekazuje dokładne słowa gracza z bieżącego podejścia. Kontrakt przepuszcza notatkę transferu wraz z poprawnym dowodem, potwierdzoną regułą i zgodnym ID. Brak lub błąd bieżącego dowodu usuwa notatkę z kontekstu, nawet gdy serwer zna wcześniejszą lekcję. Test z lokalnym HTTP SDK pokazuje tekst w roli user oraz kanoniczną regułę w roli developer.
+- **Dziennik.** Na bazie f1e059d regresja znalazła w DOM jedną regułę M02 w dzienniku otwartym z M01 przed samodzielną próbą M02. Oczekiwano zera. Po poprawce widoczność zależy od pierwszej parsowalnej próby misji wpisu. Zasada jest ukryta także w podsumowaniu kampanii i w pamięci przekazywanej Piko z innej misji. Bieżący transfer nadal otrzymuje własną potwierdzoną lekcję. Replay wymaga własnej pierwszej próby, a archiwum wcześniejszego podejścia zachowuje wynik. Dziennik ustawia afterReview tylko dla wyświetlonych zasad.
+- **Demo.** A/B/C M04 mają identyczny przygotowany komentarz, wzór i walidację mechaniczną. W UI rozróżniono tekst gracza, gotowy komentarz i sprawdzoną regułę. Zaliczenie liczy silnik.
+- **Live.** Zestaw standardowy nadal ma 22 tury. Oddzielny filtr M04-LESSONS obejmuje sześć tur w trzech sesjach. Runner wymaga jawnej zgody i budżetu, porównuje notatkę z faktycznym kontekstem providera i zapisuje osobny transkrypt dla każdego uruchomienia. Rubryka semantyczna pozostaje NOT REVIEWED.
+- **Materiały.** Gotowe są instrukcja HTTPS i odbioru z innego urządzenia, scenopis 4 min 20 s, kryteria pilotażu i checklista. Oficjalna strona potwierdziła termin i wymagania materiałów. Dokumentacja wydania v1.0.0 i stare filmy opisują wcześniejszy kod.
+
+### Wyniki sprawdzeń
+
+| Polecenie lub warstwa | Wynik |
+|---|---|
+| `npm run typecheck`, `npm run lint`, `npm run build` | PASS na macOS arm64 z Node 24.11.0. |
+| `npm test -- --reporter=default --reporter=json --outputFile=checks/unit-results.json` | PASS, 183 w 7 plikach. |
+| `npm run test:content`, walidator Python i niezależny audyt treści | PASS, 62 testy treści, 24 poprawne tory, 37 znanych błędów, 42 kontrole. Weryfikację Python wykonano na fa8326b, a treść i silnik są identyczne w sprawdzonym commicie. |
+| `CI=1 AI_MODE=demo STATE_DB_PATH=:memory: npm run test:e2e` | PASS, 12 testów Chromium. Pełna kampania, regresja nawigacji z reloadem i migracją v1, replay, podsumowanie kampanii, WCAG A/AA w badanych widokach, klawiatura i offline. |
+| UI → API → SDK | MOCK PASS. HTTP dostawcy działało na loopback. Surowe zdanie gracza i źródło parafrazy sprawdzono w faktycznym żądaniu SDK. |
+| `npm run test:ai:live -- --dry-run --case M04-LESSONS --max-calls 12` oraz sucha próba standardowa | Na fa8326b PASS wejść. Sześć tur i trzy notatki M04, 22 tury i sześć notatek standardu. Zablokowane próby bez zgody lub poświadczeń zwróciły kod 2 i NOT RUN. Razem 0 wywołań dostawcy. |
+| `npm run docker:build`, `npm run docker:smoke` | PASS lokalnie. Health w demo, brak kluczy i korpusu autora w obrazie, użytkownik bez root, trwała sesja po restarcie. |
+| `npm run desktop:smoke`, `npx tsx tools/smoke-desktop-relay.ts` | PASS na macOS. Offline M01 i restart, relay i reset z trzema odpowiedziami atrapy. |
+| `npm run release:check` | PASS LOCAL CHECKS renderera. Lokalna paczka desktop ma status STALE, zatem jej inspekcja pozostaje dowodem historycznym. |
+| STRUCTURAL LIVE / SEMANTIC HUMAN REVIEW | NOT RUN / NOT REVIEWED. Historyczny raport 22/22 dotyczy promptu 1.0.2. |
+| EXE WINDOWS RUN / HTTPS REMOTE RUN | NOT RUN dla bieżącej gałęzi. Historyczny Windows CI PASS dotyczy 52ac710. Publiczny origin oraz osobny komputer odbiorcy wymagają odbioru. |
+| Aktualny film, pilotaż, zgłoszenie | NOT RUN. Dostępne są procedury i checklista do wykonania. |
+
+### Pliki i commity
+
+- `e49ae62` — `apps/web/src/App.tsx`, `review.ts`, `state.ts`, `save.ts`, kontrakty, runner `tests/live/` i regresje w `tests/ai.test.ts`, `tests/live-runner.test.ts`, `tests/e2e/campaign.spec.ts` oraz `tests/e2e/lesson.spec.ts`.
+- `1bd3f8c` — jawny tekst demo w `packages/contracts/src/index.ts` i `App.tsx` oraz porównanie trzech wariantów.
+- `fa8326b` — `docs/17-odbior-live.md`, `docs/18-film-konkursowy.md`, aktualizacja instrukcji, pilotażu i `release/CHECKLISTA.md` oraz `tools/release-check.ts`.
+- `f9efdbc` — filtr kontekstu Piko w `review.ts` i `App.tsx`, kontrakt w dokumentacji oraz test stanu.
+- Raport maszynowy jest w `checks/jury-readiness.json`. Pełna lista plików wynika z `git diff --name-only f1e059d..HEAD`.
+
+### Decyzja o odbiorze
+
+Gotowe do lokalnego przeglądu demo i mock. Niegotowe do pełnej próby jury live. Trzy kolejne kroki:
+
+1. Zatwierdzić budżet A/B/C M04, wykonać rzeczywisty zestaw i przejrzeć transkrypty z rubryką.
+2. Zapewnić ograniczony HTTPS, trwały wolumen oraz odbiór z innej sieci i na osobnym komputerze Windows.
+3. Przeprowadzić pilotaż 3–5 osób, nagrać aktualny film i uzgodnić końcową wersję materiałów z podpisanymi formularzami.
 
 ## Poprawki po audycie fef5e22 (9 listopada 2026)
 

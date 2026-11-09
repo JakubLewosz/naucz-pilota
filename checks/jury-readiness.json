@@ -1,0 +1,123 @@
+{
+  "date": "2026-11-09T20:55:23.340527+00:00",
+  "branch": "codex/jury-readiness",
+  "base": "f1e059df0ff9c3608ae53b6712c41b14c18846d1",
+  "testedCommit": "f9efdbc22de7a4fc1a1c366e76cd00b882907642",
+  "environment": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "node": "v24.11.0",
+    "playwright": "1.64.1 Chromium"
+  },
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "status": "PASS"
+    },
+    {
+      "command": "npm run lint",
+      "status": "PASS"
+    },
+    {
+      "command": "npm test -- --reporter=default --reporter=json --outputFile=checks/unit-results.json",
+      "status": "PASS",
+      "count": 183
+    },
+    {
+      "command": "npm run test:content",
+      "status": "PASS",
+      "count": 62
+    },
+    {
+      "command": "CI=1 AI_MODE=demo STATE_DB_PATH=:memory: npm run test:e2e",
+      "status": "PASS",
+      "count": 12,
+      "durationMs": 20391.362
+    },
+    {
+      "command": "python3 tools/validate_missions.py --json-report checks/math-validation-current.json",
+      "status": "PASS",
+      "controls": 42
+    },
+    {
+      "command": "python3 tools/audit_package.py",
+      "status": "PASS",
+      "scenes": 24,
+      "witnesses": 24,
+      "knownFailures": 37
+    },
+    {
+      "command": "npm run build && npm run release:check",
+      "status": "PASS LOCAL CHECKS",
+      "localDesktopArtifact": "STALE"
+    },
+    {
+      "command": "npm run docker:build && npm run docker:smoke",
+      "status": "PASS",
+      "providerCalls": 0
+    },
+    {
+      "command": "npm run desktop:smoke && npx tsx tools/smoke-desktop-relay.ts",
+      "status": "PASS",
+      "platform": "darwin",
+      "stubCalls": 3,
+      "paidCalls": 0
+    }
+  ],
+  "journalRegression": {
+    "beforeRuntimeCommit": "f1e059d",
+    "before": "FAIL",
+    "protectedRuleCountObserved": 1,
+    "protectedRuleCountExpected": 0,
+    "after": "PASS",
+    "covers": [
+      "navigation through another mission",
+      "reload",
+      "v1 migration",
+      "invalid syntax",
+      "first parseable attempt",
+      "campaign summary",
+      "replay",
+      "immutable first result"
+    ]
+  },
+  "providerPreflight": {
+    "testedCommit": "fa8326b",
+    "status": "PASS INPUT VALIDATION",
+    "realLive": "NOT RUN",
+    "providerCalls": 0,
+    "m04Variants": {
+      "turns": 6,
+      "notes": 3
+    },
+    "standard": {
+      "turns": 22,
+      "notes": 6
+    },
+    "missingCredentialsExitCode": 2,
+    "missingConsentExitCode": 2
+  },
+  "levels": {
+    "mock": "PASS",
+    "realLiveStructural": "NOT RUN",
+    "humanSemanticReview": "NOT REVIEWED",
+    "windowsRuntimeCurrent": "NOT RUN",
+    "historicalWindowsCI": {
+      "status": "PASS",
+      "testedCommit": "52ac710dba77f6cc421440d5748310fd8c53def1",
+      "run": "https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630"
+    },
+    "windowsRecipient": "NOT RUN",
+    "publicHTTPS": "NOT RUN",
+    "filmCurrent": "NOT RUN",
+    "pilot": "NOT RUN",
+    "submission": "NOT RUN"
+  },
+  "paidProviderCalls": 0,
+  "juryDecision": "NOT READY FOR FULL JURY ACCEPTANCE",
+  "blockers": [
+    "Operator approval for the live test and human semantic review",
+    "Approved HTTPS host, access controls and a separate recipient device",
+    "Current film, pilot observations and signed submission materials"
+  ]
+}

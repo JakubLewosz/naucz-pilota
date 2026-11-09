@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-09T19:38:34.737Z",
+  "date": "2026-11-09T20:53:51.210Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -13,7 +13,7 @@
       "detail": "No alternate embedded author corpus."
     },
     {
-      "name": "renderer index-NGa-D-ft.js",
+      "name": "renderer index-DnYK5pMC.js",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
@@ -26,6 +26,11 @@
       "name": "renderer index.html",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "desktop matches current build",
+      "status": "STALE",
+      "detail": "Local package belongs to an older build."
     },
     {
       "name": "desktop package allowlist",
@@ -45,7 +50,7 @@
     {
       "name": "Windows PE executable",
       "status": "PASS",
-      "detail": "Cross-built PE; not a Windows runtime test."
+      "detail": "PE inspection. Runtime evidence is reported separately."
     }
   ],
   "artifacts": [
@@ -58,10 +63,18 @@
   "live": "NOT RUN FOR CURRENT PROMPT",
   "liveDetails": {
     "promptVersion": "1.0.2",
+    "reportedStatus": "PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED",
     "currentPromptVersion": "1.1.0",
     "humanSignoff": "PENDING",
     "limitations": [],
     "browser": "NOT RUN FOR CURRENT PROMPT"
   },
-  "windowsRuntime": "NOT RUN"
+  "windowsRuntime": "NOT RUN",
+  "historicalWindowsCI": {
+    "status": "PASS",
+    "testedCommit": "52ac710dba77f6cc421440d5748310fd8c53def1",
+    "run": "https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630"
+  },
+  "remoteHTTPS": "NOT RUN",
+  "recipientWindows": "NOT RUN"
 }
