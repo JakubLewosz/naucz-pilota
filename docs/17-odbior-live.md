@@ -1,8 +1,25 @@
 # Odbiór live i test na urządzeniu jury
 
-Publiczny HTTPS, prawdziwy model z notatką i osobny komputer odbiorcy mają status **NOT RUN**. Przed próbą zanotuj SHA kodu, wersję promptu, model, datę, urządzenie i zgodę na liczbę wywołań. Lokalna atrapa i przebieg CI są oddzielnymi dowodami.
+Publiczny HTTPS i osobny komputer odbiorcy mają status **NOT RUN**. Przed próbą zanotuj SHA kodu, wersję promptu, model, datę, urządzenie i zgodę na liczbę wywołań. Lokalna atrapa i przebieg CI są oddzielnymi dowodami.
 
-## Próba M04 bez opłat
+## Odbiór M04 A/B/C przez interfejs gry
+
+Runner `tests/live/m04-browser.ts` jest protokołem dla gałęzi `codex/jury-readiness` i promptu 1.1.0. Na lokalnym backendzie odtwarza trzy osobne sesje Chromium ze wspólnego stanu tuż po naprawie i prognozach M04. W każdej sesji używa interfejsu do rozmowy, potwierdza zapis rzeczywistej parafrazy, odświeża grę i zleca transfer. Porównuje notatkę z wiadomością wysłaną do OpenAI oraz sprawdza propozycję silnikiem w aplikacji.
+
+```sh
+npm run build
+npx tsx tests/live/m04-browser.ts --mock moj-id-proby-technicznej
+```
+
+Po odrębnej zgodzie na wywołania OpenAI uruchom poniższą komendę z nowym identyfikatorem. Klucz i model ustaw w lokalnym `.env` backendu. Polecenie wymaga Chromium Playwright i dopuszcza najwyżej 12 żądań HTTP do OpenAI łącznie z ponowieniami. Próba używa sesji SQLite w pamięci, a raport i dziennik żądań zapisuje w `var/ai-live/`.
+
+```sh
+npx tsx tests/live/m04-browser.ts --allow-paid moj-id-proby-live
+```
+
+Wyniki pierwszej rzeczywistej próby oraz ocenę transferu zawiera [raport M04 A/B/C z promptem 1.1.0](../checks/ai-live-m04-abc-1.1.0.md).
+
+## Próba kontraktu M04 bez opłat
 
 ```sh
 npm run test:ai:live -- --dry-run --case M04-LESSONS --max-calls 12
@@ -10,7 +27,7 @@ npm run test:ai:live -- --dry-run --case M04-LESSONS --max-calls 12
 
 M04-A, M04-B i M04-C obejmują po jednej turze teach i transfer w każdej z trzech osobnych sesji. Geometria, naprawiony wzór i prognozy są jednakowe. Zmienia się wyłącznie tekst wyjaśnienia. W tych testach zapisano notatkę z `source: "skipped"` i pustą parafrazą. Dzięki temu transfer porównuje własne słowa gracza bez dopisywania mu przykładowej odpowiedzi modelu.
 
-Po zgodzie operatora na rzeczywiste wywołania użyj jednej z poniższych komend. Pełne A/B/C rezerwuje do 12 żądań, pojedynczy wariant do 4. Zestaw bez filtra ma 22 tury i wymaga jawnie wskazanego budżetu do 44. Przed testem zatrzymaj lokalny backend używający tej samej bazy. Nie zwiększaj limitu dobowego w celu ominięcia wyczerpanego budżetu.
+Runner kontraktu może również wykonać poniższe próby po zgodzie operatora. Pełne A/B/C rezerwuje do 12 żądań, pojedynczy wariant do 4. Zestaw bez filtra ma 22 tury i wymaga jawnie wskazanego budżetu do 44. Przed testem zatrzymaj lokalny backend używający tej samej bazy. Nie zwiększaj limitu dobowego w celu ominięcia wyczerpanego budżetu.
 
 ```sh
 npm run test:ai:live -- --allow-paid --case M04-A --max-calls 4

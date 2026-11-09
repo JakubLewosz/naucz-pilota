@@ -1,14 +1,32 @@
 # Stan implementacji — Naucz Pilota
 Aktualizacja: 2026-11-09. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
-Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Sprawdzony kod tego etapu ma SHA `f9efdbc22de7a4fc1a1c366e76cd00b882907642`.
+Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live wykonano na `a751a1cd8ceb98d89410571e9076b194652f0493`.
+
+## M04 A/B/C na żywo z promptem 1.1.0
+
+Lokalny Chromium i backend sprawdziły pełny przepływ w trzech nowych sesjach z jednakowego stanu. Po rozmowie zapisano rzeczywiste parafrazy i odświeżono grę. SDK przekazał potwierdzony tekst i parafrazę do OpenAI. Następnie interfejs pokazał wynik silnika dla każdej faktycznej propozycji.
+
+| Warstwa | Wynik |
+|---|---|
+| Rozmowa teach | PASS semantyczny w rozróżnieniu treści. A `sound`, B `incorrect`, C `not_applicable`. |
+| Zapis, odświeżenie, żądanie transferu, zgodność silnika z UI | PASS techniczny we wszystkich trzech sesjach. |
+| Transfer A | Częściowe odniesienie do lekcji, przepisany wzór początkowy `0.25(x+2)^2`, `START_MISS`. |
+| Transfer B | Ogólny komentarz bez odrzucenia błędnego wyjaśnienia, `0.25(x-1)^2`, `START_MISS`. |
+| Transfer C | Wskazanie reguły bez wyjaśnienia, czemu pominięto „abc”, `0.25(x-0)^2`, `START_MISS`. |
+| Budżet i zużycie | 6/12 rzeczywistych żądań, zero ponowień. `gpt-5.4-mini-2026-03-17`, 18 384 tokeny, koszt szacunkowy 0,00936945 USD. |
+| Próba techniczna `--mock` | PASS wszystkich trzech sesji, 7 prób po celowym ponowieniu, 0 żądań OpenAI. |
+| `npm run typecheck`, `npm run lint`, `npm run build`, `npm test` | PASS, 183 testy w 7 plikach. |
+| `CI=1 AI_MODE=demo STATE_DB_PATH=:memory: npm run test:e2e` | PASS, 12 testów w Chromium, bez OpenAI. |
+
+**Werdykt** Przepływ jest sprawny, ale aktualny transfer nie jest gotowy jako dowód dla jury, że Piko stosuje wyjaśnienie do nowej geometrii. Proponowana zmiana promptu rozdziela decyzję o wykorzystaniu notatki od wyprowadzenia wierzchołka i sprawdzenia wzoru z danymi trasy. Cytaty, wyniki i uzasadnienie zapisano w [raporcie M04 A/B/C](checks/ai-live-m04-abc-1.1.0.md) oraz [surowym zapisie live](checks/ai-live-m04-abc-1.1.0.json). Pełny zestaw 22 tur, HTTPS i Windows odbiorcy pozostają **NOT RUN** dla tej gałęzi. Odbiór transkryptów przez człowieka pozostaje **NOT REVIEWED**.
 
 ## Przygotowanie odbioru jury
 
 - **Lekcja.** Po zapisie i odświeżeniu aplikacja przekazuje dokładne słowa gracza z bieżącego podejścia. Kontrakt przepuszcza notatkę transferu wraz z poprawnym dowodem, potwierdzoną regułą i zgodnym ID. Brak lub błąd bieżącego dowodu usuwa notatkę z kontekstu, nawet gdy serwer zna wcześniejszą lekcję. Test z lokalnym HTTP SDK pokazuje tekst w roli user oraz kanoniczną regułę w roli developer.
 - **Dziennik.** Na bazie f1e059d regresja znalazła w DOM jedną regułę M02 w dzienniku otwartym z M01 przed samodzielną próbą M02. Oczekiwano zera. Po poprawce widoczność zależy od pierwszej parsowalnej próby misji wpisu. Zasada jest ukryta także w podsumowaniu kampanii i w pamięci przekazywanej Piko z innej misji. Bieżący transfer nadal otrzymuje własną potwierdzoną lekcję. Replay wymaga własnej pierwszej próby, a archiwum wcześniejszego podejścia zachowuje wynik. Dziennik ustawia afterReview tylko dla wyświetlonych zasad.
 - **Demo.** A/B/C M04 mają identyczny przygotowany komentarz, wzór i walidację mechaniczną. W UI rozróżniono tekst gracza, gotowy komentarz i sprawdzoną regułę. Zaliczenie liczy silnik.
-- **Live.** Zestaw standardowy nadal ma 22 tury. Oddzielny filtr M04-LESSONS obejmuje sześć tur w trzech sesjach. Runner wymaga jawnej zgody i budżetu, porównuje notatkę z faktycznym kontekstem providera i zapisuje osobny transkrypt dla każdego uruchomienia. Rubryka semantyczna pozostaje NOT REVIEWED.
+- **Live.** Zestaw standardowy nadal ma 22 tury. Filtr M04-LESSONS obejmuje sześć tur w trzech sesjach z przygotowanymi notatkami. Runner przeglądarkowy powyżej sprawdza zapis rzeczywistej parafrazy. Oba wymagają jawnej zgody i budżetu oraz zapisują osobny transkrypt dla każdego uruchomienia.
 - **Materiały.** Gotowe są instrukcja HTTPS i odbioru z innego urządzenia, scenopis 4 min 20 s, kryteria pilotażu i checklista. Oficjalna strona potwierdziła termin i wymagania materiałów. Dokumentacja wydania v1.0.0 i stare filmy opisują wcześniejszy kod.
 
 ### Wyniki sprawdzeń
@@ -24,7 +42,7 @@ Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej baz
 | `npm run docker:build`, `npm run docker:smoke` | PASS lokalnie. Health w demo, brak kluczy i korpusu autora w obrazie, użytkownik bez root, trwała sesja po restarcie. |
 | `npm run desktop:smoke`, `npx tsx tools/smoke-desktop-relay.ts` | PASS na macOS. Offline M01 i restart, relay i reset z trzema odpowiedziami atrapy. |
 | `npm run release:check` | PASS LOCAL CHECKS renderera. Lokalna paczka desktop ma status STALE, zatem jej inspekcja pozostaje dowodem historycznym. |
-| STRUCTURAL LIVE / SEMANTIC HUMAN REVIEW | NOT RUN / NOT REVIEWED. Historyczny raport 22/22 dotyczy promptu 1.0.2. |
+| Standardowy zestaw 22 tur live / SEMANTIC HUMAN REVIEW | NOT RUN / NOT REVIEWED dla promptu 1.1.0. Historyczny raport 22/22 dotyczy promptu 1.0.2. Odrębna próba M04 na 1.1.0 jest opisana wyżej. |
 | EXE WINDOWS RUN / HTTPS REMOTE RUN | NOT RUN dla bieżącej gałęzi. Historyczny Windows CI PASS dotyczy 52ac710. Publiczny origin oraz osobny komputer odbiorcy wymagają odbioru. |
 | Aktualny film, pilotaż, zgłoszenie | NOT RUN. Dostępne są procedury i checklista do wykonania. |
 
@@ -34,13 +52,14 @@ Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej baz
 - `1bd3f8c` — jawny tekst demo w `packages/contracts/src/index.ts` i `App.tsx` oraz porównanie trzech wariantów.
 - `fa8326b` — `docs/17-odbior-live.md`, `docs/18-film-konkursowy.md`, aktualizacja instrukcji, pilotażu i `release/CHECKLISTA.md` oraz `tools/release-check.ts`.
 - `f9efdbc` — filtr kontekstu Piko w `review.ts` i `App.tsx`, kontrakt w dokumentacji oraz test stanu.
+- `a751a1c` — limitowany runner przeglądarkowy M04 A/B/C i możliwość wstrzyknięcia `fetch` do SDK w teście.
 - Raport maszynowy jest w `checks/jury-readiness.json`. Pełna lista plików wynika z `git diff --name-only f1e059d..HEAD`.
 
 ### Decyzja o odbiorze
 
-Gotowe do lokalnego przeglądu demo i mock. Niegotowe do pełnej próby jury live. Trzy kolejne kroki:
+Gotowe do lokalnego przeglądu demo, mock i technicznego przepływu M04 live. Niegotowe do pełnej próby jury live. Trzy kolejne kroki:
 
-1. Zatwierdzić budżet A/B/C M04, wykonać rzeczywisty zestaw i przejrzeć transkrypty z rubryką.
+1. Poprawić instrukcję transferu i po osobnej zgodzie budżetowej powtórzyć M04 A/B/C z rubryką semantyczną.
 2. Zapewnić ograniczony HTTPS, trwały wolumen oraz odbiór z innej sieci i na osobnym komputerze Windows.
 3. Przeprowadzić pilotaż 3–5 osób, nagrać aktualny film i uzgodnić końcową wersję materiałów z podpisanymi formularzami.
 
@@ -61,7 +80,7 @@ Gotowe do lokalnego przeglądu demo i mock. Niegotowe do pełnej próby jury liv
 | Cross-build Windows i kontrola wydania | PASS. ZIP x64, PE i ASAR zweryfikowane lokalnie. |
 | Ekran teach na laptopie i przy 200% | PASS. Sprawdzono widok 1366×768 i zrzut karty. Axe WCAG A/AA na teach bez wykrytych naruszeń. Zatwierdzenie klawiaturą i brak przewijania w poziomie przy 200%. |
 | GitHub Actions Windows i Linux | PASS. Pierwszy przebieg 42684434332 dla 9293056. Powtórzenie 42685071630 dla 52ac710 po poprawce transportu przeszło oba zadania, w tym start i restart spakowanego EXE oraz nowy test relay z lokalną atrapą. Próba na osobnym komputerze odbiorcy ma status NOT RUN. |
-| Płatny test promptu 1.1.0 | NOT RUN, 0 wywołań. Poniższy raport 22 tur i dwa filmy odnoszą się do wersji sprzed audytu. |
+| Płatny test promptu 1.1.0 na etapie audytu | Wówczas NOT RUN, 0 wywołań. Nowszy przebieg M04 jest opisany wyżej. Historyczny raport 22 tur i dwa filmy odnoszą się do wersji sprzed audytu. |
 | HTTPS z innego urządzenia, pilotaż | NOT RUN. Endpoint w distribution.json pozostaje pusty. |
 
 Kod sprawdzony w Actions jest na gałęzi `codex/audit-fixes`. [Końcowy przebieg Windows i Linux](https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630). Zmieniono moduły stanu i zapisu w `apps/web/src`, kontrakt i kontekst w `contracts` oraz `packages/contracts`, reset w `apps/server/src/app.ts` i `store.ts`, relay i preload Electrona oraz regresje w `tests` i `tools/smoke-desktop-relay.ts`. Szczegółowe dane wydania są w `checks/windows-actions-audit.json`. Oba filmy pozostają dokumentacją wcześniejszego interfejsu.
