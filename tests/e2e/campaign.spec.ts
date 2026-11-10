@@ -138,6 +138,7 @@ test('MOCK: skip during a 21 s desktop reply preserves the independent attempt a
  await expect.poll(()=>requests.length).toBe(1);
  const skip=page.getByRole('button',{name:'Pomiń lot Piko i przejdź do własnej próby'});
  await expect(skip).toBeVisible();
+ await expect(skip).toHaveAccessibleDescription(/Twoja notatka pozostanie zapisana/);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.setViewportSize({width:390,height:844});
  await expect(skip).toBeVisible();
@@ -154,6 +155,7 @@ test('MOCK: skip during a 21 s desktop reply preserves the independent attempt a
  await expect(page.locator('html')).toHaveAttribute('data-stub-reply','delivered',{timeout:27000});
  expect(await readRun()).toMatchObject({role:'human_check',robotDisposition:'skipped',firstHuman:first,robot:null,robotTurns:0,robotFailures:0});
  expect(await readRun()).not.toHaveProperty('attempts.robot_transfer');
+ expect((await readRun()).rule.lessonNote.explanationPL).toBeTruthy();
  expect(requests).toHaveLength(1);
  await expect(page.getByLabel('Komentarz Piko')).toHaveCount(0);
  await page.reload();

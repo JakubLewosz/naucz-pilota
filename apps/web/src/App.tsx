@@ -5,7 +5,7 @@ import type {LearnerRequest} from '@piko/contracts';
 import {Board} from './Board';
 import {canOpenPage,hasIndependentAttempt,rulesForAiTurn,visibleJournalRules} from './review';
 import {clearConversation,getStatus,sendTurn,startSession} from './transport';
-import {backupSave,canAskRobot,hasCompleted,loadState,numericEvidence,persistState,reducer,removeSave,roles,roleLabels,type GameState,type LessonReply,type Run} from './state';
+import {backupSave,canAskRobot,hasCompleted,loadState,numericEvidence,persistState,reducer,removeSave,roles,roleLabels,type Attempt,type GameState,type LessonReply,type Run} from './state';
 const modeText={demo:'Demo — odpowiedzi scenariuszowe',live:'Live — prawdziwy model',unavailable:'AI niedostępne — brak odpowiedzi'};
 const familyName={constant:'funkcja stała',linear:'funkcja liniowa',quadratic:'funkcja kwadratowa'};
 const coefficientName={c2:'a',c1:'b',c0:'c'};
@@ -16,6 +16,22 @@ function eventLabel(event:Event){
  if(event.subject==='start')return 'minięcie otworu startowego';
  if(event.subject==='goal')return 'minięcie mety';
  return `minięcie bramki ${event.subject}`;
+}
+function FlightResult({attempt,robotStart}:{attempt:Attempt;robotStart?:{yMin:number;yMax:number}}){
+ const {expression,result}=attempt;
+ const missedStart=result.primaryCode==='START_MISS'?result.checkpoints.find(point=>point.id==='start'):undefined;
+ return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Wynik silnika">
+  <h3>Wynik silnika</h3>
+  <p>Sprawdzony wzór <code>f(x) = {expression}</code></p>
+  <strong>{result.ok?'✓':'×'} {result.messagePL}</strong>
+  {result.firstPhysicalEvent&&<p>Pierwsze zdarzenie: {eventLabel(result.firstPhysicalEvent)}, x ≈ {result.firstPhysicalEvent.x.toFixed(3)}.</p>}
+  {robotStart&&missedStart&&<p>Przy x = {missedStart.x} tor osiągnął y = {Number(missedStart.y.toFixed(6))}. Otwór startowy sięga od y = {robotStart.yMin} do y = {robotStart.yMax}.</p>}
+  <details>
+   <summary>Dlaczego? Wartości obliczone przez silnik</summary>
+   <ul>{result.checkpoints.map(c=><li key={c.id}>{c.passed?'✓':'×'} {pointName(c.id)}: x={c.x}, y={Number(c.y.toFixed(6))}</li>)}</ul>
+   <p>Kod silnika: {result.primaryCode}{result.firstPhysicalEvent&&` · ${result.firstPhysicalEvent.subject}`}</p>
+  </details>
+ </section>;
 }
 function LessonText({explanation,paraphrase,source}:{explanation:string;paraphrase:string|null;source?:string}){
  return <dl className="lesson-text">
@@ -65,8 +81,6 @@ export function App(){
  const heading=useRef<HTMLHeadingElement>(null),abort=useRef<AbortController|null>(null);
  const m=missionById(s.missionId),r=s.runs[s.missionId],role=r.role,scene=m.scenes[role];
  const last=r.attempts[role]?.at(-1),blind=role==='human_check'&&!hasIndependentAttempt(s,m.id);
- const missedRobotStart=role==='robot_transfer'&&r.robotChecked&&last?.result.primaryCode==='START_MISS'
-  ?last.result.checkpoints.find(point=>point.id==='start'):undefined;
  const currentResult:EngineResult|null=last?.expression===r.drafts[role]?last.result:null;
  const reduced=s.settings.reducedMotion||systemReduced;
  useEffect(()=>{setSaveError(persistState(undefined,s));},[s]);
@@ -129,7 +143,7 @@ export function App(){
   </p>}
   {scene.vertexLock&&<p>Współrzędne wierzchołka: {Object.entries(scene.vertexLock).map(([k,v])=>`${k} = ${v}`).join(', ')}.</p>}
  </div>
- <div aria-live="polite" className="feedback">{s.error&&<p className="error" role="alert">! {s.error}</p>}{last&&!blind&&(role!=='robot_transfer'||r.robotChecked)&&<div className={last.result.ok?'success':'error'} data-testid="engine-result"><strong>{last.result.ok?'✓':'×'} {last.result.messagePL}</strong>{last.result.firstPhysicalEvent&&<p>Pierwsze zdarzenie: {eventLabel(last.result.firstPhysicalEvent)}, x ≈ {last.result.firstPhysicalEvent.x.toFixed(3)}.</p>}{missedRobotStart&&<p>Przy x = {missedRobotStart.x} tor osiągnął y = {Number(missedRobotStart.y.toFixed(6))}. Otwór startowy sięga od y = {scene.start.yMin} do y = {scene.start.yMax}.</p>}<details><summary>Dlaczego?</summary><ul>{last.result.checkpoints.map(c=><li key={c.id}>{c.passed?'✓':'×'} {pointName(c.id)}: x={c.x}, y={Number(c.y.toFixed(6))}</li>)}</ul><p>Kod silnika: {last.result.primaryCode}{last.result.firstPhysicalEvent&&` · ${last.result.firstPhysicalEvent.subject}`}</p></details></div>}{blind&&<p className="notice">Nowa plansza, teraz bez podpowiedzi. Tor zobaczysz po zatwierdzeniu wzoru. Błąd składni nie zużywa pierwszej próby.</p>}</div>
+ <div aria-live="polite" className="feedback">{s.error&&<p className="error" role="alert">! {s.error}</p>}{last&&!blind&&(role!=='robot_transfer'||r.robotChecked)&&<FlightResult attempt={last} robotStart={role==='robot_transfer'?scene.start:undefined}/>}{blind&&<p className="notice">Nowa plansza, teraz bez podpowiedzi. Tor zobaczysz po zatwierdzeniu wzoru. Błąd składni nie zużywa pierwszej próby.</p>}</div>
  <details className="board-data"><summary>Dane planszy</summary><p>Granice: x od {scene.domain.xMin} do {scene.domain.xMax}; y od {scene.domain.yMin} do {scene.domain.yMax}. Bok Piko: 0,24. Cały robot musi mieścić się w przejściu.</p><ul>{[{id:'Start',...scene.start},...scene.gates,{id:'Cel',...scene.goal}].map(g=><li key={g.id}>{g.id}: x={g.x}, dozwolone y od {g.yMin} do {g.yMax}</li>)}{scene.obstacles.map(o=><li key={o.id}>Przeszkoda {o.id}: x od {o.xMin} do {o.xMax}; y od {o.yMin} do {o.yMax}</li>)}</ul></details>
  </section><aside className="side panel"><span className="eyebrow">{role==='human_check'?'TERAZ TWOJA KOLEJ':'CENTRUM LOTU'}</span><h2>{scene.title}</h2><p>{scene.instruction}</p>
  {role==='practice'&&<><div className="hint-box"><h3>Potrzebujesz wskazówki?</h3><p>Odkrywaj po jednej. Gra zapamięta ich użycie.</p>{hints.missions.find(h=>h.missionId===m.id)?.hints.slice(0,r.hintCount).map(h=><div key={h.level}><strong>{h.level}. {h.titlePL}</strong><p>{h.textPL}</p></div>)}{r.hintCount<3&&<button className="secondary" onClick={()=>dispatch({type:'HINT'})}>Wskazówka {r.hintCount+1} / 3</button>}</div>{last?.result.ok&&<button onClick={()=>dispatch({type:'NEXT'})}>Teraz naucz Piko →</button>}</>}
@@ -157,14 +171,17 @@ export function App(){
   <code>f(x) = {r.robot.learner.proposedExpression}</code>
   <p className="muted">{r.robot.mode==='live'?'Komentarz Piko opisuje, jak wykorzystał notatkę lub sprawdzoną zasadę. Wynik oblicza silnik.':'To przygotowany lot demonstracyjny. Wynik oblicza silnik.'}</p>
   <fieldset><legend>Jak przewidujesz?</legend>{['Przeleci','Nie przeleci','Jeszcze nie wiem'].map(p=><label key={p}><input type="radio" name="prediction" checked={r.prediction===p} onChange={()=>dispatch({type:'ROBOT_PREDICTION',value:p})}/>{p}</label>)}</fieldset>
-  {!r.robotChecked&&<button disabled={!r.prediction} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
+  {!r.robotChecked&&<button disabled={s.busy||!r.prediction} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
   {!r.prediction&&<p className="muted">Wybierz przewidywanie, by zobaczyć wynik.</p>}
  </div>}
  {s.mode!=='unavailable'&&canAskRobot(s,r)&&<button disabled={s.busy} onClick={()=>void askPiko()}>{r.robotTurns===0?'Piko, spróbuj sam':'Jedna poprawka Piko'}</button>}
- <div role="status">{s.busy&&<p>Piko analizuje nową trasę. Możesz poczekać albo przejść do swojego lotu.</p>}</div>
+ <div role="status" id="transfer-wait">{s.busy&&<div className="notice">
+  <strong>{s.mode==='demo'?'Ładowanie propozycji demonstracyjnej':'Piko analizuje nową trasę'}</strong>
+  <p>Po odpowiedzi możesz przewidzieć wynik i sprawdzić go silnikiem. Jeśli wolisz przejść dalej, Twoja notatka pozostanie zapisana. Pominięcie zapisze się oddzielnie od wyniku Twojego lotu.</p>
+ </div>}</div>
  {r.robotChecked&&!s.busy
   ? <button onClick={()=>dispatch({type:'NEXT'})}>Teraz mój samodzielny lot →</button>
-  : <button className="secondary" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>}</>}
+  : <button className="secondary" aria-describedby={s.busy?'transfer-wait':undefined} onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>}</>}
  {role==='human_check'&&<><p className="notice">Pierwszy parsowalny wzór zostaje zapisany na stałe, również po odświeżeniu.</p>{r.firstHuman&&<p>Pierwsza próba: <strong>{r.firstHuman.result.ok?'poprawna':'do poprawy'}</strong>. Liczba prób: {r.counts.human_check}.</p>}{r.completed&&<><p className="success">✓ Misja ukończona{(r.counts.human_check??0)>1?` w ${r.counts.human_check}. próbie. Pierwsza próba pozostaje w podsumowaniu.`:'.'}</p><button onClick={()=>dispatch({type:'NEXT'})}>Zobacz podsumowanie →</button></>}</>}
  {['teach','robot_transfer'].includes(role)&&<section aria-label="Komentarz Piko">
   <div className="conversation">

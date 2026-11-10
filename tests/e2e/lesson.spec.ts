@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {createServer,type Server} from 'node:http';
 import {once} from 'node:events';
-import type {LearnerRequest,ModelPayload} from '@piko/contracts';
+import type {Envelope,LearnerRequest,ModelPayload} from '@piko/contracts';
 import {createApp} from '../../apps/server/src/app';
 import {Store} from '../../apps/server/src/store';
 import {openAIProvider} from '../../apps/server/src/provider';
@@ -26,7 +26,7 @@ for(const scenario of [
  const observed:WireRequest[]=[];
  const paraphrase='Próbuję powiązać stałą z wysokością toru.';
  const {explanation}=scenario;
- const transferComment='Opieram wzór na sprawdzonej zasadzie. Na starcie moja funkcja daje y = 3.';
+ const transferComment='Opieram wzór na sprawdzonej zasadzie. Na starcie moja funkcja daje y = 999.';
  const providerStub=createServer(async(req,res)=>{
   let data='';
   for await(const chunk of req)data+=chunk;
@@ -57,8 +57,18 @@ for(const scenario of [
   const browserRequests:LearnerRequest[]=[];
   await page.route('**/api/**',async route=>{
    const path=new URL(route.request().url()).pathname;
-   if(path==='/api/learner-turn')browserRequests.push(route.request().postDataJSON() as LearnerRequest);
-   await route.fulfill({response:await route.fetch({url:address(api)+path})});
+   const response=await route.fetch({url:address(api)+path});
+   if(path==='/api/learner-turn'){
+    const request=route.request().postDataJSON() as LearnerRequest;
+    browserRequests.push(request);
+    if(request.phase==='robot_propose'){
+     const envelope=await response.json() as Envelope;
+     envelope.proposalValidation={status:'failed',failureCode:'START_MISS',normalizedExpression:'888',facts:[]};
+     await route.fulfill({response,json:envelope});
+     return;
+    }
+   }
+   await route.fulfill({response});
   });
   await page.goto('/');
   await page.getByRole('button',{name:'Zacznij'}).click();
@@ -85,7 +95,12 @@ for(const scenario of [
   await expect(page.getByTestId('engine-result')).toHaveCount(0);
   await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
   await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
-  await expect(page.getByTestId('engine-result')).toContainText('Bezpieczny lot');
+  const verified=page.getByRole('region',{name:'Wynik silnika'});
+  await expect(verified).toContainText('Bezpieczny lot');
+  await expect(verified).toContainText('f(x) = 3');
+  await verified.getByText('Dlaczego? Wartości obliczone przez silnik').click();
+  await expect(verified.getByText(/Start: x=.+, y=3$/)).toBeVisible();
+  await expect(verified).not.toContainText(/999|888|START_MISS/);
   await expect(page.getByText(scenario.feedback,{exact:true})).toBeVisible();
   await expect(page.getByText(/nauczyłeś Piko/i)).toHaveCount(0);
 

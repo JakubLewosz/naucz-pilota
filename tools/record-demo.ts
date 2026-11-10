@@ -11,6 +11,7 @@ if(args.some(a=>a!=='--live')||args.length>1)throw new Error('Use no arguments f
 const live=args.includes('--live'),mode=live?'live':'demo';
 const browser=await chromium.launch(),setup=await browser.newContext({reducedMotion:'reduce'}),page=await setup.newPage();
 const pause=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms)),responses:Envelope[]=[],pageErrors:string[]=[];
+let transferEngineCode:string|undefined;
 async function play(p:Page,m:typeof data.missions[number],slow=false){
  const caption=async(text:string)=>{if(!slow)return;await p.evaluate(({text,label})=>{let el=document.getElementById('recording-caption');if(!el){el=document.createElement('div');el.id='recording-caption';Object.assign(el.style,{position:'fixed',bottom:'10px',left:'20px',right:'20px',padding:'12px',background:'#172033',color:'#fff',zIndex:'10000',borderRadius:'8px',font:'16px system-ui',textAlign:'center'});document.body.append(el);}el.textContent=label+' · '+text;},{text,label:live?'AUTOMATYCZNY POKAZ LIVE':'NAGRANIE DEMO'});await pause(3500);};
  const ask=async(name:string)=>{
@@ -35,17 +36,24 @@ async function play(p:Page,m:typeof data.missions[number],slow=false){
  if(slow)assert.equal(await p.getByTestId('trajectory').count(),0,'Robot trajectory shown before prediction');
  await caption('Nowa plansza. Zanim odsłonimy tor i wynik, gracz przewiduje skuteczność pomysłu Piko.');
  await p.getByLabel(live&&slow?'Jeszcze nie wiem':'Nie przeleci',{exact:true}).check();await p.getByRole('button',{name:'Sprawdź lot Piko'}).click();
- const success=(await p.getByTestId('engine-result').innerText()).startsWith('✓');
+ const success=(await p.getByTestId('engine-result').innerText()).includes('✓ Bezpieczny lot.');
  if(slow&&live)assert.equal(success,responses.at(-1)?.proposalValidation.status==='passed');
- await caption(success?'Silnik potwierdził bezpieczny lot Piko. Wynik robota pozostaje oddzielony od wyniku gracza.':'Pomysł Piko nie działa. Gra zachowuje prawdziwą porażkę i pozwala przejść do zadania gracza.');
+ if(slow){
+  await p.getByText('Dlaczego? Wartości obliczone przez silnik',{exact:true}).click();
+  const code=p.getByText(/Kod silnika:/);
+  await code.evaluate(element=>element.scrollIntoView({block:'center'}));
+  transferEngineCode=(await code.innerText()).match(/Kod silnika: (\w+)/)?.[1];
+  assert.ok(transferEngineCode);
+ }
+ await caption(success?'Silnik potwierdził bezpieczny lot Piko. Wynik robota pozostaje oddzielony od wyniku gracza.':'Silnik wykrył błąd lotu Piko. Gracz widzi obliczone wysokości i może przejść do własnego zadania.');
  await p.getByRole('button',{name:'Teraz mój samodzielny lot'}).click();
  if(slow){assert.equal(await p.getByTestId('trajectory').count(),0);assert.equal(await p.getByTestId('robot').count(),0);assert.equal(await p.getByRole('button',{name:'Dziennik zasad'}).count(),0);assert.equal(await p.getByLabel('Komentarz Piko').count(),0);}
  await caption('Czwarta, osobna plansza. Bez podglądu trasy, AI, dziennika i podpowiedzi przed pierwszą próbą.');
  let first:unknown;
- if(slow&&live){await p.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.initialExpression);await p.getByLabel('Wzór funkcji',{exact:true}).press('Enter');first=await p.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!).runs.M04.firstHuman);await caption('Pokazujemy nieudaną pierwszą próbę. Późniejsza poprawka jej nie nadpisze.');}
+ if(slow){await p.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.initialExpression);await p.getByLabel('Wzór funkcji',{exact:true}).press('Enter');first=await p.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!).runs.M04.firstHuman);await caption('Pokazujemy nieudaną pierwszą próbę. Późniejsza poprawka jej nie nadpisze.');}
  await p.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.witness.expression);if(slow)await pause(1500);await p.getByLabel('Wzór funkcji',{exact:true}).press('Enter');
  await p.getByRole('button',{name:'Zobacz podsumowanie'}).click();
- if(slow&&live){await p.reload();await p.getByRole('heading',{name:'Misja ukończona',exact:true}).waitFor();const after=await p.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!).runs.M04);assert.deepEqual(after.firstHuman,first);assert.equal(after.counts.human_check,2);assert.equal(after.firstHuman.result.ok,false);}
+ if(slow){await p.reload();await p.getByRole('heading',{name:'Misja ukończona',exact:true}).waitFor();const after=await p.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!).runs.M04);assert.deepEqual(after.firstHuman,first);assert.equal(after.counts.human_check,2);assert.equal(after.firstHuman.result.ok,false);}
  await caption('Podsumowanie rozdziela wynik robota i pierwszą samodzielną próbę. To zapis wykonania zadania, nie diagnoza wiedzy.');
 }
 try{
@@ -58,7 +66,7 @@ try{
  if(live){await p.getByRole('button',{name:'Ustawienia',exact:true}).click();await p.getByRole('button',{name:'Wybierz live',exact:true}).click();await p.getByRole('button',{name:'Wróć do gry',exact:true}).click();}
  await play(p,data.missions[3],true);assert.deepEqual(pageErrors,[]);await pause(2000);
  await p.screenshot({path:`checks/browser-${mode}.png`,fullPage:true});const video=p.video()!;await recording.close();const file=await video.path();
- const report={date:new Date().toISOString(),status:'PASS',mode,promptVersion:PROMPT_VERSION,source:path.relative(process.cwd(),file),mission:'M04',automated:true,providerCalls:responses.reduce((n,r)=>n+r.model.requestCount,0),responses,pageErrors,firstIndependentAttemptPreserved:live,note:live?'Actual live model replies, real UI, no substitutions. Author-prepared automated demonstration.':'Actual UI recording. Scripted demo; no live AI claim.'};
+ const report={date:new Date().toISOString(),status:'PASS',mode,promptVersion:PROMPT_VERSION,source:path.relative(process.cwd(),file),mission:'M04',automated:true,providerCalls:responses.reduce((n,r)=>n+r.model.requestCount,0),responses,pageErrors,transferEngineCode,firstIndependentAttemptPreserved:true,note:live?'Actual live model replies, real UI, no substitutions. Author-prepared automated demonstration.':'Actual UI recording. Scripted demo; no live AI claim.'};
  await writeFile(`checks/${live?'browser-live':'demo-recording'}.json`,JSON.stringify(report,null,2)+'\n');console.log(`${mode} recording PASS: ${file}`);
 }catch(error){if(live)await writeFile('checks/browser-live.json',JSON.stringify({date:new Date().toISOString(),status:'FAIL',mode,providerCalls:responses.reduce((n,r)=>n+r.model.requestCount,0),error:error instanceof Error?error.message:'Recording failed',responses},null,2)+'\n');throw error;}
 finally{await browser.close();}
