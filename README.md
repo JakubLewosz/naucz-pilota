@@ -4,7 +4,7 @@ Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkc
 
 **Stan na 10 listopada 2026.** Prompt 1.2.0 prosi Piko o uzasadnienie wzoru geometrią bieżącej trasy. Gra pokazuje opinię o notatce oddzielnie od wyniku silnika i pozwala pominąć oczekującą propozycję. Na dwóch dodatkowych geometriach testowych Luna z `xhigh` podała siedem wzorów zaliczonych przez silnik. Ósma próba zakończyła się timeoutem podczas uśpienia hosta. [Wyniki i zakres odbioru](IMPLEMENTATION_STATUS.md).
 
-**Windows x64.** Pobierz ZIP, rozpakuj cały folder i uruchom `Naucz Pilota.exe`. Paczka zawiera tryb demo i pochodzi z przebiegu Actions, który sprawdził spakowaną aplikację na Windows. Kod źródłowy, instrukcje, raport i nagrania znajdziesz w tym samym wydaniu. [GitHub Releases 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
+**Windows x64.** Opublikowane v1.0.0 pochodzi z wcześniejszego commita przetestowanego w Windows CI. Aktualny kandydat przeszedł cross-build i inspekcję paczki. Uruchomienie bieżącego EXE na Windows pozostaje NOT RUN. [GitHub Releases 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
 
 ## Szybki start
 
@@ -52,9 +52,9 @@ npm run release:check
 npm run release:prepare
 ```
 
-`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje ZIP Windows x64 w `release/bin`. Po rozpakowaniu uruchamia się `Naucz Pilota.exe`, bez Node. Paczka jest niepodpisana. Automatyczny test spakowanego EXE przeszedł na runnerze Windows. Odbiór na osobnym komputerze użytkownika ma status NOT RUN. Nie uruchamiaj samego EXE poza całym rozpakowanym katalogiem.
+`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje niepodpisany ZIP Windows x64 w `release/bin`. Rozpakuj cały katalog i uruchom `Naucz Pilota.exe`. Node jest potrzebny do budowania aplikacji. [Odbiór Windows](docs/16-windows-odbior.md)
 
-Aby przygotować live dla odbiorcy, skonfiguruj zaufany origin HTTPS w `apps/desktop/distribution.json` i ponownie zbuduj paczkę. Klucz pozostaje wyłącznie na backendzie. Obecnie adres jest pusty, dlatego paczka ma działające demo, ale nie ma gotowości live dla jury. Szczegóły wdrożenia: [docs/11-uruchomienie.md](docs/11-uruchomienie.md).
+Paczka domyślnie uruchamia jawne demo. Aby połączyć ją z zatwierdzonym adresem live, podaj `PIKO_DESKTOP_HTTPS_ORIGIN` przy budowie. Na hostingu użyj `deploy/jury/compose.yaml` z Caddy, listą dozwolonych sieci i domyślnym budżetem zero. Klucz ustaw wyłącznie w chronionym pliku backendu. [Wdrożenie i próba HTTPS](docs/17-odbior-live.md)
 
 ## Rozgrywka i zapis
 
@@ -71,7 +71,7 @@ python3 tools/validate_missions.py
 python3 tools/audit_package.py
 ```
 
-Raporty w `checks/`. Weryfikacja ograniczeń: [docs/13-raport-weryfikacji.md](docs/13-raport-weryfikacji.md). Materiały konkursowe i jawne braki: `release/Naucz_Pilota_zgloszenie/`. Nie opublikowano hostingu ani nie wysłano zgłoszenia. Oryginalny README paczki zachowano w `docs/README-pakiet-startowy.md`.
+Raporty są w `checks/`. Stan materiałów i braki formalne podaje checklista. Oryginalny README paczki zachowano w `docs/README-pakiet-startowy.md`. [Raport weryfikacji](docs/13-raport-weryfikacji.md) · [Checklista konkursowa](release/CHECKLISTA.md)
 
 ## Odbiór wydania i test live w małym zakresie
 
@@ -83,6 +83,7 @@ npm run desktop:smoke
 npm run desktop:smoke -- --executable "release/bin/win-unpacked/Naucz Pilota.exe"
 npm run docker:build
 npm run docker:smoke
+npm run jury:https:smoke
 ```
 
 Pierwsza komenda sprawdza wejścia teach i transfer M01 bez wywołań dostawcy. Dla zatwierdzonej próby live zatrzymaj backend korzystający z tej samej bazy SQLite. Nadal obowiązuje limit dobowy.

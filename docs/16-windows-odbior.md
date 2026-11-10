@@ -17,6 +17,23 @@ Smoke uruchamia wskazany plik EXE z osobnym profilem, przechodzi M01 w demo, spr
 
 W `.github/workflows/verify.yml` przygotowano ręcznie uruchamiany workflow. Po umieszczeniu kodu w wybranym repozytorium GitHub otwórz Actions → Verify release on Windows and Linux → Run workflow. Job Windows uruchamia EXE; job Linux sprawdza kontener. Workflow nie otrzymuje klucza API i nie uruchamia płatnych testów. Zapisz SHA rzeczywiście sprawdzonego commita i odróżnij go od SHA bieżących poprawek.
 
+## Próba połączenia HTTPS w spakowanym EXE
+
+Na Windows z Node 24.x i OpenSSL (np. w Git for Windows) wykonaj poniższy odbiór osobnego artefaktu. Port 3443 ma być wolny. Test tworzy jednodniowy certyfikat w katalogu tymczasowym, sprawdza jego odrzucenie bez zaufania, a następnie dodaje zaufanie tylko procesowi testowemu. Uruchamia rozmowę, reset historii, odpowiedź po 17 s i transfer M01 z rzeczywistą walidacją silnika. Źródłem wypowiedzi jest lokalna atrapa. W pakiecie jest tylko adres loopback.
+
+```powershell
+npm run build
+$env:PIKO_DESKTOP_HTTPS_ORIGIN = 'https://127.0.0.1:3443'
+$env:PIKO_OPENSSL = Join-Path $env:ProgramFiles 'Git/usr/bin/openssl.exe'
+$env:PIKO_DESKTOP_RELAY_REPORT = 'checks/desktop-relay-https-win32.json'
+npx tsx tools/prepare-desktop.ts
+npx electron-builder --config apps/desktop/builder.json --config.directories.output=release/bin/tls-smoke --win zip --x64
+npx tsx tools/smoke-desktop-relay.ts --executable 'release/bin/tls-smoke/win-unpacked/Naucz Pilota.exe'
+Remove-Item Env:PIKO_DESKTOP_HTTPS_ORIGIN
+```
+
+Aktualne ZIP-y zbudowano na macOS, oddzielnie dla demo i połączenia testowego loopback. Uruchomienie obu EXE na Windows pozostaje **NOT RUN**. Po odbiorze docelowego HTTPS zbuduj paczkę ponownie, ustawiając `PIKO_DESKTOP_HTTPS_ORIGIN` na zatwierdzony origin, i wykonaj poniższy odbiór z tej sieci. ZIP przeznaczony do loopback zachowaj jako artefakt techniczny.
+
 ## Ręczny test na komputerze odbiorcy bez Node
 
 Użyj osobnego komputera z Windows x64 bez narzędzi projektu. Pobierz dokładnie oznaczony artefakt wydania, porównaj SHA-256 z raportem tej paczki i zapisz tag oraz SHA kodu. Dla v1.0.0 użyj wartości w `checks/windows-actions-audit.json`. W PowerShell sprawdzisz plik przez `Get-FileHash -Algorithm SHA256 <ścieżka-do-pobranego-pliku>`. Rozpakuj cały katalog do ścieżki ze spacjami i uruchom EXE. Zapisz system oraz wynik każdej pozycji. Próby live wykonaj dopiero z zatwierdzonym HTTPS i zgodą na budżet według [protokołu live](17-odbior-live.md).

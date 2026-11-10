@@ -1,10 +1,12 @@
 # Raport weryfikacji
 
-## Gałąź przygotowania odbioru jury
+## Lokalny kandydat konkursowy, 10 listopada 2026
 
-Kod f9efdbc przeszedł 183 testy Vitest i 12 testów Playwright na macOS arm64. Przeszły również lokalny build, Docker oraz uruchomienie i reset z atrapą w Electronie. Łańcuch notatki sprawdzono przez prawdziwy SDK na lokalnym HTTP stubie. Sprawdzenie próby samodzielnej objęło dziennik otwarty z innej misji, zapis v1, odświeżenie, podsumowanie kampanii i replay.
+Na macOS arm64 przeszły 206 testów Vitest, 15 prób Playwright oraz kontrola typów, lint i build. Walidator potwierdził 24 poprawne tory, 37 kontrolnych porażek i 42 kontrole parsera i geometrii. Regresja odtworzyła odpowiedź po 21 sekundach oraz celowo błędne liczby w komentarzu Piko. Pierwsza próba i archiwum pozostały zachowane, a wynik sprawdzonego wzoru pochodził z silnika.
 
-Prawdziwy model, przegląd semantyczny, HTTPS z innej sieci i nowy odbiór Windows mają osobne statusy w raporcie. Lokalny ZIP pochodzi z wcześniejszej wersji. [Szczegółowe wyniki i zakres testów](../IMPLEMENTATION_STATUS.md)
+Lokalny Caddy przeszedł test ograniczenia dostępu i zaufania TLS. Backend przy budżecie zero nie wysłał żadnego żądania do OpenAI. Test Electrona na macOS używał lokalnego zastępnika dostawcy. Wcześniejsza rzeczywista próba GPT-6 Luna Extra High z promptem 1.2.0 przyniosła siedem zaliczonych propozycji na dwóch geometriach M04. Ósma próba przekroczyła czas.
+
+Paczki Windows x64 w wariantach demo i testowego HTTPS przeszły inspekcję PE, ASAR i ZIP. Uruchomienie aktualnego EXE na Windows, docelowy HTTPS, pilotaż i montaż filmu konkursowego pozostają NOT RUN. Zakres i źródła dowodów zapisano w IMPLEMENTATION_STATUS.md.
 
 ## Historia odbioru v1.0.0
 
@@ -62,7 +64,7 @@ Przeczytaj zapisane odpowiedzi live według rubryk i zatwierdź jakość dialogu
 
 ## Dalszy odbiór
 
-Runner live obsługuje filtr --case i limit --max-calls, sprawdza teach i transfer misji w jednej sesji, zatrzymuje test po pierwszym błędzie i zwraca niezerowy kod przy awarii. Cztery dodatkowe testy sprawdzają ten mechanizm bez płatnego API. Przygotowany ręczny workflow GitHub Actions obejmuje Windows EXE i kontener Linux; wykonanie workflow pozostaje NOT RUN, ponieważ repozytorium nie ma remote. Dostępne są protokoły pilotażu i ręcznego odbioru Windows w docs/15-pilotaz.md i docs/16-windows-odbior.md.
+Runner live obsługuje filtr --case i limit --max-calls, sprawdza teach i transfer misji w jednej sesji, zatrzymuje test po pierwszym błędzie i zwraca niezerowy kod przy awarii. Cztery dodatkowe testy sprawdzają ten mechanizm bez płatnego API. W pierwszym lokalnym przebiegu ręczny workflow GitHub Actions pozostawał NOT RUN. Nowszy wynik starszego EXE podano przy commicie 52ac710. Dostępne są protokoły pilotażu i ręcznego odbioru Windows w docs/15-pilotaz.md i docs/16-windows-odbior.md.
 
 
 ## Poprawki po wywołaniach prawdziwego modelu

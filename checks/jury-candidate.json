@@ -1,0 +1,147 @@
+{
+  "date": "2026-11-10T12:36:48.063705+00:00",
+  "runtimeCommit": "4c779ff2baf83aa3c44ead59d084d7fda2fc5525",
+  "platform": "macOS arm64",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "xhigh",
+  "promptVersion": "1.2.0",
+  "paidProviderCalls": 0,
+  "checks": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "build": "PASS",
+    "vitestPassed": 206,
+    "contentPassed": 62,
+    "playwright": {
+      "startTime": "2026-11-10T12:21:53.658Z",
+      "duration": 50667.864,
+      "expected": 15,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "pythonMath": {
+      "ok": true,
+      "schemaVersion": "1.0.0",
+      "missions": 6,
+      "scenes": 24,
+      "successfulWitnesses": 24,
+      "checkedKnownFailures": 37,
+      "parserAndGeometryChecks": 42,
+      "schemaValid": true,
+      "expressionsMatchCoefficients": true,
+      "humanChecksDistinctFromRobotTransfer": true
+    },
+    "independentAudit": {
+      "ok": true,
+      "checkedAtUTC": "2026-11-10T12:35:02.426531+00:00",
+      "scope": "Independent fixture/content audit; not application tests or live AI.",
+      "method": "Separate AST coefficient expansion and root-partition inequalities; no import of reference validator.",
+      "scenes": 24,
+      "witnessesPassed": 24,
+      "knownFailuresMatched": 37,
+      "humanInitialExpressionsNotSolutions": true,
+      "hintCount": 18,
+      "ruleTextMatchesSkills": true,
+      "responseHasNoOutcomeAuthority": true,
+      "plannedAiCases": 42,
+      "liveAiCalls": 0,
+      "fullExternalJsonSchemaEngineUsed": false
+    },
+    "m04WithStub": "PASS, 16 cases, 0 OpenAI HTTP requests",
+    "docker": {
+      "date": "2026-11-10T12:27:05.971Z",
+      "status": "PASS",
+      "image": "naucz-pilota:jury",
+      "checks": [
+        "HTTP health and explicit demo",
+        "No .env or author corpus; runtime is not root",
+        "Session and SQLite survive process restart on mounted volume"
+      ],
+      "providerCalls": 0,
+      "publicHTTPS": "NOT DEPLOYED"
+    },
+    "localJuryHTTPS": {
+      "date": "2026-11-10T12:23:43.058Z",
+      "status": "PASS",
+      "checks": [
+        "Production proxy has Linux host networking; only backend loopback port and backend-only secret file",
+        "TLS without trust in the issuing CA is rejected",
+        "Source-IP restriction blocks the site and API, including spoofed forwarding headers",
+        "Trusted TLS serves the page and Luna health; secure cookie, foreign origin rejection, 16 KiB body limit and budget 0",
+        "Authenticated session survives backend restart on SQLite volume"
+      ],
+      "paidProviderCalls": 0,
+      "publicHTTPS": "NOT RUN"
+    },
+    "macPackagedHTTPSRelay": {
+      "date": "2026-11-10T12:33:24.596Z",
+      "status": "PASS",
+      "platform": "darwin",
+      "stubCalls": 4,
+      "paidProviderCalls": 0,
+      "transport": "Electron IPC to local HTTPS relay",
+      "packaged": true,
+      "slowReplyMs": 17000,
+      "oldContextCleared": true,
+      "untrustedCertificateRejected": true,
+      "transferChecked": true,
+      "disconnectedStateVerified": true
+    },
+    "macPackagedOffline": {
+      "date": "2026-11-10T12:35:52.619Z",
+      "platform": "darwin",
+      "packaged": true,
+      "executable": "Naucz Pilota",
+      "status": "PASS",
+      "scope": "app://, sandbox, isolation, offline M01, immutable first attempt and restart persistence",
+      "windowsStatus": "NOT RUN",
+      "executableSHA256": "e1e6fcf02e1263644308692375784cf67507c3bbc7a408acae15d92a8fd4850c",
+      "appAsarSHA256": "4d788866fc498f72e65435507b7f083cb890f237d865dadd0addb4386e990d23"
+    },
+    "windowsZIPs": {
+      "demo": {
+        "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
+        "size": 153230673,
+        "sha256": "42a599393304079916527122a28b0c2011e9e429a9bc8daea6c61077c1fc6be2",
+        "origin": null,
+        "runtime": "NOT RUN"
+      },
+      "https": {
+        "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
+        "size": 153230663,
+        "sha256": "0745f0f69d800d705db560db0c3f425d97e412ab71f803e8907b6418bacd75b3",
+        "origin": "https://127.0.0.1:3443",
+        "runtime": "NOT RUN"
+      }
+    },
+    "windowsZIPIntegrity": "PASS (CRC, ASAR and PE inspection)",
+    "workflowYAML": "PASS (syntax; Windows jobs NOT RUN)",
+    "pdfs": {
+      "launchPages": 1,
+      "buildPages": 3,
+      "userGuidePages": 2,
+      "descriptionPages": 1,
+      "reportPages": 4,
+      "visualReview": "PASS"
+    },
+    "filmMaterial": {
+      "file": "M04_demo_material.mp4",
+      "durationSeconds": 40.92,
+      "codec": "H.264",
+      "dimensions": "1440x900",
+      "sha256": "19d959c813f4546019973b424da5db8f1d55c651bd99cf364830117edd944d56",
+      "scope": "Automated M04 capture, demo mode, START_MISS and first independent attempt preserved after reload",
+      "paidProviderCalls": 0
+    }
+  },
+  "notRun": [
+    "Public HTTPS and external allowed/denied network acceptance",
+    "Windows runtime on the current EXE",
+    "Windows package pointing to a real hosted live endpoint",
+    "New paid provider test and browser live on prompt 1.2.0",
+    "3–5-person pilot",
+    "Final film edit and sign-off",
+    "Signed forms and cloud delivery"
+  ]
+}

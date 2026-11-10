@@ -3,6 +3,27 @@ Aktualizacja: 2026-11-10. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live z GPT-5.4 mini wykonano na `a751a1c`, a z GPT-6 Luna na `95a55ca`.
 
+## Kandydat konkursowy po próbie M04
+
+Kod interfejsu i testów zapisano w `2c0ffe7`, a wdrożenie i dystrybucję w `4c779ff`. Konfiguracja używa GPT-6 Luna Extra High z promptem 1.2.0. W tej rundzie wykonano **0 płatnych wywołań API**. Wynik 7/7 otrzymanych propozycji Luny przyjęto jako pozytywny dla doboru wzoru na dwóch geometriach. Ósma próba z wcześniejszego testu pozostaje timeoutem.
+
+- Oczekiwanie opisuje, co gracz może zrobić po odpowiedzi, oraz co zachowuje pominięcie. Komentarz Piko i obliczone wartości mają oddzielne sekcje. Po przewidywaniu wynik pokazuje oryginalny sprawdzony wzór i punkty z lokalnego silnika. Kryteria zaliczenia i blokada pierwszej samodzielnej próby korzystają z dotychczasowych reguł.
+- Stack Compose/Caddy ogranicza dostęp po IP/CIDR, zachowuje certyfikaty i SQLite oraz uruchamia backend z domyślnym budżetem zero. Test lokalny stosuje ten sam Caddyfile z odizolowaną siecią zamiast linuksowego trybu host. Klucz testowy był syntetyczny. W pakiecie Windows zapisuje się wyłącznie publiczny origin podany przy budowie.
+- Materiały obejmują pięć aktualnych PDF-ów, scenopis 4 min 20 s, klip demo M04 40,92 s i protokół pilotażu dla 3–5 osób. Klip pokazuje `START_MISS` oraz zachowanie pierwszej próby po korekcie i odświeżeniu. Źródła i materiały do odbioru są zebrane lokalnie w `var/jury-candidate/zgloszenie/`. [Checklista UwB](release/CHECKLISTA.md) · [Scenopis](docs/18-film-konkursowy.md) · [Pilotaż](docs/15-pilotaz.md)
+
+| Sprawdzenie | Rzeczywisty wynik |
+|---|---|
+| `npm run typecheck`, `npm run lint`, `npm run build`, `npm test` | PASS, 206 testów Vitest w 8 plikach. |
+| `npm run test:content`, `tools/validate_missions.py`, `tools/audit_package.py` | PASS, 62 testy treści, 24 poprawne tory, 37 kontrolnych porażek i 42 kontrole walidatora. |
+| `npm run test:e2e` w demo i z atrapami | PASS, 15 testów w 50,7 s. Po 21 s spóźniona odpowiedź nie zmieniła samodzielnej próby. Celowo błędna wysokość i fałszywa walidacja transportu nie zmieniły wyniku silnika. |
+| `npm run test:m04:offline`, `npm run docker:smoke` | PASS, 16 przypadków M04 z atrapą i kontener z trwałą sesją po restarcie. |
+| `npm run jury:https:smoke` | PASS. Zaufany TLS, odrzucony niezaufany certyfikat, sieci dozwolona i odrzucona, podrobione nagłówki, Secure cookie, obcy origin, limit 16 KiB, HTTP 429 z `requestCount=0` i sesja po restarcie. |
+| Spakowany Electron macOS | PASS, M01 offline i zachowanie pierwszej próby po restarcie. W osobnej próbie HTTPS z atrapą odrzucono niezaufany certyfikat, odebrano odpowiedź po 17 s, wyczyszczono historię, sprawdzono lot i jawną awarię sieci. |
+| Windows x64, `release:check`, `unzip -tq` | PASS cross-build i inspekcja obu ZIP-ów, PE i ASAR. Demo ma pusty origin. Wariant do smoke ma `https://127.0.0.1:3443`. Aktualny workflow Windows jest gotowy do uruchomienia, jego wykonanie **NOT RUN**. |
+| Wymogi UwB, opis i film | Oficjalna strona potwierdza termin 29.11.2026 oraz wymagane materiały. Aktualny opis ma jedną stronę. Lokalna próba pobrania regulaminu i załączników PDF zwróciła HTTP 403. Finalny film pozostaje **NOT RUN**. |
+
+**Gotowość**. Można pokazać aktualne demo lokalnie oraz wyniki wcześniejszego testu Luny. Docelowy HTTPS z sieci jury, paczka skierowana do tego hosta, uruchomienie obecnego EXE na Windows, pilotaż, finalny montaż, formularze i udostępnienie zgłoszenia pozostają **NOT RUN**. [Raport maszynowy](checks/jury-candidate.json) · [Odbiór Windows](docs/16-windows-odbior.md) · [Odbiór HTTPS](docs/17-odbior-live.md)
+
 ## Dwie nowe geometrie M04 na żywo z promptem 1.2.0
 
 - Na `21ed51b` wykorzystano limit **8 prób HTTP**, bez ponowień. `gpt-6-luna` z `xhigh` podała siedem wzorów, które silnik zaliczył. Na translacji −4 wszystkie cztery warunki dały `0.25*(x+2)^2`. Na przebudowanej A/B/C dały `0.5*(x-4)^2+1`, a D zakończyło się `AI_TIMEOUT` w trakcie uśpienia hosta. Koszt tej ostatniej tury pozostaje nieustalony.

@@ -1,27 +1,28 @@
-# Materiały do odbioru konkursowego
+# Odbiór zgłoszenia konkursowego
 
-Wydanie v1.0.0 i jego filmy dokumentują stan sprzed przygotowania odbioru jury. Zgłoszenie i aktualizacja wydania wymagają decyzji autora.
+Stan na 10 listopada 2026 dla lokalnego kandydata na `codex/jury-readiness`. Organizator przyjmuje kompletne zgłoszenia do **29 listopada 2026**. Pakiet przekazuje się przez link do chmury. [Strona organizatora i pliki do pobrania](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
 
-- [x] Źródła, package-lock.json, komendy kompilacji i uruchomienia.
-- [x] Pełna kampania demo, 24 plansze i trwały zapis.
-- [x] Paczka Windows x64 z EXE i zasobami; bez sekretów i node_modules autora.
-- [x] Instrukcje uruchomienia, kompilacji i użytkownika w PDF.
-- [x] Jednostronicowy opis PDF, z jawnym stanem live/Windows.
-- [x] Raport weryfikacji PDF i raporty maszynowe.
-- [x] Scenopis aktualnej prezentacji ma 4 min 20 s. [Scenopis filmu](../docs/18-film-konkursowy.md)
-- [ ] Nagranie aktualnej prezentacji, w tym porównanie rzeczywistych reakcji M04. NOT RUN.
-- [x] Historyczny odbiór live promptu 1.0.2 obejmuje 22 tury i M04 w przeglądarce.
-- [x] Historyczny prompt 1.1.0 i A/B/C M04 z GPT-6 Luna Extra High. Trzy zaliczone loty. [Raport](../checks/ai-live-m04-abc-luna-xhigh-1.1.0.md)
-- [ ] Prompt 1.2.0 i kontrola A/B/C/D na zmienionych geometriach. Próba live dała siedem zaliczonych wzorów. Do uzupełnienia pozostaje D na przebudowanej planszy oraz ocena człowieka. [Wyniki live](../checks/m04-generalization-1.2.0.live.md)
-- [ ] Autor: przeczytaj odpowiedzi live i zatwierdź jakość dialogu; dwie etykiety oceny i ton Piko mają zapisane zastrzeżenia.
-- [ ] Hosting: wdrożony origin HTTPS, trwały wolumen, jedna instancja, ustawiony distribution.json i przebudowana paczka.
-- [x] Runner Windows uruchomił spakowane EXE v1.0.0, sprawdził M01 offline i zapis po restarcie. GitHub Actions 42685071630, SHA 52ac710.
-- [ ] Spójność źródeł, instrukcji, paczki, filmu i raportu dla jednego zatwierdzonego wydania konkursowego.
-- [ ] Windows na osobnym komputerze odbiorcy, odbiór offline i z przygotowanym HTTPS.
-- [ ] Pilotaż 3–5 osób: rzeczywiste obserwacje, bez danych osobowych i bez deklaracji badania skuteczności.
-- [x] Sprawdzono stronę organizatora 10 listopada 2026. Wskazuje termin 29 listopada 2026, film do 5 minut i opis do jednej strony. [Organizator](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
-- [ ] Autor: sprawdź własną kwalifikację, pobierz oryginalne formularze ze strony organizatora, uzupełnij oraz podpisz formularze. Brak fikcyjnych plików PDF udających podpisy.
-- [x] Film live i film demo dokumentują wcześniejszy interfejs. Pokaz M04 live ma 45,28 s i zawiera dwie rzeczywiste tury modelu.
-- [ ] Udostępnienie: wybierz chmurę, sprawdź dostęp bez konta autora i linki, następnie samodzielnie wyślij zgłoszenie.
+## Materiały wymagane przez organizatora
 
-Oryginalny plan konkursowy: docs/09-contest-delivery.md; scenariusz pełnego filmu live: docs/06-ui-ux.md. Datę i formalne wymagania sprawdź ponownie u organizatora przed wysyłką.
+| Wymóg | Stan kandydata | Dowód lub krok do wykonania |
+|---|---|---|
+| Wypełniona i podpisana karta zgłoszenia | NOT RUN | Uczestnicy uzupełniają i podpisują oryginalny formularz. |
+| Wypełniona i podpisana klauzula informacyjna | NOT RUN | Uczestnicy uzupełniają i podpisują oryginał. Jeżeli jest wymagana zgoda opiekuna, dopełnij jej przed wysłaniem. |
+| Kod źródłowy i instrukcja kompilacji | GOTOWE LOKALNIE | ZIP źródeł i lockfile, aktualne [polecenia kompilacji](../docs/11-uruchomienie.md). |
+| Wersja binarna i instrukcja uruchomienia | CROSS-BUILD PASS, WINDOWS NOT RUN | Aktualny ZIP Windows x64 w jawnym demo i aktualna instrukcja. Oddzielna paczka testowa HTTPS wskazuje loopback. [Protokół Windows](../docs/16-windows-odbior.md) |
+| Instrukcja użytkownika | GOTOWA LOKALNIE | [Instrukcja użytkownika](../docs/12-instrukcja-uzytkownika.md) i odpowiadający PDF. |
+| Film AVI/MP4 do 5 minut | FINALNY MONTAŻ NOT RUN | Klip aktualnego demo, scenopis 4 min 20 s i historyczne wypowiedzi live opisano w [materiałach filmowych](../docs/18-film-konkursowy.md). |
+| Opis funkcjonalności do jednej strony | GOTOWY LOKALNIE | Jednostronicowy PDF z aktualnym wynikiem M04. [Tekst źródłowy](../docs/14-opis-funkcjonalnosci.md) |
+| Link z pełnym zestawem i wysłanie zgłoszenia | NOT RUN | Autor wybiera chmurę, sprawdza pobieranie spoza własnego konta i wysyła link na adres podany przez organizatora. |
+
+Uprawnienia uczestnika weryfikuje autor. Organizator wymaga statusu ucznia szkoły ponadpodstawowej, wieku poniżej 21 lat przez cały konkurs, drużyny maksymalnie dwuosobowej i udziału w jednej drużynie. Zgoda opiekuna dotyczy osób niepełnoletnich. Kwestionariusz laureata dotyczy późniejszego etapu. [Oficjalne warunki](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
+
+## Odbiór techniczny przed wysłaniem
+
+- [x] Pełna kampania, zapis pierwszej próby, jawne demo i rozdzielony wynik silnika.
+- [x] Historyczna próba GPT-6 Luna Extra High 1.2.0. Silnik zaliczył 7/7 otrzymanych wzorów na dwóch geometriach poza kampanią. Jedna dodatkowa próba przekroczyła czas. [Wyniki](../checks/m04-generalization-1.2.0.live.md)
+- [x] Ograniczony HTTPS na lokalnym Caddy. Zaufanie do certyfikatu, lista sieci, limit budżetu zero i restart SQLite. [Raport](../checks/jury-https-smoke.json)
+- [ ] Docelowy HTTPS, tura z realnym dostawcą w aplikacji na tym adresie, zatwierdzony origin w finalnej paczce Windows. NOT RUN.
+- [ ] Aktualny EXE na Windows i odbiór na osobnym komputerze bez Node. NOT RUN. Wcześniejszy test GitHub Actions dotyczy commita `52ac710`.
+- [ ] Pilotaż 3–5 osób i poprawki z rzeczywistych obserwacji. NOT RUN. [Protokół](../docs/15-pilotaz.md)
+- [ ] Sprawdzenie kompletnego zestawu z finalnym filmem, podpisanymi dokumentami i linkiem widocznym dla organizatora. NOT RUN.

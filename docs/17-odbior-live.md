@@ -67,26 +67,24 @@ Przed próbą zapisz limit wywołań i uzgodniony limit wydatków operatora. Po 
 
 ## Jedna instancja za HTTPS
 
-Do wykonania potrzebne są zgoda operatora, host z Dockerem, trwały wolumen, własna nazwa DNS z poprawnym certyfikatem, uprawnienia do konfiguracji proxy i zapory, autoryzowany klucz API po stronie hosta oraz komputer i sieć do odbioru. Adresu publicznego nie ustalono. Operator wybiera metodę dostępu kompatybilną z przeglądarką oraz Electronem, np. listę dozwolonych adresów wyjściowych lub prywatną sieć.
+W repozytorium jest gotowy [stack Docker Compose i Caddy](../deploy/jury/compose.yaml). Test `npm run jury:https:smoke` uruchamia ten sam Caddyfile i produkcyjny backend w odizolowanej sieci Docker. Sprawdza zaufanie TLS, wejście dozwolonej sieci i odrzucenie drugiego klienta mimo podrobionych nagłówków, cookie Secure, obcy origin, limit 16 KiB, budżet zero oraz trwałą sesję po restarcie. Smoke używa lokalnego certyfikatu i syntetycznego klucza. [Raport lokalny](../checks/jury-https-smoke.json)
 
-1. Najpierw skonfiguruj TLS i kontrolę dostępu na proxy. Udostępnij wyłącznie proxy. Poniższy backend nasłuchuje dla proxy na tym samym hoście przez port loopback.
-2. Na hoście utwórz chroniony plik zmiennych dostępny tylko operatorowi. Ustaw `PUBLIC_ORIGIN` na zatwierdzony origin HTTPS bez końcowego ukośnika, `AI_MODE=live`, `AI_MODEL`, `OPENAI_API_KEY` oraz `AI_DAILY_REQUEST_BUDGET=0` na próbę blokady. Klucz pobierz z magazynu sekretów operatora. `AI_MAX_PROVIDER_REQUESTS_PER_TURN` ustaw na 1 do pierwszej kontrolowanej próby. Podnieś limit wyłącznie w granicach zatwierdzonego budżetu.
-3. Wykonaj na udostępnionym hoście z wybranego commita po ustawieniu `PIKO_SECRET_ENV_FILE` na ścieżkę tego pliku.
+Na hostingu potrzebne są Linux, Docker Compose, zatwierdzona nazwa DNS skierowana na host, porty TCP 80 i 443 dla Caddy oraz adresy wyjściowe dopuszczonych sieci. Ustaw listę IP/CIDR rozdzieloną spacjami. Caddy używa adresu bezpośredniego połączenia, dlatego w tej konfiguracji ruch ma trafiać bezpośrednio do hosta. Jeśli sieć jury ma zmienne adresy, ustal stałą sieć wyjściową lub zatwierdzoną sieć prywatną przed testem. [Adres źródłowy w Caddy](https://caddyserver.com/docs/caddyfile/matchers#remote_ip) · [Automatyczny HTTPS](https://caddyserver.com/docs/automatic-https)
+
+1. W chronionym pliku poza repozytorium, dostępnym tylko operatorowi, ustaw `OPENAI_API_KEY` z magazynu sekretów. Użyj uprawnień 0600. Adres, model i parametry określa Compose. Na start budżet ma wynosić zero.
+2. Na docelowym hoście ustaw `PIKO_JURY_HOST` na zatwierdzoną nazwę DNS bez protokołu i ścieżki, `PIKO_JURY_ALLOWED_IPS` na listę sieci oraz `PIKO_SECRET_ENV_FILE` na bezwzględną ścieżkę do pliku sekretu. Nie drukuj wynikowej konfiguracji z rozwiniętymi wartościami pliku środowiskowego.
+3. Po uzyskaniu zgody na uruchomienie docelowej usługi wykonaj:
 
 ```sh
-npm run docker:build
-docker volume create piko-live-state
-docker run -d --name piko-live --restart unless-stopped \
-  --env-file "${PIKO_SECRET_ENV_FILE:?Wskaż chroniony plik na hoście}" \
-  -e NODE_ENV=production -e STATE_DB_PATH=/app/var/piko.sqlite \
-  -p 127.0.0.1:3001:3001 \
-  --mount type=volume,src=piko-live-state,dst=/app/var \
-  naucz-pilota:codex-readiness
+docker compose -f deploy/jury/compose.yaml config --quiet
+docker compose -f deploy/jury/compose.yaml up -d --build
 ```
 
-Na proxy kieruj stronę i `/api` pod ten sam origin. Ogranicz szybkość `/api/session`, `/api/learner-turn` i `/api/conversation/reset` na adres dopuszczonego klienta. Ustal limit treści maksymalnie 16 KiB, zachowaj `Origin` i nagłówki Electron oraz nadpisuj nagłówki adresu klienta. Dla `/api/learner-turn` ustaw timeout odpowiedzi proxy na co najmniej 130 s. Daje to zapas na turę o konfigurowalnym limicie do 120 s. Anonimowa sesja aplikacji daje kontekst rozmowy. Kontrolę dostępu do budżetu zapewnia proxy lub sieć. Po zmianie konfiguracji zachowaj wolumen i używaj jednej instancji. Limit dobowy jest liczbą żądań, a realny koszt zależy od modelu i tokenów.
+Caddy przyjmuje ruch na hoście Linuksowym i kieruje stronę oraz API pod ten sam origin. Backend publikuje port 3001 tylko na loopback. Zapora ma odrzucać zewnętrzny dostęp do tego portu. Lista na proxy ogranicza dostęp do aplikacji i API. Backend za proxy stosuje wspólny limit 60 żądań API/min i limit tur na sesję. Przed pokazem z wieloma równoczesnymi klientami zmierz obciążenie w dozwolonej sieci. Caddy daje backendowi 135 s na nagłówki odpowiedzi. Wolumeny przechowują SQLite i certyfikaty po restarcie. Zatrzymując wdrożenie, zachowaj wolumeny.
 
-Klucze i plik zmiennych pozostają na hoście. W desktopowym `distribution.json` konfiguruj wyłącznie zatwierdzony origin HTTPS po odbiorze usługi i zgodzie na przygotowanie wydania. Zapis gry pozostaje na urządzeniu. Serwer zachowuje aktywną rozmowę oraz dowody w SQLite. Sesja wygasa po 24 godzinach, a czyszczenie wygasłych rekordów odbywa się przy ustanawianiu sesji. Operator odpowiada również za retencję kopii, czyszczenie podczas bezczynności i ustawienia dostawcy modelu.
+Dopiero po odbiorze dostępu ustaw `PIKO_JURY_DAILY_BUDGET` w granicach osobnej zgody operatora i odtwórz kontener backendu przez `docker compose -f deploy/jury/compose.yaml up -d backend`. Domyślnie limit wynosi 0, model to `gpt-6-luna` z `xhigh`, a maksymalna liczba żądań dostawcy na turę to 1. Próba HTTP 429 przy budżecie 0 nie wymaga płatnego wywołania. `available:true` z health potwierdza obecność konfiguracji, a próba dostawcy jest osobnym sprawdzeniem.
+
+Paczka desktop przyjmuje wyłącznie zatwierdzony origin HTTPS przez `PIKO_DESKTOP_HTTPS_ORIGIN` podczas budowania. Klucz zostaje na hoście. Zapis gry pozostaje na urządzeniu. Sesja rozmowy w SQLite wygasa po 24 godzinach i jest czyszczona przy zakładaniu sesji. Operator odpowiada za retencję kopii, czyszczenie podczas bezczynności i ustawienia dostawcy modelu.
 
 ## Próba z innego urządzenia
 
@@ -100,7 +98,7 @@ curl --fail --silent --show-error "${PIKO_PUBLIC_ORIGIN:?Ustaw zatwierdzony orig
 |---|---|---|
 | Wejście z dozwolonej i niedozwolonej sieci | Ważny TLS oraz odrzucenie dostępu do płatnych endpointów poza listą | NOT RUN |
 | Health, sesja i origin | Status live, nowe cookie Secure w web, odrzucenie obcego originu | NOT RUN |
-| Limit 0 oraz limiter proxy | Czytelne 429, `requestCount=0`, licznik dostawcy bez wzrostu | NOT RUN |
+| Limit 0 oraz ograniczenia backendu | Czytelne 429, `requestCount=0`, licznik dostawcy bez wzrostu | NOT RUN |
 | Jedna prawdziwa tura po zgodzie | Odpowiedź live, rzeczywiste ID i model, oddzielny wynik silnika | NOT RUN |
 | Odświeżenie, zapis i reset rozmowy | Wzór i notatka zostają. Następna rozmowa po resecie ma pustą historię | NOT RUN |
 | Utrata sieci i niedostępny serwer | Wpisy zachowane, jawny błąd, przejście do demo po decyzji gracza | NOT RUN |
@@ -108,4 +106,4 @@ curl --fail --silent --show-error "${PIKO_PUBLIC_ORIGIN:?Ustaw zatwierdzony orig
 | Electron z zatwierdzonym HTTPS | Dostęp z drugiej sieci, bezpośrednie połączenie bez redirectu i poprawny reset | NOT RUN |
 | Ponowny start backendu | Poprzednia sesja i limit pozostają w wolumenie SQLite | NOT RUN |
 
-Do osobnego testu opublikowanej aplikacji służy [protokół Windows](16-windows-odbior.md). Lokalny test Docker sprawdza mechanizmy kontenera. Odbiór HTTPS wykonuje się w faktycznej sieci jury.
+Do osobnego testu opublikowanej aplikacji służy [protokół Windows](16-windows-odbior.md). Lokalny test Docker obejmuje kontrolę dostępu i TLS z własnym CA. Odbiór publicznego certyfikatu wykonuje się z faktycznej sieci jury.

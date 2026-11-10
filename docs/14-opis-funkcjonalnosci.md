@@ -12,4 +12,4 @@ Na planszy transferu Piko dostaje notatkę i sprawdzoną zasadę. Model GPT-6 Lu
 
 W samodzielnym zadaniu gracz rozwiązuje nową planszę. Podgląd, obliczenia, AI i dziennik są ukryte do pierwszej parsowalnej próby. Jej wynik pozostaje w zapisie osobno od wyniku robota i późniejszych poprawek.
 
-Demo działa lokalnie bez internetu i jawnie oznacza przygotowane odpowiedzi. Wcześniejsza próba live na promptcie 1.1.0 dała trzy bezpieczne loty Luny w M04. Aktualny prompt 1.2.0 sprawdzono z atrapą, również na czterech dodatkowych geometriach testowych. Przebieg na prawdziwym modelu, publiczny HTTPS i odbiór aktualnej wersji na osobnym Windows są do wykonania. Dokumentacja opisuje warunki prób i ograniczenia wniosków.
+Demo działa lokalnie bez internetu i jawnie oznacza przygotowane odpowiedzi. W próbie live na dwóch geometriach M04 poza kampanią silnik zaliczył wszystkie siedem otrzymanych propozycji Luny z promptem 1.2.0. Ósma próba przekroczyła limit czasu. Lokalnie sprawdzono ograniczone HTTPS i przygotowano paczkę Windows x64. Odbiór publicznego adresu, uruchomienie aktualnego EXE na Windows i pilotaż z uczestnikami pozostają do wykonania.

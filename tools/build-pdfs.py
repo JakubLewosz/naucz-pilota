@@ -23,6 +23,8 @@ def safe(text):
  text=text.replace('–','-').replace('—','-').replace('‑','-').replace('→',' > ').replace('×','x')
  text=html.escape(text)
  text=re.sub(r'`([^`]+)`',r'<b>\1</b>',text)
+ text=re.sub(r'\[([^\]]+)\]\((https?://[^ )]+)\)',r'<link href="\2" color="#2457d6">\1</link>',text)
+ text=re.sub(r'\[([^\]]+)\]\(([^ )]+)\)',r'\1 (\2)',text)
  return text
 
 def footer(canvas,doc):
@@ -47,7 +49,7 @@ def make(name,text):
 source=Path('docs/11-uruchomienie.md').read_text()
 launch='''# Instrukcja uruchomienia
 
-Naucz Pilota 1.0.0. Aktualna paczka jest demonstracją lokalną; backend live nie został wdrożony.
+Naucz Pilota 1.0.0, kandydat konkursowy. Paczka offline udostępnia całą kampanię demo. Docelowy adres live jest do skonfigurowania.
 
 ## Windows x64
 
@@ -57,7 +59,7 @@ Naucz Pilota 1.0.0. Aktualna paczka jest demonstracją lokalną; backend live ni
 4. Kliknij Zacznij. Szczegóły czterech etapów znajdziesz w instrukcji użytkownika.
 5. Zamknij okno. Przy kolejnym uruchomieniu postęp pozostaje na tym urządzeniu. W Ustawieniach możesz usunąć go po potwierdzeniu.
 
-Paczka jest niepodpisana. Test automatyczny w GitHub Actions potwierdził start spakowanego EXE i ponowne otwarcie zapisu na Windows. Odbiór na osobnym komputerze użytkownika pozostaje do wykonania.
+Paczka jest niepodpisana. Test GitHub Actions potwierdził start i wznowienie EXE starszego commita 52ac710. Aktualny plik sprawdzono statycznie. Uruchomienie aktualnej paczki na Windows jest do wykonania.
 
 ## Kod źródłowy na komputerze autora
 
@@ -67,7 +69,7 @@ Po npm run build polecenie npm start udostępnia aplikację na http://127.0.0.1:
 
 ## Live i brak sieci
 
-Klucz i model konfiguruje autor wyłącznie na backendzie. Obecna paczka nie ma adresu serwera live. Wersja dla jury wymaga zaufanego originu HTTPS w distribution.json i ponownego builda.
+Klucz i model konfiguruje autor wyłącznie na backendzie. Paczka jury z live wymaga zaufanego adresu HTTPS wskazanego w PIKO_DESKTOP_HTTPS_ORIGIN przy budowie. Dostęp do serwera może być ograniczony do sieci jury.
 
 Gdy model jest niedostępny, aplikacja pokazuje błąd i zachowuje wzór oraz wyjaśnienie. Dopiero wybór gracza przełącza na demo. Gra nie udaje odpowiedzi modelu.
 

@@ -1,6 +1,6 @@
 # Uruchomienie, kompilacja i wdrożenie
 
-Wersja 1.0.0, aktualizacja po audycie 9 listopada 2026. Sprawdzony host: macOS arm64; Node 24.11.0, npm 11.6.1. Lockfile przypina faktyczne wersje pakietów. Runtime gry nie wymaga Pythona.
+Wersja 1.0.0, aktualizacja odbioru 10 listopada 2026. Sprawdzony host: macOS arm64; Node 24.11.0, npm 11.6.1. Lockfile przypina faktyczne wersje pakietów. Runtime gry nie wymaga Pythona.
 
 ## Autor: kod źródłowy
 
@@ -16,7 +16,7 @@ Zwykłe sprawdzenia: `npm run typecheck`, `npm run lint`, `npm test`, `npm run t
 
 Rozpakuj cały Naucz_Pilota_Windows.zip i uruchom Naucz Pilota.exe z rozpakowanego folderu. Zachowaj towarzyszące pliki i resources/. Node nie jest potrzebny. Gra zapisuje postęp w profilu lokalnym aplikacji.
 
-Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznanym wydawcy; autor powinien sprawdzić integralność pobranej paczki i przetestować uruchomienie na osobnym komputerze. Automatyczny start i wznowienie spakowanego EXE przeszły w GitHub Actions. Odbiór na osobnym komputerze pozostaje do wykonania. Adres backendu w paczce jest pusty, więc dystrybucja uruchamia jawne demo.
+Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznanym wydawcy; autor powinien sprawdzić integralność pobranej paczki i przetestować uruchomienie na osobnym komputerze. GitHub Actions potwierdził start i wznowienie EXE starszego commita 52ac710. Aktualną paczkę zbudowano i sprawdzono statycznie. Uruchomienie tej paczki na Windows jest do wykonania. Domyślna paczka jest przeznaczona do jawnego demo.
 
 ## Konfiguracja modelu
 
@@ -28,17 +28,17 @@ Test dostawcy wymaga zgody, poświadczeń, flagi `--allow-paid` oraz jawnego `--
 
 ## Backend na hostingu: przygotowana konfiguracja
 
-Dostępny Dockerfile buduje aplikację na Node 24. Backend i frontend działają jako jedna domena. Kontener słucha na porcie 3001; reverse proxy zapewnia TLS. Zamontuj trwały wolumen /app/var i ustaw STATE_DB_PATH=/app/var/piko.sqlite. Przekaż sekrety jako zmienne serwera; nie kopiuj .env do obrazu. PUBLIC_ORIGIN ma odpowiadać adresowi publicznemu.
+Dockerfile buduje aplikację na Node 24. Stack deploy/jury/compose.yaml dostarcza Caddy, kontrolę dostępu po IP i trwałe wolumeny. Lokalny odbiór odtwarza `npm run jury:https:smoke` z budżetem API równym zero. Backend i frontend działają jako jedna domena. Kontener słucha na porcie 3001; reverse proxy zapewnia TLS. Zamontuj trwały wolumen /app/var i ustaw STATE_DB_PATH=/app/var/piko.sqlite. Przekaż sekrety jako zmienne serwera; nie kopiuj .env do obrazu. PUBLIC_ORIGIN ma odpowiadać adresowi publicznemu.
 
-Uruchamiaj jedną instancję procesu i jeden trwały licznik SQLite. Aplikacja domyślnie nie ufa X-Forwarded-For. Proxy musi też limitować żądania przy publicznym ruchu. Każda sesja ma 6 tur na minutę, a globalny limit wynosi domyślnie 200 żądań dostawcy na dzień UTC. Transfer wykonuje jedno żądanie. W nauczaniu naprawa formatu zużywa kolejne żądanie w ramach wspólnego czasu tury, domyślnie 90 sekund. Limit wywołań nie gwarantuje kwoty rachunku.
+Uruchamiaj jedną instancję procesu i jeden trwały licznik SQLite. Aplikacja domyślnie nie ufa X-Forwarded-For. Każda sesja ma 6 tur na minutę. Stack jury ma domyślny limit zero żądań dostawcy i wspólny limit 60 żądań API na minutę. Transfer wykonuje jedno żądanie. W nauczaniu naprawa formatu zużywa kolejne żądanie w ramach wspólnego czasu tury, domyślnie 90 sekund. Limit wywołań nie gwarantuje kwoty rachunku.
 
-Cookie web jest HttpOnly/SameSite=Strict, Secure w produkcji. Desktop trzyma token w main process, przyjmuje tylko zaufany origin HTTPS i blokuje przekierowania. W dystrybucji ustaw apiBaseUrl w apps/desktop/distribution.json, potem wykonaj `npm run desktop:dist`. Wyjątek HTTP 127.0.0.1 dotyczy tylko desktop:dev. Nie wdrożono publicznego endpointu w tym zadaniu.
+Cookie web jest HttpOnly/SameSite=Strict, Secure w produkcji. Desktop trzyma token w main process, przyjmuje tylko zaufany origin HTTPS i blokuje przekierowania. Przed budową paczki live ustaw `PIKO_DESKTOP_HTTPS_ORIGIN` na zatwierdzony origin HTTPS i wykonaj `npm run desktop:dist`. W paczce znajdzie się adres serwera. Wyjątek HTTP na loopback dotyczy tylko desktop:dev. Publiczny endpoint pozostaje do uruchomienia.
 
 ## Dostęp i przechowywanie danych w live
 
 Przed udostępnieniem live ogranicz dostęp do backendu regułami sieci lub uwierzytelnianiem na reverse proxy. Przetestuj, czy wybrana metoda wpuszcza zarówno przeglądarkę, jak i klienta Electron. Od strony internetu udostępnij tylko proxy TLS i pozostaw port aplikacji w sieci prywatnej. Anonimowa sesja rozróżnia użytkowników aplikacji. Dostęp do budżetu zapewnia osobna kontrola na proxy.
 
-Ustaw limit żądań na adres klienta dla /api/session, /api/learner-turn i /api/conversation/reset oraz limit treści żądania. Proxy ma nadpisywać przekazywane nagłówki adresu klienta. Sprawdź z innego urządzenia przyjęcie dozwolonego ruchu, odrzucenie ruchu spoza listy, limit żądań oraz widoczną awarię po odłączeniu sieci. Dzienny licznik SQLite ogranicza liczbę żądań dostawcy. Koszt zależy od modelu i liczby tokenów.
+Dostarczony Caddy ogranicza dostęp według adresu połączenia i treść żądania do 16 KiB. Przy zmianie topologii proxy sprawdź adres źródłowy i limity dostępu ponownie. Sprawdź z innego urządzenia przyjęcie dozwolonego ruchu, odrzucenie ruchu spoza listy, limit żądań oraz widoczną awarię po odłączeniu sieci. Dzienny licznik SQLite ogranicza liczbę żądań dostawcy. Koszt zależy od modelu i liczby tokenów.
 
 SQLite przechowuje bieżące wiadomości, sprawdzone dowody, przekazane notatki oraz koperty tur do obsługi ponowionych żądań. Sesja wygasa po 24 godzinach. Aplikacja usuwa wygasłe rekordy przy obsłudze /api/session. Przy stałym wdrożeniu zaplanuj retencję kopii wolumenu oraz czyszczenie wygasłych danych również podczas bezczynności.
 
@@ -62,4 +62,4 @@ Dockerfile został lokalnie zbudowany, a kontener przeszedł test zdrowia, braku
 Runner zatrzymuje się po pierwszym błędzie i zachowuje odrębne wyniki dla wybranych scenariuszy. Teach i transfer jednego wariantu współdzielą sesję. A/B/C M04 otrzymują trzy osobne sesje. Zobacz [plan HTTPS oraz test z innego urządzenia](17-odbior-live.md). Test Windows EXE i pilotaż mają protokoły w docs/16-windows-odbior.md i docs/15-pilotaz.md. Workflow 42685071630 potwierdził start i wznowienie spakowanego EXE oraz czyszczenie kontekstu na lokalnej atrapie Electrona.
 
 
-Historyczny odbiór live z 3 listopada obejmował 22 tury i M04 w UI z promptem 1.0.2 oraz modelem gpt-5.4-mini-2026-03-17. Dla promptu 1.1.0 z notatką lekcji płatne testy mają status NOT RUN. Pozostają uwagi do semantyki, publiczny HTTPS i odbiór Windows. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.
+Historyczny odbiór live z 3 listopada obejmował 22 tury i M04 w UI z promptem 1.0.2 oraz modelem gpt-5.4-mini-2026-03-17. Aktualny pomiar promptu 1.2.0 dał siedem zaliczonych propozycji Luny na nowych geometriach M04 i jeden timeout. Publiczny HTTPS oraz uruchomienie aktualnego EXE na Windows pozostają NOT RUN. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.
