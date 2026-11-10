@@ -2,7 +2,7 @@
 
 Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkcje stopnia 0–2, robot Piko i osobna samodzielna próba gracza. Matematyka jest liczona analitycznie przez współdzielony silnik TypeScript. Demo działa bez klucza, serwera i internetu po załadowaniu zasobów aplikacji.
 
-**Stan na 10 listopada 2026.** Gra zachowuje notatkę z lekcji i przekazuje ją Piko przed lotem. Lokalna próba M04 A/B/C na promptcie 1.1.0 objęła GPT-5.4 mini. Nową konfigurację GPT-6 Luna z `xhigh` sprawdzono z atrapą HTTP. Wyniki i zakres odbioru są w [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+**Stan na 10 listopada 2026.** Gra zachowuje notatkę z lekcji i przekazuje ją Piko przed lotem. W lokalnym M04 A/B/C na promptcie 1.1.0 GPT-6 Luna z `xhigh` zaliczyła trzy pierwsze loty, a GPT-5.4 mini trzykrotnie ominął start. Wyniki i zakres odbioru są w [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 **Windows x64.** Pobierz ZIP, rozpakuj cały folder i uruchom `Naucz Pilota.exe`. Paczka zawiera tryb demo i pochodzi z przebiegu Actions, który sprawdził spakowaną aplikację na Windows. Kod źródłowy, instrukcje, raport i nagrania znajdziesz w tym samym wydaniu. [GitHub Releases 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
 
@@ -32,7 +32,7 @@ Po buildzie `npm start` serwuje aplikację i API pod http://127.0.0.1:3001. Do l
 
 ## Prawdziwe AI
 
-Skopiuj `.env.example` do `.env`. Ustaw na backendzie `AI_MODE=live` i `OPENAI_API_KEY`. Przykład konfiguruje `AI_MODEL=gpt-6-luna`, `AI_REASONING_EFFORT=xhigh`, `AI_MAX_OUTPUT_TOKENS=8192` i `AI_TURN_TIMEOUT_MS=90000`. Klucz ustaw wyłącznie na backendzie. Zrestartuj backend, a w ustawieniach gry wybierz live. Dostęp konta do Luny i jakość jej odpowiedzi wymagają osobnej próby. [Konfiguracja i plan próby GPT-6 Luna](docs/19-gpt-6-luna-xhigh.md)
+Skopiuj `.env.example` do `.env`. Ustaw na backendzie `AI_MODE=live` i `OPENAI_API_KEY`. Przykład konfiguruje `AI_MODEL=gpt-6-luna`, `AI_REASONING_EFFORT=xhigh`, `AI_MAX_OUTPUT_TOKENS=8192` i `AI_TURN_TIMEOUT_MS=90000`. Klucz ustaw wyłącznie na backendzie. Zrestartuj backend, a w ustawieniach gry wybierz live. [Konfiguracja i protokół próby GPT-6 Luna](docs/19-gpt-6-luna-xhigh.md)
 
 Weryfikacja zestawu M04 bez połączenia z dostawcą:
 

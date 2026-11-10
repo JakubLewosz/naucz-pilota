@@ -1,6 +1,6 @@
 # GPT-6 Luna z Extra High w Naucz Pilota
 
-Backend i runnery korzystają z tej samej konfiguracji. OpenAI Docs potwierdzają obsługę Responses API, Structured Outputs i `reasoning.effort: xhigh` przez `gpt-6-luna`. Sprawdzenie z lokalną atrapą potwierdziło wysłanie tych parametrów przez SDK. Dostęp do modelu na koncie, odpowiedzi i czasy prawdziwego API pozostają **NOT RUN**. [Model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna).
+Backend i runnery korzystają z tej samej konfiguracji. OpenAI Docs potwierdzają obsługę Responses API, Structured Outputs i `reasoning.effort: xhigh` przez `gpt-6-luna`. Po sprawdzeniu SDK z atrapą wykonano kontrolowane M04 A/B/C. API zwróciło sześć odpowiedzi modelu, a silnik zaliczył trzy loty. [Model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) · [Wyniki porównania M04](../checks/ai-live-m04-abc-luna-xhigh-1.1.0.md).
 
 ## Uruchomienie lokalne
 
@@ -29,9 +29,9 @@ PIKO_CAPTURE_LUNA_HTTP_BODY=var/luna-xhigh-http-stub-request.json npm test -- te
 
 Test sprawdza także `AI_NOT_CONFIGURED` dla odrzuconego parametru i niedostępnego modelu, `AI_INCOMPLETE` dla odpowiedzi uciętej przez limit oraz pojedyncze żądanie na każdą próbę. Kod aplikacji zachowuje kontrakt notatki jako danych w roli `user` i niezależną walidację lotu.
 
-## Porównanie M04 po osobnej zgodzie
+## Protokół porównania M04
 
-**NOT RUN.** Porównaj Lunę z [rzeczywistym przebiegiem GPT-5.4 mini](../checks/ai-live-m04-abc-1.1.0.md) przy tym samym prompcie 1.1.0 i tej samej geometrii. Poniższa komenda jest przeznaczona do uruchomienia po zatwierdzeniu wydatków. Utworzy trzy osobne sesje z identycznego stanu, każdą z jedną turą teach i jedną turą transferu. Ustawienie jednej próby wyłącza techniczne ponowienie i ogranicza budżet runnera na granicy HTTP do sześciu żądań.
+Przebieg z 10 listopada użył poniższych ustawień. Porównanie wykorzystało [zapis GPT-5.4 mini](../checks/ai-live-m04-abc-1.1.0.md) dla tego samego promptu 1.1.0 i tej samej geometrii. Runner tworzy trzy osobne sesje z identycznego stanu, każdą z jedną turą teach i jedną turą transferu. Ustawienie jednej próby wyłącza techniczne ponowienie i ogranicza budżet na granicy HTTP do sześciu żądań. Każdy kolejny przebieg wymaga zgody na wydatki i własnego identyfikatora.
 
 ```sh
 AI_MODEL=gpt-6-luna AI_REASONING_EFFORT=xhigh AI_MAX_OUTPUT_TOKENS=8192 \

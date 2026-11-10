@@ -20,7 +20,7 @@ Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznany
 
 ## Konfiguracja modelu
 
-Skopiuj `.env.example` do `.env` i uzupełnij `AI_MODE=live` oraz `OPENAI_API_KEY`. Plik przykładowy konfiguruje GPT-6 Luna z `xhigh`, limitem 8192 tokenów i czasem 90 sekund. Lokalna atrapa potwierdziła wysyłane parametry. Dostęp na własnym koncie wymaga zatwierdzonej próby live. Klucz pozostaje na backendzie. [Konfiguracja i plan próby](19-gpt-6-luna-xhigh.md)
+Skopiuj `.env.example` do `.env` i uzupełnij `AI_MODE=live` oraz `OPENAI_API_KEY`. Plik przykładowy konfiguruje GPT-6 Luna z `xhigh`, limitem 8192 tokenów i czasem 90 sekund. Lokalny przebieg M04 A/B/C potwierdził działanie z rzeczywistym API na koncie użytym w teście. Klucz pozostaje na backendzie. [Konfiguracja i protokół próby](19-gpt-6-luna-xhigh.md)
 
 Dla Vite PUBLIC_ORIGIN=http://127.0.0.1:5173. Dla lokalnego `npm start` ustaw http://127.0.0.1:3001. W produkcji ustaw pełny origin HTTPS, NODE_ENV=production i trwały STATE_DB_PATH. Brak klucza/modelu jest jawnym błędem, bez podstawiania demo. Zmianę na demo wykonuje gracz.
 

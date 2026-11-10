@@ -1,7 +1,15 @@
 # Stan implementacji — Naucz Pilota
 Aktualizacja: 2026-11-10. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
-Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live wykonano na `a751a1cd8ceb98d89410571e9076b194652f0493`.
+Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live z GPT-5.4 mini wykonano na `a751a1c`, a z GPT-6 Luna na `95a55ca`.
+
+## M04 A/B/C live z GPT-6 Luna xhigh
+
+Próba z 10 listopada na `95a55ca` przeszła lokalnie w Chromium z promptem 1.1.0. W trzech osobnych sesjach wykonano **6/6** zatwierdzonych żądań, bez ponowień. Wszystkie odpowiedzi HTTP 200 miały status `completed`. Niezależny silnik zaliczył **3/3** pierwsze loty Luny przy tym samym wielomianie `0.25(x-2)^2`. W historycznym przebiegu GPT-5.4 mini każdy z trzech lotów zakończył się `START_MISS`. Build przed próbą przeszedł.
+
+Luna odniosła się do poprawnego wyjaśnienia w A, odrzuciła błąd w B i wskazała brak użytecznej wskazówki w C. Średni czas odpowiedzi wyniósł 8,27 s wobec 2,84 s dla mini. Zużycie Luny to 22 821 tokenów, w tym 4 440 tokenów rozumowania. Koszt według zużycia API i cennika Standard wyniósł 0,003463335 USD wobec 0,009369450 USD dla mini.
+
+Luna nadaje się do kontrolowanego pokazu M04. Wybór domyślnego modelu dla całej gry wymaga sprawdzenia powtarzalności i czasu odpowiedzi. Reguła M04 przekazywana Piko zawiera już przykład `(x-2)`, więc warto przetestować planszę, która wymaga innej wartości `p`. Odbiór transkryptu przez człowieka ma status **NOT REVIEWED**. Publiczny HTTPS i odbiór na Windows pozostają **NOT RUN**. [Raport porównawczy](checks/ai-live-m04-abc-luna-xhigh-1.1.0.md) · [Zapis wypowiedzi i użycia API](checks/ai-live-m04-abc-luna-xhigh-1.1.0.json).
 
 ## GPT-6 Luna z Extra High
 
@@ -16,11 +24,11 @@ Commit `9e32afe` ujednolica konfigurację serwera i obu runnerów live. SDK wysy
 | M04 A/B/C w Chromium z `--mock` | PASS w trzech sesjach. 7 prób z jednym celowym technicznym ponowieniem, 0 rzeczywistych żądań OpenAI. |
 | `npx tsx tools/smoke-desktop-relay.ts` | PASS na macOS. Relay odebrał odpowiedź atrapy po 17 s, po uprzednim wyczyszczeniu kontekstu. UI pokazało oczekiwanie. |
 | Cross-build Windows x64 i inspekcja PE, ASAR i ZIP | PASS na macOS. Paczka testowa zawiera bieżący relay i konfigurację demo. Uruchomienie EXE na Windows **NOT RUN**. |
-| Prawdziwe GPT-6 Luna `xhigh`, publiczny HTTPS i Windows odbiorcy | **NOT RUN**. Dostęp do modelu na koncie, opóźnienia i jakość transferu wymagają odbioru. |
+| Prawdziwe GPT-6 Luna `xhigh` na etapie integracji | Wówczas **NOT RUN**. Wynik nowszej próby na `95a55ca` jest powyżej. |
 
-Lokalna integracja jest gotowa do kontrolowanej próby. Odbiór jury w trybie live wymaga sprawdzenia Luny w M04, następnie HTTPS i osobnego urządzenia. Pełne [body z atrapy HTTP](checks/luna-xhigh-http-stub-request.json) oraz [plan próby na maksymalnie sześć wywołań](docs/19-gpt-6-luna-xhigh.md) są gotowe. W tym etapie wykorzystano 0 płatnych wywołań. Poniższe wyniki live nadal opisują GPT-5.4 mini.
+Na etapie integracji wykorzystano 0 płatnych wywołań. Pełne [body z atrapy HTTP](checks/luna-xhigh-http-stub-request.json) dokumentuje ustawienia adaptera. [Protokół próby na maksymalnie sześć wywołań](docs/19-gpt-6-luna-xhigh.md) opisuje nowszy przebieg live.
 
-## M04 A/B/C na żywo z promptem 1.1.0
+## M04 A/B/C live z GPT-5.4 mini
 
 Lokalny Chromium i backend sprawdziły pełny przepływ w trzech nowych sesjach z jednakowego stanu. Po rozmowie zapisano rzeczywiste parafrazy i odświeżono grę. SDK przekazał potwierdzony tekst i parafrazę do OpenAI. Następnie interfejs pokazał wynik silnika dla każdej faktycznej propozycji.
 
@@ -36,7 +44,7 @@ Lokalny Chromium i backend sprawdziły pełny przepływ w trzech nowych sesjach 
 | `npm run typecheck`, `npm run lint`, `npm run build`, `npm test` | PASS, 183 testy w 7 plikach. |
 | `CI=1 AI_MODE=demo STATE_DB_PATH=:memory: npm run test:e2e` | PASS, 12 testów w Chromium, bez OpenAI. |
 
-**Werdykt** Przepływ jest sprawny, ale aktualny transfer nie jest gotowy jako dowód dla jury, że Piko stosuje wyjaśnienie do nowej geometrii. Proponowana zmiana promptu rozdziela decyzję o wykorzystaniu notatki od wyprowadzenia wierzchołka i sprawdzenia wzoru z danymi trasy. Cytaty, wyniki i uzasadnienie zapisano w [raporcie M04 A/B/C](checks/ai-live-m04-abc-1.1.0.md) oraz [surowym zapisie live](checks/ai-live-m04-abc-1.1.0.json). Pełny zestaw 22 tur, HTTPS i Windows odbiorcy pozostają **NOT RUN** dla tej gałęzi. Odbiór transkryptów przez człowieka pozostaje **NOT REVIEWED**.
+Transfer GPT-5.4 mini wymaga poprawy jako demonstracja zastosowania wyjaśnienia do nowej geometrii. Proponowana zmiana promptu rozdziela decyzję o wykorzystaniu notatki od wyprowadzenia wierzchołka i sprawdzenia wzoru z danymi trasy. [Raport M04 A/B/C](checks/ai-live-m04-abc-1.1.0.md) · [Surowy zapis live](checks/ai-live-m04-abc-1.1.0.json). Pełny zestaw 22 tur, HTTPS i Windows odbiorcy pozostają **NOT RUN** dla tej gałęzi. Odbiór transkryptów przez człowieka pozostaje **NOT REVIEWED**.
 
 ## Przygotowanie odbioru jury
 

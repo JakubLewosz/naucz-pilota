@@ -1,0 +1,1359 @@
+{
+  "date": "2026-11-10T07:34:15.476Z",
+  "mode": "live",
+  "promptVersion": "1.1.0",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "xhigh",
+  "maxOutputTokens": 8192,
+  "timeoutMs": 90000,
+  "branch": "codex/jury-readiness",
+  "commit": "95a55ca86b6b4cbdf6e01e728749b22eb986e0f6",
+  "maxCalls": 6,
+  "platform": "darwin",
+  "node": "v24.11.0",
+  "maxAttemptsPerTurn": 1,
+  "attempts": [
+    {
+      "number": 1,
+      "variant": "M04-A",
+      "sceneId": "M04-teach",
+      "phase": "teach_repair",
+      "time": "2026-11-10T07:34:17.670Z",
+      "httpStatus": 200,
+      "providerRequestId": "req_557326afcadf4179b48282f6cbdc1d86",
+      "response": {
+        "id": "resp_0affc6fbf4be4411016af2c8fbbaf887d2a5e47a88930f13a2",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "service_tier": "default",
+        "usage": {
+          "input_tokens": 3323,
+          "input_tokens_details": {
+            "cache_write_tokens": 3320,
+            "cached_tokens": 0
+          },
+          "output_tokens": 1137,
+          "output_tokens_details": {
+            "reasoning_tokens": 997
+          },
+          "total_tokens": 4460
+        },
+        "output": [
+          {
+            "id": "rs_0affc6fbf4be4411016af2c8fdd33487d29c85b139214ccfbc",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "rs_0affc6fbf4be4411016af2c901906487d2bcba989114da97fb",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "msg_0affc6fbf4be4411016af2c904884c87d2bf235f5e52d27e77",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"utterancePL\":\"Rozumiem: w 0,25(x+1)^2 nawias zeruje się przy x=-1, więc tam jest wierzchołek, a plus oznacza przesunięcie w lewo. Z obliczeń mam y(-2)=0,25 i y(0)=0,25.\",\"followUpPL\":null,\"explanationAssessment\":\"sound\",\"proposedExpression\":null,\"suggestedRuleId\":\"RULE_QUAD_HORIZONTAL\",\"usedFactIds\":[\"F_CANDIDATE_G1_VALUE\",\"F_CANDIDATE_G2_VALUE\"],\"action\":\"explain_back\"}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "variant": "M04-A",
+      "sceneId": "M04-robot_transfer",
+      "phase": "robot_propose",
+      "time": "2026-11-10T07:34:29.693Z",
+      "httpStatus": 200,
+      "providerRequestId": "req_d93836b6ec1b48cca40185e5b0249f91",
+      "response": {
+        "id": "resp_04e6fa9e526898df016af2c907084887d2b73adc78d74703ca",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "service_tier": "default",
+        "usage": {
+          "input_tokens": 2633,
+          "input_tokens_details": {
+            "cache_write_tokens": 2630,
+            "cached_tokens": 0
+          },
+          "output_tokens": 777,
+          "output_tokens_details": {
+            "reasoning_tokens": 673
+          },
+          "total_tokens": 3410
+        },
+        "output": [
+          {
+            "id": "rs_04e6fa9e526898df016af2c908216487d2ae64a7ef860b088d",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "rs_04e6fa9e526898df016af2c90d17f487d2a4fbd6024e9b6e04",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "msg_04e6fa9e526898df016af2c90e982887d2b30a62d0c49e48a5",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"utterancePL\":\"Notatka poprawnie wskazuje, że plus w nawiasie przesuwa parabolę w lewo. Tym razem spróbuję przesunąć wierzchołek w prawo.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25*(x-2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "variant": "M04-B",
+      "sceneId": "M04-teach",
+      "phase": "teach_repair",
+      "time": "2026-11-10T07:34:39.991Z",
+      "httpStatus": 200,
+      "providerRequestId": "req_9bb9ec5d8fbb4d4b8467621ba8a61b94",
+      "response": {
+        "id": "resp_0d62a54ad4b8005e016af2c9101b7887d2b6326a02826a79a1",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "service_tier": "default",
+        "usage": {
+          "input_tokens": 3294,
+          "input_tokens_details": {
+            "cache_write_tokens": 18,
+            "cached_tokens": 3273
+          },
+          "output_tokens": 1584,
+          "output_tokens_details": {
+            "reasoning_tokens": 1427
+          },
+          "total_tokens": 4878
+        },
+        "output": [
+          {
+            "id": "rs_0d62a54ad4b8005e016af2c910b99887d2bceecfcf295e8fbe",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "rs_0d62a54ad4b8005e016af2c914234c87d2801259c2edb4ab0e",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "rs_0d62a54ad4b8005e016af2c917ae2087d2865988e2dd194073",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "msg_0d62a54ad4b8005e016af2c91a401c87d29c699191b77c0cbb",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"utterancePL\":\"Rozumiem, że według Ciebie plus przesuwa parabolę w prawo. W 0.25(x+1)^2 oś symetrii jest jednak przy x=-1, więc przesunięcie jest w lewo. W G1 i G2 wartości są równe 0.25.\",\"followUpPL\":\"Jak poprawisz swoją regułę, uwzględniając ten kierunek przesunięcia?\",\"explanationAssessment\":\"incorrect\",\"proposedExpression\":null,\"suggestedRuleId\":null,\"usedFactIds\":[\"F_CANDIDATE_G1_VALUE\",\"F_CANDIDATE_G2_VALUE\"],\"action\":\"ask_question\"}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "variant": "M04-B",
+      "sceneId": "M04-robot_transfer",
+      "phase": "robot_propose",
+      "time": "2026-11-10T07:34:51.377Z",
+      "httpStatus": 200,
+      "providerRequestId": "req_2fdab6f52b6a4f9abbca8476ec78c76d",
+      "response": {
+        "id": "resp_0cc2510d4bdd6849016af2c91b779087d289b8ecd28111e792",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "service_tier": "default",
+        "usage": {
+          "input_tokens": 2605,
+          "input_tokens_details": {
+            "cache_write_tokens": 142,
+            "cached_tokens": 2460
+          },
+          "output_tokens": 579,
+          "output_tokens_details": {
+            "reasoning_tokens": 465
+          },
+          "total_tokens": 3184
+        },
+        "output": [
+          {
+            "id": "rs_0cc2510d4bdd6849016af2c91c543887d297e1489b9ce1c0f7",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "msg_0cc2510d4bdd6849016af2c920aeac87d2a6e96168f6629724",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"utterancePL\":\"Notatka mówi, że plus przesuwa w prawo, ale kanoniczna reguła wskazuje przesunięcie w lewo. Spróbuję zastosować ją, ustawiając wierzchołek po prawej stronie.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "variant": "M04-C",
+      "sceneId": "M04-teach",
+      "phase": "teach_repair",
+      "time": "2026-11-10T07:34:58.036Z",
+      "httpStatus": 200,
+      "providerRequestId": "req_f449edaf3f9647e3bc35c88d8bb917e7",
+      "response": {
+        "id": "resp_0cb2832974affcfd016af2c922226887d286cbbb566f52b9f1",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "service_tier": "default",
+        "usage": {
+          "input_tokens": 3281,
+          "input_tokens_details": {
+            "cache_write_tokens": 5,
+            "cached_tokens": 3273
+          },
+          "output_tokens": 525,
+          "output_tokens_details": {
+            "reasoning_tokens": 436
+          },
+          "total_tokens": 3806
+        },
+        "output": [
+          {
+            "id": "rs_0cb2832974affcfd016af2c9230b8c87d2a227b70c7b993b31",
+            "type": "reasoning",
+            "content": [],
+            "summary": []
+          },
+          {
+            "id": "msg_0cb2832974affcfd016af2c9261ea087d2811473a40597088f",
+            "type": "message",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "annotations": [],
+                "logprobs": [],
+                "text": "{\"utterancePL\":\"Nie widzę wyjaśnienia w „abc”.\",\"followUpPL\":\"Jak zmiana znaku w nawiasie wpływa na poziome położenie wierzchołka?\",\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":null,\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"ask_question\"}"
+              }
+            ],
+            "phase": "final_answer",
+            "role": "assistant"
+          }
+        ]
+      }
+    },
+    {
+      "number": 6,
+      "variant": "M04-C",
+      "sceneId": "M04-robot_transfer",
+      "phase": "robot_propose",
+      "time": "2026-11-10T07:35:02.958Z",
+      "httpStatus": 200,
+      "providerRequestId": "req_c1af1993912e4be48f57ca31f427e794",
+      "response": {
+        "id": "resp_0d2532257a527901016af2c9270c4887d2b8e10cff94567de6",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "service_tier": "default",
+        "usage": {
+          "input_tokens": 2539,
+          "input_tokens_details": {
+            "cached_tokens": 2460,
+            "cache_write_tokens": 76
+          },
+          "output_tokens": 544,
+          "output_tokens_details": {
+            "reasoning_tokens": 442
+          },
+          "total_tokens": 3083
+        },
+        "output": [
+          {
+            "type": "reasoning",
+            "id": "rs_0d2532257a527901016af2c92b876887d28ea512796f87c7cf",
+            "summary": [],
+            "content": []
+          },
+          {
+            "type": "message",
+            "id": "msg_0d2532257a527901016af2c92baa3c87d2a11319852ef35e66",
+            "role": "assistant",
+            "status": "completed",
+            "content": [
+              {
+                "type": "output_text",
+                "text": "{\"utterancePL\":\"Notatka „abc” jest niejasna, więc spróbuję zastosować regułę, że nawias (x-p) ustawia wierzchołek w x=p.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+                "annotations": [],
+                "logprobs": []
+              }
+            ],
+            "phase": "final_answer"
+          }
+        ]
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "M04-A",
+      "explanationPL": "Dla x = −1 nawias x + 1 jest równy zero, więc tam leży wierzchołek. Plus w nawiasie oznacza przesunięcie w lewo.",
+      "rubric": "Czy Piko odnosi się do znaku i miejsca zerowania nawiasu oraz próbuje zastosować tę ideę na nowej planszy?",
+      "status": "PASS",
+      "baselineSha256": "3e2e291e00c752748100e8f0c7fe01c788f7a2488b91475e7a8475db25a9d9e1",
+      "teach": {
+        "httpStatus": 200,
+        "request": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "c68cc443-008a-4e7f-9774-370a5e7eee1f",
+          "sessionRevision": 0,
+          "turnId": "78527a27-5445-49f9-901e-c70899e59488",
+          "missionId": "M04",
+          "sceneRole": "teach",
+          "requestedMode": "live",
+          "phase": "teach_repair",
+          "userMessage": "Dla x = −1 nawias x + 1 jest równy zero, więc tam leży wierzchołek. Plus w nawiasie oznacza przesunięcie w lewo.",
+          "candidateExpression": "0.25(x+1)^2",
+          "attemptHistory": [
+            {
+              "attemptId": "d031a78a-ac98-4638-8a4e-a06012f7f036",
+              "sceneId": "M04-teach",
+              "expression": "0.25(x+1)^2"
+            }
+          ],
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT",
+            "RULE_LINE_SLOPE",
+            "RULE_QUAD_VERTICAL"
+          ],
+          "numericEvidence": [
+            {
+              "sceneId": "M04-teach",
+              "checkpointId": "G1",
+              "submittedY": 0.25
+            },
+            {
+              "sceneId": "M04-teach",
+              "checkpointId": "G2",
+              "submittedY": 0.25
+            }
+          ],
+          "ruleEvidence": [
+            {
+              "missionId": "M01",
+              "candidateExpression": "2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 2
+                }
+              ]
+            },
+            {
+              "missionId": "M02",
+              "candidateExpression": "-0.5x+3",
+              "numericEvidence": [
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 1
+                }
+              ]
+            },
+            {
+              "missionId": "M03",
+              "candidateExpression": "0.25x^2-1",
+              "numericEvidence": [
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G1",
+                  "submittedY": -0.4375
+                },
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G2",
+                  "submittedY": -0.75
+                }
+              ]
+            }
+          ]
+        },
+        "envelope": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "c68cc443-008a-4e7f-9774-370a5e7eee1f",
+          "sessionRevision": 1,
+          "turnId": "78527a27-5445-49f9-901e-c70899e59488",
+          "sceneId": "M04-teach",
+          "mode": "live",
+          "learner": {
+            "utterancePL": "Rozumiem: w 0,25(x+1)^2 nawias zeruje się przy x=-1, więc tam jest wierzchołek, a plus oznacza przesunięcie w lewo. Z obliczeń mam y(-2)=0,25 i y(0)=0,25.",
+            "followUpPL": null,
+            "explanationAssessment": "sound",
+            "proposedExpression": null,
+            "suggestedRuleId": "RULE_QUAD_HORIZONTAL",
+            "usedFactIds": [
+              "F_CANDIDATE_G1_VALUE",
+              "F_CANDIDATE_G2_VALUE"
+            ],
+            "action": "explain_back"
+          },
+          "proposalValidation": {
+            "status": "not_proposed",
+            "failureCode": null,
+            "normalizedExpression": null,
+            "facts": []
+          },
+          "memory": {
+            "learnedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL"
+            ],
+            "qualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "newlyQualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "rejectedEvidenceMissionIds": []
+          },
+          "model": {
+            "provider": "openai",
+            "configuredModel": "gpt-6-luna",
+            "actualModel": "gpt-6-luna",
+            "providerResponseId": "resp_0affc6fbf4be4411016af2c8fbbaf887d2a5e47a88930f13a2",
+            "requestCount": 1,
+            "inputTokens": 3323,
+            "outputTokens": 1137,
+            "latencyMs": 11895
+          },
+          "error": null
+        }
+      },
+      "note": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Dla x = −1 nawias x + 1 jest równy zero, więc tam leży wierzchołek. Plus w nawiasie oznacza przesunięcie w lewo.",
+        "pikoParaphrasePL": "Rozumiem: w 0,25(x+1)^2 nawias zeruje się przy x=-1, więc tam jest wierzchołek, a plus oznacza przesunięcie w lewo. Z obliczeń mam y(-2)=0,25 i y(0)=0,25.",
+        "source": "live",
+        "confirmation": "saved_by_player"
+      },
+      "transfer": {
+        "httpStatus": 200,
+        "request": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "c68cc443-008a-4e7f-9774-370a5e7eee1f",
+          "sessionRevision": 1,
+          "turnId": "9d499cfc-7693-48eb-bc9b-ea71f12ecd44",
+          "missionId": "M04",
+          "sceneRole": "robot_transfer",
+          "requestedMode": "live",
+          "phase": "robot_propose",
+          "userMessage": "",
+          "candidateExpression": null,
+          "attemptHistory": [],
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT",
+            "RULE_LINE_SLOPE",
+            "RULE_QUAD_VERTICAL",
+            "RULE_QUAD_HORIZONTAL"
+          ],
+          "numericEvidence": [],
+          "ruleEvidence": [
+            {
+              "missionId": "M01",
+              "candidateExpression": "2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 2
+                }
+              ]
+            },
+            {
+              "missionId": "M02",
+              "candidateExpression": "-0.5x+3",
+              "numericEvidence": [
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 1
+                }
+              ]
+            },
+            {
+              "missionId": "M03",
+              "candidateExpression": "0.25x^2-1",
+              "numericEvidence": [
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G1",
+                  "submittedY": -0.4375
+                },
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G2",
+                  "submittedY": -0.75
+                }
+              ]
+            },
+            {
+              "missionId": "M04",
+              "candidateExpression": "0.25(x+1)^2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M04-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 0.25
+                },
+                {
+                  "sceneId": "M04-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 0.25
+                }
+              ],
+              "lessonNote": {
+                "version": 1,
+                "ruleId": "RULE_QUAD_HORIZONTAL",
+                "explanationPL": "Dla x = −1 nawias x + 1 jest równy zero, więc tam leży wierzchołek. Plus w nawiasie oznacza przesunięcie w lewo.",
+                "pikoParaphrasePL": "Rozumiem: w 0,25(x+1)^2 nawias zeruje się przy x=-1, więc tam jest wierzchołek, a plus oznacza przesunięcie w lewo. Z obliczeń mam y(-2)=0,25 i y(0)=0,25.",
+                "source": "live",
+                "confirmation": "saved_by_player"
+              }
+            }
+          ]
+        },
+        "envelope": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "c68cc443-008a-4e7f-9774-370a5e7eee1f",
+          "sessionRevision": 2,
+          "turnId": "9d499cfc-7693-48eb-bc9b-ea71f12ecd44",
+          "sceneId": "M04-robot_transfer",
+          "mode": "live",
+          "learner": {
+            "utterancePL": "Notatka poprawnie wskazuje, że plus w nawiasie przesuwa parabolę w lewo. Tym razem spróbuję przesunąć wierzchołek w prawo.",
+            "followUpPL": null,
+            "explanationAssessment": "not_applicable",
+            "proposedExpression": "0.25*(x-2)^2",
+            "suggestedRuleId": null,
+            "usedFactIds": [],
+            "action": "propose_attempt"
+          },
+          "proposalValidation": {
+            "status": "passed",
+            "failureCode": null,
+            "normalizedExpression": "{\"c2\":0.25,\"c1\":-1,\"c0\":1}",
+            "facts": [
+              {
+                "id": "F_CANDIDATE_VALIDATION",
+                "textPL": "Bezpieczny lot. Wszystkie bramki zaliczone."
+              },
+              {
+                "id": "F_CANDIDATE_start_VALUE",
+                "textPL": "start: dla x=-1 wzór daje y=2.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_G1_VALUE",
+                "textPL": "G1: dla x=1 wzór daje y=0.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_G2_VALUE",
+                "textPL": "G2: dla x=3 wzór daje y=0.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_goal_VALUE",
+                "textPL": "goal: dla x=5 wzór daje y=2.25; prześwit zachowany."
+              }
+            ]
+          },
+          "memory": {
+            "learnedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "qualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "newlyQualifiedRuleIds": [],
+            "rejectedEvidenceMissionIds": []
+          },
+          "model": {
+            "provider": "openai",
+            "configuredModel": "gpt-6-luna",
+            "actualModel": "gpt-6-luna",
+            "providerResponseId": "resp_04e6fa9e526898df016af2c907084887d2b73adc78d74703ca",
+            "requestCount": 1,
+            "inputTokens": 2633,
+            "outputTokens": 777,
+            "latencyMs": 9845
+          },
+          "error": null
+        }
+      },
+      "engine": {
+        "status": "passed",
+        "code": null,
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "uiMessagePL": "✓ Bezpieczny lot. Wszystkie bramki zaliczone.\nDlaczego?"
+      }
+    },
+    {
+      "id": "M04-B",
+      "explanationPL": "Plus w nawiasie przesuwa parabolę w prawo.",
+      "rubric": "Czy Piko dostrzega sprzeczność ze sprawdzoną regułą i odróżnia ją od słów gracza?",
+      "status": "PASS",
+      "baselineSha256": "3e2e291e00c752748100e8f0c7fe01c788f7a2488b91475e7a8475db25a9d9e1",
+      "teach": {
+        "httpStatus": 200,
+        "request": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "6af41ffc-ecbc-4157-8acd-a9076cc49d7f",
+          "sessionRevision": 0,
+          "turnId": "6b142901-b1a3-41dd-a5f4-643da8ec30bb",
+          "missionId": "M04",
+          "sceneRole": "teach",
+          "requestedMode": "live",
+          "phase": "teach_repair",
+          "userMessage": "Plus w nawiasie przesuwa parabolę w prawo.",
+          "candidateExpression": "0.25(x+1)^2",
+          "attemptHistory": [
+            {
+              "attemptId": "d031a78a-ac98-4638-8a4e-a06012f7f036",
+              "sceneId": "M04-teach",
+              "expression": "0.25(x+1)^2"
+            }
+          ],
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT",
+            "RULE_LINE_SLOPE",
+            "RULE_QUAD_VERTICAL"
+          ],
+          "numericEvidence": [
+            {
+              "sceneId": "M04-teach",
+              "checkpointId": "G1",
+              "submittedY": 0.25
+            },
+            {
+              "sceneId": "M04-teach",
+              "checkpointId": "G2",
+              "submittedY": 0.25
+            }
+          ],
+          "ruleEvidence": [
+            {
+              "missionId": "M01",
+              "candidateExpression": "2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 2
+                }
+              ]
+            },
+            {
+              "missionId": "M02",
+              "candidateExpression": "-0.5x+3",
+              "numericEvidence": [
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 1
+                }
+              ]
+            },
+            {
+              "missionId": "M03",
+              "candidateExpression": "0.25x^2-1",
+              "numericEvidence": [
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G1",
+                  "submittedY": -0.4375
+                },
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G2",
+                  "submittedY": -0.75
+                }
+              ]
+            }
+          ]
+        },
+        "envelope": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "6af41ffc-ecbc-4157-8acd-a9076cc49d7f",
+          "sessionRevision": 1,
+          "turnId": "6b142901-b1a3-41dd-a5f4-643da8ec30bb",
+          "sceneId": "M04-teach",
+          "mode": "live",
+          "learner": {
+            "utterancePL": "Rozumiem, że według Ciebie plus przesuwa parabolę w prawo. W 0.25(x+1)^2 oś symetrii jest jednak przy x=-1, więc przesunięcie jest w lewo. W G1 i G2 wartości są równe 0.25.",
+            "followUpPL": "Jak poprawisz swoją regułę, uwzględniając ten kierunek przesunięcia?",
+            "explanationAssessment": "incorrect",
+            "proposedExpression": null,
+            "suggestedRuleId": null,
+            "usedFactIds": [
+              "F_CANDIDATE_G1_VALUE",
+              "F_CANDIDATE_G2_VALUE"
+            ],
+            "action": "ask_question"
+          },
+          "proposalValidation": {
+            "status": "not_proposed",
+            "failureCode": null,
+            "normalizedExpression": null,
+            "facts": []
+          },
+          "memory": {
+            "learnedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL"
+            ],
+            "qualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "newlyQualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "rejectedEvidenceMissionIds": []
+          },
+          "model": {
+            "provider": "openai",
+            "configuredModel": "gpt-6-luna",
+            "actualModel": "gpt-6-luna",
+            "providerResponseId": "resp_0d62a54ad4b8005e016af2c9101b7887d2b6326a02826a79a1",
+            "requestCount": 1,
+            "inputTokens": 3294,
+            "outputTokens": 1584,
+            "latencyMs": 11241
+          },
+          "error": null
+        }
+      },
+      "note": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": "Rozumiem, że według Ciebie plus przesuwa parabolę w prawo. W 0.25(x+1)^2 oś symetrii jest jednak przy x=-1, więc przesunięcie jest w lewo. W G1 i G2 wartości są równe 0.25.",
+        "source": "live",
+        "confirmation": "saved_by_player"
+      },
+      "transfer": {
+        "httpStatus": 200,
+        "request": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "6af41ffc-ecbc-4157-8acd-a9076cc49d7f",
+          "sessionRevision": 1,
+          "turnId": "ebddae91-4254-4575-85c1-c53cabe465dc",
+          "missionId": "M04",
+          "sceneRole": "robot_transfer",
+          "requestedMode": "live",
+          "phase": "robot_propose",
+          "userMessage": "",
+          "candidateExpression": null,
+          "attemptHistory": [],
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT",
+            "RULE_LINE_SLOPE",
+            "RULE_QUAD_VERTICAL",
+            "RULE_QUAD_HORIZONTAL"
+          ],
+          "numericEvidence": [],
+          "ruleEvidence": [
+            {
+              "missionId": "M01",
+              "candidateExpression": "2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 2
+                }
+              ]
+            },
+            {
+              "missionId": "M02",
+              "candidateExpression": "-0.5x+3",
+              "numericEvidence": [
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 1
+                }
+              ]
+            },
+            {
+              "missionId": "M03",
+              "candidateExpression": "0.25x^2-1",
+              "numericEvidence": [
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G1",
+                  "submittedY": -0.4375
+                },
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G2",
+                  "submittedY": -0.75
+                }
+              ]
+            },
+            {
+              "missionId": "M04",
+              "candidateExpression": "0.25(x+1)^2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M04-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 0.25
+                },
+                {
+                  "sceneId": "M04-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 0.25
+                }
+              ],
+              "lessonNote": {
+                "version": 1,
+                "ruleId": "RULE_QUAD_HORIZONTAL",
+                "explanationPL": "Plus w nawiasie przesuwa parabolę w prawo.",
+                "pikoParaphrasePL": "Rozumiem, że według Ciebie plus przesuwa parabolę w prawo. W 0.25(x+1)^2 oś symetrii jest jednak przy x=-1, więc przesunięcie jest w lewo. W G1 i G2 wartości są równe 0.25.",
+                "source": "live",
+                "confirmation": "saved_by_player"
+              }
+            }
+          ]
+        },
+        "envelope": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "6af41ffc-ecbc-4157-8acd-a9076cc49d7f",
+          "sessionRevision": 2,
+          "turnId": "ebddae91-4254-4575-85c1-c53cabe465dc",
+          "sceneId": "M04-robot_transfer",
+          "mode": "live",
+          "learner": {
+            "utterancePL": "Notatka mówi, że plus przesuwa w prawo, ale kanoniczna reguła wskazuje przesunięcie w lewo. Spróbuję zastosować ją, ustawiając wierzchołek po prawej stronie.",
+            "followUpPL": null,
+            "explanationAssessment": "not_applicable",
+            "proposedExpression": "0.25(x-2)^2",
+            "suggestedRuleId": null,
+            "usedFactIds": [],
+            "action": "propose_attempt"
+          },
+          "proposalValidation": {
+            "status": "passed",
+            "failureCode": null,
+            "normalizedExpression": "{\"c2\":0.25,\"c1\":-1,\"c0\":1}",
+            "facts": [
+              {
+                "id": "F_CANDIDATE_VALIDATION",
+                "textPL": "Bezpieczny lot. Wszystkie bramki zaliczone."
+              },
+              {
+                "id": "F_CANDIDATE_start_VALUE",
+                "textPL": "start: dla x=-1 wzór daje y=2.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_G1_VALUE",
+                "textPL": "G1: dla x=1 wzór daje y=0.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_G2_VALUE",
+                "textPL": "G2: dla x=3 wzór daje y=0.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_goal_VALUE",
+                "textPL": "goal: dla x=5 wzór daje y=2.25; prześwit zachowany."
+              }
+            ]
+          },
+          "memory": {
+            "learnedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "qualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "newlyQualifiedRuleIds": [],
+            "rejectedEvidenceMissionIds": []
+          },
+          "model": {
+            "provider": "openai",
+            "configuredModel": "gpt-6-luna",
+            "actualModel": "gpt-6-luna",
+            "providerResponseId": "resp_0cc2510d4bdd6849016af2c91b779087d289b8ecd28111e792",
+            "requestCount": 1,
+            "inputTokens": 2605,
+            "outputTokens": 579,
+            "latencyMs": 6177
+          },
+          "error": null
+        }
+      },
+      "engine": {
+        "status": "passed",
+        "code": null,
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "uiMessagePL": "✓ Bezpieczny lot. Wszystkie bramki zaliczone.\nDlaczego?"
+      }
+    },
+    {
+      "id": "M04-C",
+      "explanationPL": "abc",
+      "rubric": "Czy Piko przyznaje, że tekst nie daje użytecznej wskazówki, i opiera próbę na sprawdzonej regule?",
+      "status": "PASS",
+      "baselineSha256": "3e2e291e00c752748100e8f0c7fe01c788f7a2488b91475e7a8475db25a9d9e1",
+      "teach": {
+        "httpStatus": 200,
+        "request": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "3992e43d-6dbb-49f7-9057-7562a1fed58c",
+          "sessionRevision": 0,
+          "turnId": "97a3837c-b8c6-4cc3-9a6d-da2e0298f429",
+          "missionId": "M04",
+          "sceneRole": "teach",
+          "requestedMode": "live",
+          "phase": "teach_repair",
+          "userMessage": "abc",
+          "candidateExpression": "0.25(x+1)^2",
+          "attemptHistory": [
+            {
+              "attemptId": "d031a78a-ac98-4638-8a4e-a06012f7f036",
+              "sceneId": "M04-teach",
+              "expression": "0.25(x+1)^2"
+            }
+          ],
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT",
+            "RULE_LINE_SLOPE",
+            "RULE_QUAD_VERTICAL"
+          ],
+          "numericEvidence": [
+            {
+              "sceneId": "M04-teach",
+              "checkpointId": "G1",
+              "submittedY": 0.25
+            },
+            {
+              "sceneId": "M04-teach",
+              "checkpointId": "G2",
+              "submittedY": 0.25
+            }
+          ],
+          "ruleEvidence": [
+            {
+              "missionId": "M01",
+              "candidateExpression": "2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 2
+                }
+              ]
+            },
+            {
+              "missionId": "M02",
+              "candidateExpression": "-0.5x+3",
+              "numericEvidence": [
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 1
+                }
+              ]
+            },
+            {
+              "missionId": "M03",
+              "candidateExpression": "0.25x^2-1",
+              "numericEvidence": [
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G1",
+                  "submittedY": -0.4375
+                },
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G2",
+                  "submittedY": -0.75
+                }
+              ]
+            }
+          ]
+        },
+        "envelope": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "3992e43d-6dbb-49f7-9057-7562a1fed58c",
+          "sessionRevision": 1,
+          "turnId": "97a3837c-b8c6-4cc3-9a6d-da2e0298f429",
+          "sceneId": "M04-teach",
+          "mode": "live",
+          "learner": {
+            "utterancePL": "Nie widzę wyjaśnienia w „abc”.",
+            "followUpPL": "Jak zmiana znaku w nawiasie wpływa na poziome położenie wierzchołka?",
+            "explanationAssessment": "not_applicable",
+            "proposedExpression": null,
+            "suggestedRuleId": null,
+            "usedFactIds": [],
+            "action": "ask_question"
+          },
+          "proposalValidation": {
+            "status": "not_proposed",
+            "failureCode": null,
+            "normalizedExpression": null,
+            "facts": []
+          },
+          "memory": {
+            "learnedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL"
+            ],
+            "qualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "newlyQualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "rejectedEvidenceMissionIds": []
+          },
+          "model": {
+            "provider": "openai",
+            "configuredModel": "gpt-6-luna",
+            "actualModel": "gpt-6-luna",
+            "providerResponseId": "resp_0cb2832974affcfd016af2c922226887d286cbbb566f52b9f1",
+            "requestCount": 1,
+            "inputTokens": 3281,
+            "outputTokens": 525,
+            "latencyMs": 4800
+          },
+          "error": null
+        }
+      },
+      "note": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": "Nie widzę wyjaśnienia w „abc”.",
+        "source": "live",
+        "confirmation": "saved_by_player"
+      },
+      "transfer": {
+        "httpStatus": 200,
+        "request": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "3992e43d-6dbb-49f7-9057-7562a1fed58c",
+          "sessionRevision": 1,
+          "turnId": "4ff9a0c2-f969-4a18-a1c3-a012cf15727c",
+          "missionId": "M04",
+          "sceneRole": "robot_transfer",
+          "requestedMode": "live",
+          "phase": "robot_propose",
+          "userMessage": "",
+          "candidateExpression": null,
+          "attemptHistory": [],
+          "learnedRuleIds": [
+            "RULE_LINE_INTERCEPT",
+            "RULE_LINE_SLOPE",
+            "RULE_QUAD_VERTICAL",
+            "RULE_QUAD_HORIZONTAL"
+          ],
+          "numericEvidence": [],
+          "ruleEvidence": [
+            {
+              "missionId": "M01",
+              "candidateExpression": "2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M01-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 2
+                }
+              ]
+            },
+            {
+              "missionId": "M02",
+              "candidateExpression": "-0.5x+3",
+              "numericEvidence": [
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 2
+                },
+                {
+                  "sceneId": "M02-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 1
+                }
+              ]
+            },
+            {
+              "missionId": "M03",
+              "candidateExpression": "0.25x^2-1",
+              "numericEvidence": [
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G1",
+                  "submittedY": -0.4375
+                },
+                {
+                  "sceneId": "M03-teach",
+                  "checkpointId": "G2",
+                  "submittedY": -0.75
+                }
+              ]
+            },
+            {
+              "missionId": "M04",
+              "candidateExpression": "0.25(x+1)^2",
+              "numericEvidence": [
+                {
+                  "sceneId": "M04-teach",
+                  "checkpointId": "G1",
+                  "submittedY": 0.25
+                },
+                {
+                  "sceneId": "M04-teach",
+                  "checkpointId": "G2",
+                  "submittedY": 0.25
+                }
+              ],
+              "lessonNote": {
+                "version": 1,
+                "ruleId": "RULE_QUAD_HORIZONTAL",
+                "explanationPL": "abc",
+                "pikoParaphrasePL": "Nie widzę wyjaśnienia w „abc”.",
+                "source": "live",
+                "confirmation": "saved_by_player"
+              }
+            }
+          ]
+        },
+        "envelope": {
+          "schemaVersion": "1.0.0",
+          "sessionId": "3992e43d-6dbb-49f7-9057-7562a1fed58c",
+          "sessionRevision": 2,
+          "turnId": "4ff9a0c2-f969-4a18-a1c3-a012cf15727c",
+          "sceneId": "M04-robot_transfer",
+          "mode": "live",
+          "learner": {
+            "utterancePL": "Notatka „abc” jest niejasna, więc spróbuję zastosować regułę, że nawias (x-p) ustawia wierzchołek w x=p.",
+            "followUpPL": null,
+            "explanationAssessment": "not_applicable",
+            "proposedExpression": "0.25(x-2)^2",
+            "suggestedRuleId": null,
+            "usedFactIds": [],
+            "action": "propose_attempt"
+          },
+          "proposalValidation": {
+            "status": "passed",
+            "failureCode": null,
+            "normalizedExpression": "{\"c2\":0.25,\"c1\":-1,\"c0\":1}",
+            "facts": [
+              {
+                "id": "F_CANDIDATE_VALIDATION",
+                "textPL": "Bezpieczny lot. Wszystkie bramki zaliczone."
+              },
+              {
+                "id": "F_CANDIDATE_start_VALUE",
+                "textPL": "start: dla x=-1 wzór daje y=2.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_G1_VALUE",
+                "textPL": "G1: dla x=1 wzór daje y=0.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_G2_VALUE",
+                "textPL": "G2: dla x=3 wzór daje y=0.25; prześwit zachowany."
+              },
+              {
+                "id": "F_CANDIDATE_goal_VALUE",
+                "textPL": "goal: dla x=5 wzór daje y=2.25; prześwit zachowany."
+              }
+            ]
+          },
+          "memory": {
+            "learnedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "qualifiedRuleIds": [
+              "RULE_LINE_INTERCEPT",
+              "RULE_LINE_SLOPE",
+              "RULE_QUAD_VERTICAL",
+              "RULE_QUAD_HORIZONTAL"
+            ],
+            "newlyQualifiedRuleIds": [],
+            "rejectedEvidenceMissionIds": []
+          },
+          "model": {
+            "provider": "openai",
+            "configuredModel": "gpt-6-luna",
+            "actualModel": "gpt-6-luna",
+            "providerResponseId": "resp_0d2532257a527901016af2c9270c4887d2b8e10cff94567de6",
+            "requestCount": 1,
+            "inputTokens": 2539,
+            "outputTokens": 544,
+            "latencyMs": 5647
+          },
+          "error": null
+        }
+      },
+      "engine": {
+        "status": "passed",
+        "code": null,
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "uiMessagePL": "✓ Bezpieczny lot. Wszystkie bramki zaliczone.\nDlaczego?"
+      }
+    }
+  ],
+  "baselineSha256": "3e2e291e00c752748100e8f0c7fe01c788f7a2488b91475e7a8475db25a9d9e1",
+  "baseline": {
+    "missionId": "M04",
+    "role": "teach",
+    "expression": "0.25(x+1)^2",
+    "predictions": [
+      "0.25",
+      "0.25"
+    ],
+    "cookies": 0
+  },
+  "phase": "COMPLETE",
+  "providerCalls": 6,
+  "semanticReview": "NOT REVIEWED"
+}
