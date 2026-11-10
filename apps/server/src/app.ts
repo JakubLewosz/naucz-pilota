@@ -78,7 +78,8 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
     else{
      if(config.mode!=='live'||!options.provider||!config.model)throw new ProviderError('AI_NOT_CONFIGURED',503);
      let repair:Parameters<Provider>[3];let accepted=false;
-     for(let attempt=0;attempt<Math.min(2,config.maxProviderRequests);attempt++){
+     const requestLimit=request.phase==='robot_propose'?1:Math.min(2,config.maxProviderRequests);
+     for(let attempt=0;attempt<requestLimit;attempt++){
       if(controller.signal.aborted)throw new ProviderError('AI_TIMEOUT',504);
       if(!store.reserve(config.dailyBudget))throw new ProviderError('DAILY_BUDGET_EXHAUSTED',429);
       count++;

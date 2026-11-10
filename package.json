@@ -19,6 +19,7 @@
     "test:content": "vitest run tests/content.test.ts",
     "test:e2e": "playwright test",
     "test:ai:live": "tsx tests/live/run.ts",
+    "test:m04:offline": "tsx tests/live/run-m04-generalization.ts --mock",
     "build": "npm run build:content && npm run typecheck && vite build --config apps/web/vite.config.ts && tsx tools/build-server.ts",
     "start": "node dist/server/index.mjs",
     "desktop:dev": "npm run build && electron apps/desktop/main.cjs",

@@ -103,6 +103,23 @@ it('INT14 late reply cannot overwrite human scene or first independent result',(
  const s:GameState=initialState();s.runs.M01=newRun('M01');s.runs.M01.role='human_check';s.viewRevision=5;
  const envelope={} as Envelope;expect(reducer(s,{type:'AI_RESULT',turnId:'old',revision:4,sceneId:'M01-robot_transfer',envelope})).toEqual(s);
 });
+
+it('an invalid transfer response is reported after one provider request',async()=>{
+ const fixture=evals.cases.find(item=>item.id==='INT02')!;
+ let calls=0;
+ const store=new Store(':memory:');stores.push(store);
+ const app=createApp({store,config:{mode:'live',model:'mock-model',maxProviderRequests:2},provider:async()=>{
+  calls++;
+  return calls===1?{...result(null),text:'invalid JSON'}:result(fixtures.robot_passes);
+ }});
+ const session=await request(app).post('/api/session').send({});
+ const reply=await request(app).post('/api/learner-turn').set('Cookie',session.headers['set-cookie']).send({
+  ...fixture.request,sessionId:session.body.sessionId,sessionRevision:0,turnId:crypto.randomUUID()
+ });
+ expect(reply.status).toBe(502);
+ expect(reply.body).toMatchObject({mode:'unavailable',learner:null,model:{requestCount:1},error:{code:'AI_INVALID_OUTPUT'}});
+ expect(calls).toBe(1);
+});
 it('durable atomic budget survives restart and cannot be overspent',async()=>{
  const dir=mkdtempSync(path.join(tmpdir(),'piko-budget-'));try{
   let s=new Store(path.join(dir,'state.sqlite'));expect(s.reserve(2)).toBe(true);s.close();s=new Store(path.join(dir,'state.sqlite'));

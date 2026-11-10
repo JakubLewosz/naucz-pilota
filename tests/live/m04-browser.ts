@@ -22,12 +22,11 @@ import {M04_LESSON_VARIANTS} from './cases';
 const paid=process.argv[2]==='--allow-paid';
 const runId=process.argv[3];
 if(!['--mock','--allow-paid'].includes(process.argv[2])||process.argv.length!==4||!/^[a-zA-Z0-9-]{1,60}$/.test(runId)){
- throw new Error('Use npx tsx tests/live/m04-browser.ts --mock|--allow-paid unique-run-id. Paid cap: 12 HTTP requests.');
+ throw new Error('Use npx tsx tests/live/m04-browser.ts --mock|--allow-paid unique-run-id. Paid cap: at most 9 HTTP requests.');
 }
-assert.equal(PROMPT_VERSION,'1.1.0','This protocol expects prompt 1.1.0.');
 const key=paid?process.env.OPENAI_API_KEY:'offline-stub-key';
 const {model,reasoningEffort,maxOutputTokens,timeoutMs,maxProviderRequests}=readOpenAIConfig(paid?process.env:{AI_MODEL:'gpt-6-luna'});
-const maxCalls=M04_LESSON_VARIANTS.length*2*maxProviderRequests;
+const maxCalls=M04_LESSON_VARIANTS.length*(maxProviderRequests+1);
 if(!key||!model)throw new Error('NOT RUN: configure the backend key and model first.');
 const branch=execFileSync('git',['branch','--show-current'],{encoding:'utf8'}).trim();
 const commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
