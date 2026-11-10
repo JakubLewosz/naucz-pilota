@@ -1,7 +1,24 @@
 # Stan implementacji — Naucz Pilota
-Aktualizacja: 2026-11-09. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
+Aktualizacja: 2026-11-10. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live wykonano na `a751a1cd8ceb98d89410571e9076b194652f0493`.
+
+## GPT-6 Luna z Extra High
+
+Commit `9e32afe` ujednolica konfigurację serwera i obu runnerów live. SDK wysyła `gpt-6-luna`, `reasoning.effort=xhigh` i limit 8192 tokenów. Tura ma domyślnie 90 s, w tym ewentualne techniczne ponowienie. Relay Electron i narzędzia przeglądarkowe dają 130 s na odpowiedź. W grze widać stan oczekiwania. Timeout, odrzucenie konfiguracji modelu i odpowiedź niekompletna są jawnymi błędami. Lokalny `.env` zawiera nowe jawne ustawienia, a `/api/health` zbudowanej aplikacji potwierdził konfigurację bez tury u dostawcy.
+
+| Sprawdzenie | Wynik dla `9e32afe` |
+|---|---|
+| `npm run typecheck`, `npm run lint`, `npm run build` | PASS. Walidacja i build obejmują 6 misji i 24 sceny. |
+| `npm test` | PASS, 185 w 7 plikach. Atrapa SDK obsłużyła `completed`, `incomplete`, odmowę i HTTP 400, 404, 429. Jeden request na przypadek. |
+| `npm run test:content`, walidator i niezależny audyt Python | PASS, 62 testy treści, 24 poprawne tory, 37 znanych błędów i 42 kontrole walidatora. |
+| E2E Chromium w demo i z lokalnymi atrapami | PASS, 12 testów w 21,2 s. |
+| M04 A/B/C w Chromium z `--mock` | PASS w trzech sesjach. 7 prób z jednym celowym technicznym ponowieniem, 0 rzeczywistych żądań OpenAI. |
+| `npx tsx tools/smoke-desktop-relay.ts` | PASS na macOS. Relay odebrał odpowiedź atrapy po 17 s, po uprzednim wyczyszczeniu kontekstu. UI pokazało oczekiwanie. |
+| Cross-build Windows x64 i inspekcja PE, ASAR i ZIP | PASS na macOS. Paczka testowa zawiera bieżący relay i konfigurację demo. Uruchomienie EXE na Windows **NOT RUN**. |
+| Prawdziwe GPT-6 Luna `xhigh`, publiczny HTTPS i Windows odbiorcy | **NOT RUN**. Dostęp do modelu na koncie, opóźnienia i jakość transferu wymagają odbioru. |
+
+Lokalna integracja jest gotowa do kontrolowanej próby. Odbiór jury w trybie live wymaga sprawdzenia Luny w M04, następnie HTTPS i osobnego urządzenia. Pełne [body z atrapy HTTP](checks/luna-xhigh-http-stub-request.json) oraz [plan próby na maksymalnie sześć wywołań](docs/19-gpt-6-luna-xhigh.md) są gotowe. W tym etapie wykorzystano 0 płatnych wywołań. Poniższe wyniki live nadal opisują GPT-5.4 mini.
 
 ## M04 A/B/C na żywo z promptem 1.1.0
 

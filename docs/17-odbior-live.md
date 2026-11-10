@@ -1,6 +1,6 @@
 # Odbiór live i test na urządzeniu jury
 
-Publiczny HTTPS i osobny komputer odbiorcy mają status **NOT RUN**. Przed próbą zanotuj SHA kodu, wersję promptu, model, datę, urządzenie i zgodę na liczbę wywołań. Lokalna atrapa i przebieg CI są oddzielnymi dowodami.
+Publiczny HTTPS i osobny komputer odbiorcy mają status **NOT RUN**. Dla GPT-6 Luna z `xhigh` obowiązuje [plan próby z osobnym budżetem](19-gpt-6-luna-xhigh.md). Przed próbą zanotuj SHA kodu, wersję promptu, model, datę, urządzenie i zgodę na liczbę wywołań. Lokalna atrapa i przebieg CI są oddzielnymi dowodami.
 
 ## Odbiór M04 A/B/C przez interfejs gry
 
@@ -67,7 +67,7 @@ docker run -d --name piko-live --restart unless-stopped \
   naucz-pilota:codex-readiness
 ```
 
-Na proxy kieruj stronę i `/api` pod ten sam origin. Ogranicz szybkość `/api/session`, `/api/learner-turn` i `/api/conversation/reset` na adres dopuszczonego klienta. Ustal limit treści maksymalnie 16 KiB, zachowaj `Origin` i nagłówki Electron oraz nadpisuj nagłówki adresu klienta. Daj relay czas na limit aplikacji 15 s. Anonimowa sesja aplikacji daje kontekst rozmowy. Kontrolę dostępu do budżetu zapewnia proxy lub sieć. Po zmianie konfiguracji zachowaj wolumen i używaj jednej instancji. Limit dobowy jest liczbą żądań, a realny koszt zależy od modelu i tokenów.
+Na proxy kieruj stronę i `/api` pod ten sam origin. Ogranicz szybkość `/api/session`, `/api/learner-turn` i `/api/conversation/reset` na adres dopuszczonego klienta. Ustal limit treści maksymalnie 16 KiB, zachowaj `Origin` i nagłówki Electron oraz nadpisuj nagłówki adresu klienta. Dla `/api/learner-turn` ustaw timeout odpowiedzi proxy na co najmniej 130 s. Daje to zapas na turę o konfigurowalnym limicie do 120 s. Anonimowa sesja aplikacji daje kontekst rozmowy. Kontrolę dostępu do budżetu zapewnia proxy lub sieć. Po zmianie konfiguracji zachowaj wolumen i używaj jednej instancji. Limit dobowy jest liczbą żądań, a realny koszt zależy od modelu i tokenów.
 
 Klucze i plik zmiennych pozostają na hoście. W desktopowym `distribution.json` konfiguruj wyłącznie zatwierdzony origin HTTPS po odbiorze usługi i zgodzie na przygotowanie wydania. Zapis gry pozostaje na urządzeniu. Serwer zachowuje aktywną rozmowę oraz dowody w SQLite. Sesja wygasa po 24 godzinach, a czyszczenie wygasłych rekordów odbywa się przy ustanawianiu sesji. Operator odpowiada również za retencję kopii, czyszczenie podczas bezczynności i ustawienia dostawcy modelu.
 

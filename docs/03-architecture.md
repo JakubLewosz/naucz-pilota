@@ -123,7 +123,7 @@ Proponowane wartości domyślne dla małego pilota, do zmiany w konfiguracji:
 - wiadomość użytkownika: 600 znaków; body: 16 KiB.
 - 6 tur na minutę na sesję; dodatkowy limit IP i trwały limit globalny.
 - najwyżej 2 żądania dostawcy na jedną turę, w tym maksymalnie 1 naprawa struktury.
-- wspólny budżet czasu tury: 15 sekund; nie 15 sekund na każdą z wielu prób.
+- wspólny budżet czasu tury wynosi domyślnie 90 sekund i obejmuje obie próby. Backend przyjmuje ustawienie do 120 sekund.
 - output do 1200 tokenów; model może wymagać większego limitu, co należy sprawdzić na wybranym adapterze.
 - dzienny globalny limit 200 żądań dostawcy, liczony także dla napraw i błędów wysłanych do API.
 

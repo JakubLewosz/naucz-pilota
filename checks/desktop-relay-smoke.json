@@ -1,9 +1,10 @@
 {
-  "date": "2026-11-09T20:53:54.509Z",
+  "date": "2026-11-10T07:26:24.802Z",
   "status": "PASS",
   "platform": "darwin",
   "stubCalls": 3,
   "paidProviderCalls": 0,
   "transport": "Electron IPC to local HTTP relay",
+  "slowReplyMs": 17000,
   "oldContextCleared": true
 }

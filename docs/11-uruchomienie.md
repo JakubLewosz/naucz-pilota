@@ -20,7 +20,7 @@ Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznany
 
 ## Konfiguracja modelu
 
-Skopiuj .env.example do .env i uzupełnij AI_MODE=live, OPENAI_API_KEY, AI_MODEL. Plik przykładowy wskazuje lokalnie przetestowany gpt-5.4-mini. Dostęp modelu na własnym koncie sprawdź krótkim testem live. Klucz nie trafia do gry ani paczki desktopowej.
+Skopiuj `.env.example` do `.env` i uzupełnij `AI_MODE=live` oraz `OPENAI_API_KEY`. Plik przykładowy konfiguruje GPT-6 Luna z `xhigh`, limitem 8192 tokenów i czasem 90 sekund. Lokalna atrapa potwierdziła wysyłane parametry. Dostęp na własnym koncie wymaga zatwierdzonej próby live. Klucz pozostaje na backendzie. [Konfiguracja i plan próby](19-gpt-6-luna-xhigh.md)
 
 Dla Vite PUBLIC_ORIGIN=http://127.0.0.1:5173. Dla lokalnego `npm start` ustaw http://127.0.0.1:3001. W produkcji ustaw pełny origin HTTPS, NODE_ENV=production i trwały STATE_DB_PATH. Brak klucza/modelu jest jawnym błędem, bez podstawiania demo. Zmianę na demo wykonuje gracz.
 
@@ -30,7 +30,7 @@ Test dostawcy wymaga zgody, poświadczeń, flagi `--allow-paid` oraz jawnego `--
 
 Dostępny Dockerfile buduje aplikację na Node 24. Backend i frontend działają jako jedna domena. Kontener słucha na porcie 3001; reverse proxy zapewnia TLS. Zamontuj trwały wolumen /app/var i ustaw STATE_DB_PATH=/app/var/piko.sqlite. Przekaż sekrety jako zmienne serwera; nie kopiuj .env do obrazu. PUBLIC_ORIGIN ma odpowiadać adresowi publicznemu.
 
-Uruchamiaj jedną instancję procesu i jeden trwały licznik SQLite. Nie skaluj przez niezależne kopie bazy. Aplikacja domyślnie nie ufa X-Forwarded-For; proxy musi też limitować żądania przy publicznym ruchu. Każda sesja ma 6 tur/min, globalny limit to domyślnie 200 żądań dostawcy/dzień UTC. Naprawa struktury zużywa kolejne żądanie; maksymalnie 2 na turę, 15 sekund łącznie. Limit wywołań nie gwarantuje kwoty rachunku.
+Uruchamiaj jedną instancję procesu i jeden trwały licznik SQLite. Aplikacja domyślnie nie ufa X-Forwarded-For. Proxy musi też limitować żądania przy publicznym ruchu. Każda sesja ma 6 tur na minutę, a globalny limit wynosi domyślnie 200 żądań dostawcy na dzień UTC. Naprawa struktury zużywa kolejne żądanie. Maksymalnie 2 żądania dzielą wspólny czas tury, domyślnie 90 sekund. Limit wywołań nie gwarantuje kwoty rachunku.
 
 Cookie web jest HttpOnly/SameSite=Strict, Secure w produkcji. Desktop trzyma token w main process, przyjmuje tylko zaufany origin HTTPS i blokuje przekierowania. W dystrybucji ustaw apiBaseUrl w apps/desktop/distribution.json, potem wykonaj `npm run desktop:dist`. Wyjątek HTTP 127.0.0.1 dotyczy tylko desktop:dev. Nie wdrożono publicznego endpointu w tym zadaniu.
 

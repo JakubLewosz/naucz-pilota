@@ -309,7 +309,7 @@ Podstawa techniczna, sprawdzona 2026-11-03: [Structured Outputs](https://develop
 
 ## 8. Jedna naprawa, budżet, czas i współbieżność
 
-Cały turn, wraz z ewentualną naprawą, ma **15 s** od przyjęcia poprawnego requestu. Maksymalnie **2 żądania do dostawcy**. Drugie jest dopuszczalne tylko po technicznie niepoprawnym outputcie: JSON/schemat, niedozwolone pole/ID, naruszony kontrakt fazy lub nieparsowalna propozycja. Naprawa zawiera te same fakty, poprzedni output jako nieufne dane i listę naruszeń; nie zawiera wzoru wzorcowego ani wyniku przyszłej planszy.
+Cała tura wraz z ewentualną naprawą ma domyślnie **90 s** od przyjęcia poprawnego żądania. Maksymalnie **2 żądania do dostawcy**. Drugie jest dopuszczalne tylko po technicznie niepoprawnym outputcie: JSON/schemat, niedozwolone pole/ID, naruszony kontrakt fazy lub nieparsowalna propozycja. Naprawa zawiera te same fakty, poprzedni output jako nieufne dane i listę naruszeń; nie zawiera wzoru wzorcowego ani wyniku przyszłej planszy.
 
 Nie ponawiaj automatycznie po timeout, 429, 5xx, odmowie, braku klucza ani po niekompletnym outputcie. Poprawnie zapisany wzór, który uderza w przeszkodę albo nie spełnia geometrii, jest widoczną pomyłką robota i nie uruchamia technicznego retry. Pozwala to uczciwie policzyć wynik pierwszej propozycji.
 
@@ -321,8 +321,8 @@ Limity konfiguracyjne:
 |---|---:|
 | `AI_SESSION_TURNS_PER_MINUTE` | 6 nowych turnów na sesję / 60 s |
 | `AI_DAILY_REQUEST_BUDGET` | 200 żądań dostawcy / dzień UTC; naprawa też zużywa 1 |
-| `AI_MAX_OUTPUT_TOKENS` | 1200 na żądanie |
-| `AI_TURN_TIMEOUT_MS` | 15000 łącznie |
+| `AI_MAX_OUTPUT_TOKENS` | 8192 na żądanie razem z tokenami rozumowania, zakres 256–16384 |
+| `AI_TURN_TIMEOUT_MS` | 90000 na całą turę, zakres 1–120000 ms |
 | `AI_REQUEST_BODY_BYTES` | 16384 |
 
 Budżet dobowy to **jawna kwota wywołań, nie gwarantowany rachunek w złotych**. Koszt zależy od ustawionego modelu i tokenów. Rejestruj zużycie tokenów zwrócone przez dostawcę; do raportu nie podstawiaj stałego fikcyjnego kosztu. Przed publicznym uruchomieniem autor ustala dodatkowy limit wydatków po stronie konta dostawcy zgodnie z dostępną konfiguracją.
@@ -381,7 +381,7 @@ Minimalna telemetria lokalna: turnId, missionId, sceneRole, mode, model, latency
 - [ ] Utrata klucza, timeout i błąd modelu nie udają odpowiedzi live.
 - [ ] Ocena tekstowa nie zmienia wyniku ani reguł.
 - [ ] Pamięć po restarcie odtwarzana jest z ponownie sprawdzonego evidence.
-- [ ] Maksymalnie 2 wywołania dostawcy; jedno techniczne retry, 15 s łącznie.
+- [ ] Maksymalnie 2 wywołania dostawcy z jednym technicznym ponowieniem w ramach wspólnego limitu czasu.
 - [ ] Globalny limit przetrwa restart; wynik opóźniony nie nadpisuje nowej sceny.
 - [ ] Nieparsowalne wyrażenie nie może zostać uruchomione jako kod.
 - [ ] Raport odróżnia mock, demo i rzeczywiste testy live.
