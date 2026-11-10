@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-10T12:23:43.058Z",
+  "status": "PASS",
+  "checks": [
+    "Production proxy has Linux host networking; only backend loopback port and backend-only secret file",
+    "TLS without trust in the issuing CA is rejected",
+    "Source-IP restriction blocks the site and API, including spoofed forwarding headers",
+    "Trusted TLS serves the page and Luna health; secure cookie, foreign origin rejection, 16 KiB body limit and budget 0",
+    "Authenticated session survives backend restart on SQLite volume"
+  ],
+  "paidProviderCalls": 0,
+  "publicHTTPS": "NOT RUN"
+}

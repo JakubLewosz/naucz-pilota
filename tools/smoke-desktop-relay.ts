@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
-import {mkdtemp,rm,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {once} from 'node:events';
+import {mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
+import {createServer,type Server as HttpsServer} from 'node:https';
+import type {Server as HttpServer} from 'node:http';
 import {setTimeout as delay} from 'node:timers/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
@@ -7,33 +11,64 @@ import {_electron as electron,type ElectronApplication} from 'playwright';
 import {createApp} from '../apps/server/src/app';
 import {Store} from '../apps/server/src/store';
 import type {Exchange} from '@piko/contracts';
+const executableIndex=process.argv.indexOf('--executable');
+const executable=executableIndex>=0?process.argv[executableIndex+1]:undefined;
+if(executableIndex>=0&&!executable)throw new Error('--executable requires a packaged Electron executable path');
+const tls=Boolean(executable)||process.argv.includes('--https');
+const tlsPort=3443;
 const directory=await mkdtemp(path.join(tmpdir(),'piko-chat-audit-'));
 const seen:Exchange[][]=[],store=new Store(':memory:');
 const slowReplyMs=17000; // Exercise the previous 16 s Electron cutoff.
 const stubReply=(turn:number)=>`Próba ${turn}. Stała ustawia wysokość.`;
 const report={
  date:new Date().toISOString(),status:'FAIL',platform:process.platform,stubCalls:0,paidProviderCalls:0,
- transport:'Electron IPC to local HTTP relay',slowReplyMs,oldContextCleared:false,error:undefined as string|undefined
+ transport:`Electron IPC to local ${tls?'HTTPS':'HTTP'} relay`,packaged:Boolean(executable),
+ slowReplyMs,oldContextCleared:false,untrustedCertificateRejected:false,transferChecked:false,
+ disconnectedStateVerified:false,error:undefined as string|undefined
 };
-const server=createApp({store,config:{mode:'live',model:'local-stub'},provider:async context=>{
+const backend=createApp({store,config:{mode:'live',model:'local-stub',production:tls},provider:async context=>{
  seen.push(context.recentExchanges);
  if(seen.length===3)await delay(slowReplyMs);
+ const transfer=context.phase==='robot_propose';
  return {text:JSON.stringify({
-  utterancePL:stubReply(seen.length),followUpPL:null,
-  explanationAssessment:'partial',proposedExpression:null,suggestedRuleId:null,usedFactIds:[],action:'explain_back'
+  utterancePL:transfer?'Proponuję stałą 3.':stubReply(seen.length),followUpPL:null,
+  explanationAssessment:transfer?'not_applicable':'partial',proposedExpression:transfer?'3':null,
+  suggestedRuleId:null,usedFactIds:[],action:transfer?'propose_attempt':'explain_back'
  }),actualModel:'local-stub',responseId:'local-stub',inputTokens:null,outputTokens:null};
-}}).listen(0,'127.0.0.1');
-await new Promise<void>(resolve=>server.once('listening',resolve));
+}});
+let server:HttpServer|HttpsServer|undefined;
 let app:ElectronApplication|undefined;
 try{
+ const cert=path.join(directory,'loopback.crt'),key=path.join(directory,'loopback.key');
+ if(tls){
+  execFileSync(process.env.PIKO_OPENSSL??'openssl',['req','-x509','-newkey','rsa:2048','-nodes','-days','1',
+   '-subj','/CN=Piko Loopback Smoke','-addext','subjectAltName=IP:127.0.0.1','-keyout',key,'-out',cert],{stdio:'pipe'});
+  server=createServer({key:await readFile(key),cert:await readFile(cert)},backend).listen(tlsPort,'127.0.0.1');
+ }else server=backend.listen(0,'127.0.0.1');
+ await once(server,'listening');
  const address=server.address();
  assert.ok(address&&typeof address==='object');
  const env=Object.fromEntries(Object.entries(process.env).filter((entry):entry is [string,string]=>entry[1]!==undefined));
- env.DESKTOP_API_BASE_URL='http://127.0.0.1:'+address.port;
+ env.DESKTOP_API_BASE_URL=`${tls?'https':'http'}://127.0.0.1:${address.port}`;
  delete env.ELECTRON_RUN_AS_NODE;
  delete env.OPENAI_API_KEY;
- app=await electron.launch({args:['apps/desktop/main.cjs','--user-data-dir='+directory],env});
+ delete env.NODE_TLS_REJECT_UNAUTHORIZED;
+ delete env.NODE_EXTRA_CA_CERTS;
+ const launch=()=>electron.launch({
+  ...(executable?{executablePath:path.resolve(executable)}:{}),
+  args:[...(executable?[]:['apps/desktop/main.cjs']),'--user-data-dir='+path.join(directory,'profile')],env
+ });
+ if(tls){
+  app=await launch();
+  const untrusted=await app.firstWindow();
+  assert.equal((await untrusted.evaluate(()=>window.piko!.getAiStatus())).available,false);
+  report.untrustedCertificateRejected=true;
+  await app.close();app=undefined;
+  env.NODE_EXTRA_CA_CERTS=cert;
+ }
+ app=await launch();
  const page=await app.firstWindow();
+ assert.equal((await page.evaluate(()=>window.piko!.getAiStatus())).available,true);
  await page.getByRole('button',{name:'Zacznij'}).click();
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('1');
  await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');
@@ -56,6 +91,26 @@ try{
  await page.getByRole('button',{name:'Wyczyść rozmowę'}).waitFor({state:'hidden'});
  await send('Nowa rozmowa po czyszczeniu.',3);
  assert.deepEqual(seen[2],[]);
+ if(tls){
+  await page.getByLabel('Twój poprawiony wzór').fill('2');
+  await page.locator('#prediction0').fill('2');
+  await page.locator('#prediction1').fill('2');
+  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
+  await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
+  await page.getByRole('button',{name:'Piko, spróbuj sam'}).click();
+  await page.getByText('Proponuję stałą 3.',{exact:true}).waitFor();
+  await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
+  await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
+  assert.match(await page.getByRole('region',{name:'Wynik silnika'}).innerText(),/Bezpieczny lot/);
+  report.transferChecked=true;
+  const listener=server;
+  await new Promise<void>(resolve=>listener.close(()=>resolve()));
+  await page.getByRole('button',{name:'Jedna poprawka Piko'}).click();
+  await page.getByText('Brak połączenia z serwerem live.',{exact:false}).waitFor();
+  assert.match(await page.getByTestId('ai-mode').innerText(),/AI niedostępne/);
+  assert.match(await page.getByRole('region',{name:'Wynik silnika'}).innerText(),/Bezpieczny lot/);
+  report.disconnectedStateVerified=true;
+ }
  report.status='PASS';
  report.oldContextCleared=true;
 }catch(error){
@@ -63,10 +118,10 @@ try{
  process.exitCode=1;
 }finally{
  report.stubCalls=seen.length;
- await writeFile('checks/desktop-relay-smoke.json',JSON.stringify(report,null,2)+'\n');
+ await writeFile(process.env.PIKO_DESKTOP_RELAY_REPORT??'checks/desktop-relay-smoke.json',JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report));
  if(app)await app.close();
- await new Promise<void>(resolve=>server.close(()=>resolve()));
+ if(server?.listening)await new Promise<void>(resolve=>server?.close(()=>resolve()));
  store.close();
  await rm(directory,{recursive:true,force:true});
 }

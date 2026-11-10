@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: ../..
+    image: naucz-pilota:jury
+    restart: unless-stopped
+    env_file: ${PIKO_SECRET_ENV_FILE:?Set the absolute path to the backend environment file}
+    environment:
+      PUBLIC_ORIGIN: https://${PIKO_JURY_HOST:?Set the jury DNS hostname}
+      AI_MODE: live
+      AI_MODEL: gpt-6-luna
+      AI_REASONING_EFFORT: xhigh
+      AI_DAILY_REQUEST_BUDGET: ${PIKO_JURY_DAILY_BUDGET:-0}
+      AI_MAX_PROVIDER_REQUESTS_PER_TURN: '1'
+    ports:
+      - 127.0.0.1:3001:3001
+    volumes:
+      - state:/app/var
+  proxy:
+    image: caddy:2.11.9-alpine@sha256:78bd35025c7ba85961dd149ae670315129954e77abe2383ac47c89106b35ade9
+    restart: unless-stopped
+    depends_on:
+      - backend
+    # Linux host networking preserves the actual source address for the allowlist.
+    network_mode: host
+    environment:
+      PIKO_JURY_SITE: https://${PIKO_JURY_HOST:?Set the jury DNS hostname}
+      PIKO_JURY_ALLOWED_IPS: ${PIKO_JURY_ALLOWED_IPS:?Set the space-separated jury IPs or CIDRs}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+      - proxy-config:/config
+volumes:
+  state:
+  certificates:
+  proxy-config:

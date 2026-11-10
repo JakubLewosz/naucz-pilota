@@ -18,15 +18,17 @@ function endpoint(route){
 async function relay(route,body){
  // The relay runs in main. Node fetch sends the authenticated request directly.
  // Allow the backend's maximum 120 s learner turn plus time for transport.
- const signal=AbortSignal.timeout(route==='/api/learner-turn'?130000:16000);
+ const url=endpoint(route),signal=AbortSignal.timeout(route==='/api/learner-turn'?130000:16000);
  try{
-  const response=await fetch(endpoint(route),{method:body?'POST':'GET',redirect:'error',headers:{'Origin':'app://piko','X-Piko-Desktop':'1',...(body?{'Content-Type':'application/json'}:{}),...(token?{'Authorization':`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{}),signal});
-  const result=await response.json();
+  const response=await fetch(url,{method:body?'POST':'GET',redirect:'error',headers:{'Origin':'app://piko','X-Piko-Desktop':'1',...(body?{'Content-Type':'application/json'}:{}),...(token?{'Authorization':`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{}),signal});
+  const result=await response.json().catch(()=>null);
+  if(!result)throw new Error(response.status===403?'Brak dostępu do serwera live z tej sieci.':'Serwer live zwrócił nieczytelną odpowiedź.');
   if(result.token){token=result.token;delete result.token;}
   if(!response.ok&&!result.schemaVersion)throw new Error(result.error?.messagePL||'Serwer live jest niedostępny.');
   return result;
  }catch(error){
   if(signal.aborted)throw new Error('Przekroczono czas oczekiwania na serwer live. Twoje wpisy są zachowane.',{cause:error});
+  if(error instanceof TypeError)throw new Error('Brak połączenia z serwerem live. Twoje wpisy są zachowane.',{cause:error});
   throw error;
  }
 }

@@ -1,9 +1,11 @@
-import {cp,mkdir,readFile,writeFile} from 'node:fs/promises';
+import {cp,mkdir,rm,writeFile} from 'node:fs/promises';
 import {build} from 'esbuild';
+import {readDesktopDistribution} from './desktop-distribution';
+const config=await readDesktopDistribution();
 await mkdir('apps/desktop/staging',{recursive:true});
-for(const name of ['main.cjs','preload.cjs','distribution.json'])await cp(`apps/desktop/${name}`,`apps/desktop/staging/${name}`);
-const config=JSON.parse(await readFile('apps/desktop/distribution.json','utf8'));
-if(config.apiBaseUrl){const url=new URL(config.apiBaseUrl);if(url.protocol!=='https:'||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw new Error('Release backend must be an HTTPS origin.');}
+for(const name of ['main.cjs','preload.cjs'])await cp(`apps/desktop/${name}`,`apps/desktop/staging/${name}`);
+await writeFile('apps/desktop/staging/distribution.json',JSON.stringify(config)+'\n');
+await rm('apps/desktop/staging/web',{recursive:true,force:true});
 await cp('apps/web/dist','apps/desktop/staging/web',{recursive:true});
 await build({entryPoints:['packages/contracts/src/validators.generated.js'],bundle:true,platform:'node',format:'cjs',outfile:'dist/desktop/relay-validator.cjs'});
 await cp('dist/desktop/relay-validator.cjs','apps/desktop/staging/relay-validator.cjs');

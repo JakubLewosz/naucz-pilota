@@ -29,7 +29,7 @@ for(const [entry,meta]of Object.entries(lock.packages)){
 }
 await writeFile('release/THIRD_PARTY_NOTICES.txt',notices);await writeFile(`${root}/03_kod/THIRD_PARTY_NOTICES.txt`,notices);
 // Explicit top-level source allowlist; no .env, var, release binaries, saves or node_modules.
-const top=['.github','apps','packages','content','contracts','docs','tools','tests','checks','output/pdf','release/media','release/CHECKLISTA.md','release/THIRD_PARTY_NOTICES.txt','AGENTS.md','README.md','START_CODEX.md','SCHEMAT_PROJEKTU.md','IMPLEMENTATION_STATUS.md','package.json','package-lock.json','tsconfig.json','vitest.config.ts','playwright.config.ts','eslint.config.js','Dockerfile','.dockerignore','.env.example','.gitignore','.nvmrc'];
+const top=['.github','apps','packages','content','contracts','docs','tools','tests','checks','output/pdf','release/media','release/CHECKLISTA.md','release/THIRD_PARTY_NOTICES.txt','AGENTS.md','README.md','START_CODEX.md','SCHEMAT_PROJEKTU.md','IMPLEMENTATION_STATUS.md','package.json','package-lock.json','tsconfig.json','vitest.config.ts','playwright.config.ts','eslint.config.js','Dockerfile','deploy/jury/compose.yaml','deploy/jury/Caddyfile','.dockerignore','.env.example','.gitignore','.nvmrc'];
 const sourceFiles:string[]=[];
 async function collect(file:string){
  const info=await stat(file);

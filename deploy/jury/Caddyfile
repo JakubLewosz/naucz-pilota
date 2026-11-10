@@ -1,0 +1,20 @@
+{
+	admin off
+}
+
+{$PIKO_JURY_SITE} {
+	@jury remote_ip {$PIKO_JURY_ALLOWED_IPS}
+	handle @jury {
+		request_body {
+			max_size 16384
+		}
+		reverse_proxy {$PIKO_JURY_UPSTREAM:127.0.0.1:3001} {
+			transport http {
+				response_header_timeout 135s
+			}
+		}
+	}
+	handle {
+		respond "Dostęp ograniczony do sieci odbioru." 403
+	}
+}

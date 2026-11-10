@@ -28,7 +28,8 @@
     "release:prepare": "tsx tools/prepare-release.ts",
     "desktop:smoke": "tsx tools/smoke-desktop.ts",
     "docker:build": "docker build -t naucz-pilota:codex-readiness .",
-    "docker:smoke": "tsx tools/smoke-docker.ts"
+    "docker:smoke": "tsx tools/smoke-docker.ts",
+    "jury:https:smoke": "tsx tools/smoke-jury-https.ts"
   },
   "dependencies": {
     "ajv": "8.20.0",

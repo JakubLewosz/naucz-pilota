@@ -1,5 +1,6 @@
 import {_electron as electron,type ElectronApplication,type Page} from 'playwright';
-import {mkdtemp,rm,writeFile,mkdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {mkdtemp,rm,writeFile,mkdir,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 const executableIndex=process.argv.indexOf('--executable');
@@ -11,7 +12,7 @@ delete env.ELECTRON_RUN_AS_NODE;delete env.DESKTOP_API_BASE_URL;
 let app:ElectronApplication|undefined;
 const reportPath=process.env.DESKTOP_SMOKE_REPORT??'checks/desktop-smoke.json';
 const screenshotPath=`checks/desktop-${process.platform}${packaged?'-packaged':''}.png`;
-const report:{date:string;platform:string;packaged:boolean;executable:string;status:string;scope:string;windowsStatus:string;error?:string}={date:new Date().toISOString(),platform:process.platform,packaged,executable:executable?path.basename(executable):'local Electron',status:'RUNNING',scope:'app://, sandbox, isolation, offline M01, immutable first attempt and restart persistence',windowsStatus:process.platform==='win32'&&packaged?'RUNNING':'NOT RUN'};
+const report={date:new Date().toISOString(),platform:process.platform,packaged,executable:executable?path.basename(executable):'local Electron',status:'RUNNING',scope:'app://, sandbox, isolation, offline M01, immutable first attempt and restart persistence',windowsStatus:process.platform==='win32'&&packaged?'RUNNING':'NOT RUN',error:undefined as string|undefined,executableSHA256:undefined as string|undefined,appAsarSHA256:undefined as string|undefined};
 await mkdir(path.dirname(reportPath),{recursive:true});
 async function launch(){return electron.launch({...executable?{executablePath:path.resolve(executable)}:{},args:[...packaged?[]:['apps/desktop/main.cjs'],`--user-data-dir=${dir}`],env});}
 async function assertIsolation(app:ElectronApplication,page:Page){
@@ -22,6 +23,11 @@ async function assertIsolation(app:ElectronApplication,page:Page){
  if(!page.url().startsWith('app://piko/'))throw new Error('Application did not load local app:// resources');
 }
 try{
+ if(executable){
+  report.executableSHA256=createHash('sha256').update(await readFile(executable)).digest('hex');
+  const resources=process.platform==='darwin'?path.join(path.dirname(executable),'..','Resources'):path.join(path.dirname(executable),'resources');
+  report.appAsarSHA256=createHash('sha256').update(await readFile(path.join(resources,'app.asar'))).digest('hex');
+ }
  app=await launch();const page=await app.firstWindow();await page.getByRole('button',{name:'Zacznij'}).click();await assertIsolation(app,page);
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('1');await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Teraz naucz Piko'}).click();
  await page.getByLabel('Twój poprawiony wzór').fill('2');await page.locator('#prediction0').fill('2');await page.locator('#prediction1').fill('2');await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała określa wysokość toru.');

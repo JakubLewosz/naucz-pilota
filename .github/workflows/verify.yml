@@ -31,6 +31,22 @@ jobs:
       - name: Check desktop conversation reset against a local stub
         run: npx tsx tools/smoke-desktop-relay.ts
       - run: npm run release:check
+      - name: Build and launch a Windows EXE against the TLS loopback stub
+        shell: pwsh
+        env:
+          PIKO_DESKTOP_HTTPS_ORIGIN: https://127.0.0.1:3443
+          PIKO_DESKTOP_RELAY_REPORT: checks/desktop-relay-https-win32.json
+        run: |
+          $openssl = @('Git/usr/bin/openssl.exe', 'Git/mingw64/bin/openssl.exe') |
+            ForEach-Object { Join-Path $env:ProgramFiles $_ } |
+            Where-Object { Test-Path $_ } | Select-Object -First 1
+          if ($openssl) { $env:PIKO_OPENSSL = $openssl }
+          npx tsx tools/prepare-desktop.ts
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npx electron-builder --config apps/desktop/builder.json --config.directories.output=release/bin/tls-smoke --win zip --x64
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $exe = Join-Path $PWD 'release/bin/tls-smoke/win-unpacked/Naucz Pilota.exe'
+          npx tsx tools/smoke-desktop-relay.ts --executable "$exe"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
@@ -54,9 +70,12 @@ jobs:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
       - run: npm run docker:build
       - run: npm run docker:smoke
+      - run: npm run jury:https:smoke
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()
         with:
           name: Linux-container-verification
-          path: checks/docker-smoke.json
+          path: |
+            checks/docker-smoke.json
+            checks/jury-https-smoke.json
           retention-days: 7
