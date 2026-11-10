@@ -11,7 +11,7 @@ npm test -- tests/m04-generalization.test.ts
 
 Trzy translacje o −4, +3 i −6 oraz przebudowana geometria wykorzystują produkcyjny silnik. Dla każdej geometrii sprawdź A, B, C i kontrolę D bez notatki. Warianty mają tę samą symboliczną regułę oraz dowody liczbowe z nauczania. A, B i C przechodzą walidację zapisu z dosłowną notatką oraz źródłem `skipped`, ponieważ w aparaturze pomijamy modelową parafrazę. Testy badają przekazanie notatki jako danych `user`, brak rozwiązań i izolację sceny. [Wyniki i warunki](../checks/m04-generalization-1.2.0.md).
 
-Następna kontrolowana próba ma status **NOT RUN** i wymaga zgody operatora na maksymalnie **8 żądań**. Obejmuje translację −4 i przebudowaną planszę, cztery warunki na każdej, po jednym żądaniu transferu. Model to `gpt-6-luna` z `xhigh`, limit 8192 tokenów oraz 90 s. Każdy przypadek ma oddzielny kontekst bez historii. Ponowienia są wyłączone.
+Kontrolowana próba z 10 listopada 2026 wykorzystała **8 prób HTTP**. Objęła translację −4 i przebudowaną planszę, cztery warunki na każdej, po jednym żądaniu transferu. Model to `gpt-6-luna` z `xhigh`, limit 8192 tokenów oraz 90 s. Każdy przypadek miał oddzielny kontekst bez historii i jedną próbę. Otrzymano siedem zaliczonych wzorów, a D na przebudowanej planszy zakończyło się timeoutem podczas uśpienia hosta. Ponowne wykonanie wymaga osobnej zgody i unikalnego identyfikatora. [Raport live](../checks/m04-generalization-1.2.0.live.md).
 
 ```sh
 npx tsx tests/live/run-m04-generalization.ts --live --max-calls 8 unikalny-id

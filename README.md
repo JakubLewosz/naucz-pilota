@@ -2,7 +2,7 @@
 
 Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkcje stopnia 0–2, robot Piko i osobna samodzielna próba gracza. Matematyka jest liczona analitycznie przez współdzielony silnik TypeScript. Demo działa bez klucza, serwera i internetu po załadowaniu zasobów aplikacji.
 
-**Stan na 10 listopada 2026.** Prompt 1.2.0 prosi Piko o uzasadnienie wzoru geometrią bieżącej trasy. Gra pokazuje opinię o notatce oddzielnie od wyniku silnika i pozwala pominąć oczekującą propozycję. Na czterech geometriach technicznych sprawdzono przekazanie notatki i matematykę z atrapą. Poprzedni pomiar rzeczywistej Luny z `xhigh` dotyczył promptu 1.1.0. [Wyniki i zakres odbioru](IMPLEMENTATION_STATUS.md).
+**Stan na 10 listopada 2026.** Prompt 1.2.0 prosi Piko o uzasadnienie wzoru geometrią bieżącej trasy. Gra pokazuje opinię o notatce oddzielnie od wyniku silnika i pozwala pominąć oczekującą propozycję. Na dwóch dodatkowych geometriach testowych Luna z `xhigh` podała siedem wzorów zaliczonych przez silnik. Ósma próba zakończyła się timeoutem podczas uśpienia hosta. [Wyniki i zakres odbioru](IMPLEMENTATION_STATUS.md).
 
 **Windows x64.** Pobierz ZIP, rozpakuj cały folder i uruchom `Naucz Pilota.exe`. Paczka zawiera tryb demo i pochodzi z przebiegu Actions, który sprawdził spakowaną aplikację na Windows. Kod źródłowy, instrukcje, raport i nagrania znajdziesz w tym samym wydaniu. [GitHub Releases 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
 

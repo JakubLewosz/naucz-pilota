@@ -3,15 +3,22 @@ Aktualizacja: 2026-11-10. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live z GPT-5.4 mini wykonano na `a751a1c`, a z GPT-6 Luna na `95a55ca`.
 
+## Dwie nowe geometrie M04 na żywo z promptem 1.2.0
+
+- Na `21ed51b` wykorzystano limit **8 prób HTTP**, bez ponowień. `gpt-6-luna` z `xhigh` podała siedem wzorów, które silnik zaliczył. Na translacji −4 wszystkie cztery warunki dały `0.25*(x+2)^2`. Na przebudowanej A/B/C dały `0.5*(x-4)^2+1`, a D zakończyło się `AI_TIMEOUT` w trakcie uśpienia hosta. Koszt tej ostatniej tury pozostaje nieustalony.
+- Testowe wejście zawierało symboliczną regułę i geometrię, a wzory kontrolne były dostępne tylko lokalnemu silnikowi. Otrzymane komentarze poprawnie rozróżniły A/B/C/D i podały poprawne wysokości w punktach. Notatki zmieniły argumentację. W warunkach, które zwróciły odpowiedź, wybór wielomianu w obrębie planszy był taki sam.
+- Siedem raportów zużycia zawiera 28 996 tokenów, w tym 9 784 tokeny rozumowania, za szacowane 0,006301720 USD. Mediana czasu odpowiedzi to 16,521 s. Przeszło 20 lokalnych testów geometrii i kontekstu oraz kontrola krótkiego timeoutu z atrapą.
+- Przebieg sprawdził uogólnienie w aparaturze testowej. Pełny odbiór 1.2.0 z UI gry, zewnętrzny HTTPS, Windows odbiorcy i pilotaż pozostają **NOT RUN**. Do uzupełnienia jest kontrola D na przebudowanej planszy. [Ocena i cytaty](checks/m04-generalization-1.2.0.live.md) · [Surowy zapis](checks/m04-generalization-1.2.0.live.json).
+
 ## Transfer M04 i odbiór lokalny promptu 1.2.0
 
 - `bab6283` dodaje cztery geometrie testowe, warunki A/B/C/D i instrukcję sprawdzania punktów bieżącej trasy przed podaniem wzoru. Transfer wykonuje jedno żądanie dostawcy na turę. Model roboczy to GPT-6 Luna Extra High.
 - `b8502bd` oddziela opinię Piko o notatce od wyniku silnika. Umożliwia pominięcie podczas oczekiwania i zapisuje je jako `skipped`. Test ze spóźnioną odpowiedzią po 21 s potwierdził ochronę pierwszej próby i archiwum.
 - PASS dla kodu `b8502bd`: typecheck, lint, build, 206 testów Vitest, 62 testy treści, walidatory matematyki, Electron na macOS, build i smoke Docker. Playwright przeszedł 15 testów po synchronizacji regresji odświeżenia w `6370947`. Cross-build Windows x64 przeszedł inspekcję PE, ASAR i ZIP. Lokalna kontrola wydania oznaczyła starszą paczkę w `release/bin` jako STALE.
-- Testy geometrii potwierdziły 4 bezpieczne tory kontrolne i 4 kontrolne `START_MISS`. Historyczny wzór `0.25*(x-2)^2` odrzucono na wszystkich czterech. W 16 turach aparatury z atrapą sprawdzono schemat, role wiadomości, brak rozwiązań w kontekście i zachowanie oryginalnych propozycji. To pomiar techniczny, ocena uogólnienia modelu pozostaje **NOT RUN**.
-- **0 nowych płatnych wywołań.** Gotowy jest [protokół do 8 wywołań](docs/17-odbior-live.md#uogólnienie-m04-na-czterech-geometriach-testowych), zaktualizowany opis jednostronicowy, instrukcja PDF i scenopis 4 min 20 s. Windows CI bieżącego kodu, osobny Windows, zewnętrzny HTTPS, pilotaż i aktualne nagranie pozostają **NOT RUN**.
+- Testy geometrii potwierdziły 4 bezpieczne tory kontrolne i 4 kontrolne `START_MISS`. Historyczny wzór `0.25*(x-2)^2` odrzucono na wszystkich czterech. W 16 turach aparatury z atrapą sprawdzono schemat, role wiadomości, brak rozwiązań w kontekście i zachowanie oryginalnych propozycji.
+- Etap implementacji wykorzystał **0 płatnych wywołań** i przygotował [protokół do 8 wywołań](docs/17-odbior-live.md#uogólnienie-m04-na-czterech-geometriach-testowych), opis jednostronicowy, instrukcję PDF i scenopis 4 min 20 s. Windows CI bieżącego kodu, osobny Windows, zewnętrzny HTTPS, pilotaż i aktualne nagranie pozostają **NOT RUN**.
 
-Demo jest gotowe do lokalnej próby prezentacji. Pełny odbiór wymaga próby aktualnego promptu z rzeczywistym modelem i sprawdzenia docelowego urządzenia. [Raport testów i odbioru](checks/m04-generalization-1.2.0.md) · [Surowe wyniki atrapy](checks/m04-generalization-1.2.0.mock.json).
+Demo jest gotowe do lokalnej próby prezentacji. Pełny odbiór wymaga jeszcze sprawdzenia aktualnego promptu w interfejsie gry i na docelowym urządzeniu. [Raport testów i odbioru](checks/m04-generalization-1.2.0.md) · [Surowe wyniki atrapy](checks/m04-generalization-1.2.0.mock.json).
 
 ## M04 A/B/C live z GPT-6 Luna xhigh
 

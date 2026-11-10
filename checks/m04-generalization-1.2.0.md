@@ -2,6 +2,8 @@
 
 10 listopada 2026. Gałąź `codex/jury-readiness`, czysta baza `2fffc8b`, kod po zmianach i użyty w pomiarach `b8502bd014904d4210c16df87145d18c768029a8`. Środowisko to macOS arm64, Node 24.11.0, Chromium, Electron i lokalny Docker Desktop z kontenerem Linux.
 
+Ten raport opisuje etap implementacji i sprawdzenia bezpłatne. [Późniejszy przebieg z prawdziwą Luną](m04-generalization-1.2.0.live.md).
+
 - `bab6283` wprowadza geometrię testową i runner A/B/C/D, prompt 1.2.0 oraz jedno żądanie dostawcy na turę transferu.
 - `b8502bd` rozdziela opinię Piko o wyjaśnieniu od wyniku silnika, dodaje pominięcie transferu i sprawdza zapisy oraz spóźnione odpowiedzi.
 - `6370947` synchronizuje regresję odświeżenia po dwóch awariach. Końcowe E2E uruchomiono po tym commicie.
@@ -51,7 +53,7 @@ Pierwsze uruchomienia wykryły błędy w nowej aparaturze. Poprawiono kształt o
 
 ## Odbiór konkursowy
 
-Lokalne demo jest gotowe do próby prezentacji. Wiarygodność uogólnienia Luny z promptem 1.2.0 pozostaje **NOT RUN**. W poprzednim pomiarze live wszystkie trzy loty M04 były poprawne, ale model dostał w regule przykład `(x-2)` i za każdym razem zaproponował ten sam wielomian. Przy aktualnym prompcie wykorzystano **0 nowych wywołań OpenAI**. Ocena językowa, tokeny i czasy prawdziwych tur pozostają do pomiaru.
+Lokalne demo było gotowe do próby prezentacji. Na etapie implementacji uogólnienie Luny z promptem 1.2.0 miało status **NOT RUN**. W poprzednim pomiarze live wszystkie trzy loty M04 były poprawne, ale model dostał w regule przykład `(x-2)` i za każdym razem zaproponował ten sam wielomian. Etap sprawdzeń bezpłatnych wykorzystał **0 wywołań OpenAI**.
 
 1. Po odrębnej zgodzie przeprowadzić małe live na translacji −4 i przebudowanej geometrii. Limit **8 żądań**, po cztery warunki A/B/C/D, jedna tura transferu na warunek, GPT-6 Luna `xhigh`, bez ponowień. Ocenić współrzędne w uzasadnieniu i porównać A z D. [Komenda i rubryka](../docs/17-odbior-live.md#uogólnienie-m04-na-czterech-geometriach-testowych).
 2. Bieżący Windows CI, uruchomienie EXE na osobnym Windows i publiczny HTTPS mają status **NOT RUN**. Na zatwierdzonym hoście wykonać próbę limitu zero i dostępu z innego urządzenia, a następnie odbiór autoryzowanych tur. [Windows](../docs/16-windows-odbior.md) · [HTTPS](../docs/17-odbior-live.md#jedna-instancja-za-https).

@@ -12,7 +12,7 @@ Wydanie v1.0.0 i jego filmy dokumentują stan sprzed przygotowania odbioru jury.
 - [ ] Nagranie aktualnej prezentacji, w tym porównanie rzeczywistych reakcji M04. NOT RUN.
 - [x] Historyczny odbiór live promptu 1.0.2 obejmuje 22 tury i M04 w przeglądarce.
 - [x] Historyczny prompt 1.1.0 i A/B/C M04 z GPT-6 Luna Extra High. Trzy zaliczone loty. [Raport](../checks/ai-live-m04-abc-luna-xhigh-1.1.0.md)
-- [ ] Prompt 1.2.0 i kontrola A/B/C/D na zmienionych geometriach. Testy techniczne z atrapą wykonano, a próba rzeczywistego modelu i ocena człowieka pozostają do wykonania. [Protokół](../docs/17-odbior-live.md)
+- [ ] Prompt 1.2.0 i kontrola A/B/C/D na zmienionych geometriach. Próba live dała siedem zaliczonych wzorów. Do uzupełnienia pozostaje D na przebudowanej planszy oraz ocena człowieka. [Wyniki live](../checks/m04-generalization-1.2.0.live.md)
 - [ ] Autor: przeczytaj odpowiedzi live i zatwierdź jakość dialogu; dwie etykiety oceny i ton Piko mają zapisane zastrzeżenia.
 - [ ] Hosting: wdrożony origin HTTPS, trwały wolumen, jedna instancja, ustawiony distribution.json i przebudowana paczka.
 - [x] Runner Windows uruchomił spakowane EXE v1.0.0, sprawdził M01 offline i zapis po restarcie. GitHub Actions 42685071630, SHA 52ac710.

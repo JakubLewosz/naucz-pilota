@@ -1,0 +1,663 @@
+{
+  "mode": "live",
+  "source": "openai",
+  "promptVersion": "1.2.0",
+  "configuredModel": "gpt-6-luna",
+  "reasoningEffort": "xhigh",
+  "maxOutputTokens": 8192,
+  "timeoutMs": 90000,
+  "seed": 20261110,
+  "commit": "21ed51babfc6146015f5b867586638285ada62fc",
+  "dirty": false,
+  "maxCalls": 8,
+  "providerCalls": 8,
+  "cases": [
+    {
+      "geometry": "shift--4",
+      "condition": "A"
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "B"
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "C"
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "D"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "A"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "B"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "C"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "D"
+    }
+  ],
+  "geometryControls": [
+    {
+      "id": "shift--4",
+      "reference": "0.25(x-(-2))^2",
+      "knownFailure": "0.25(x-(-6))^2"
+    },
+    {
+      "id": "shift-3",
+      "reference": "0.25(x-(5))^2",
+      "knownFailure": "0.25(x-(1))^2"
+    },
+    {
+      "id": "shift--6",
+      "reference": "0.25(x-(-4))^2",
+      "knownFailure": "0.25(x-(-8))^2"
+    },
+    {
+      "id": "rebuilt",
+      "reference": "0.5(x-4)^2+1",
+      "knownFailure": "0.5(x-1)^2+1"
+    }
+  ],
+  "results": [
+    {
+      "geometry": "shift--4",
+      "condition": "A",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "W (x+1) nawias zeruje się dla x=-1, więc wierzchołek jest po lewej; w (x-p) wierzchołek jest przy p.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż poprawną metodę z notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Z notatki stosuję zasadę, że w (x-p) wierzchołek leży przy p. Symetryczne bramki -3 i -1 uzasadniają próbę z p=-2. Wartości przy starcie, bramkach i celu to 2.25, 0.25, 0.25 i 2.25; krzywa mija przeszkodę dołem i mieści się w granicach planszy. Spróbuję tego wzoru.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25*(x+2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_0dd2e28716d8714c016af304c1339c87d2b68fe8520c20f545",
+      "inputTokens": 2610,
+      "outputTokens": 1992,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25*(x+2)^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": 22309,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_899081c311d24dac96f17bba39f39aa4",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2610,
+          "input_tokens_details": {
+            "cache_write_tokens": 2607,
+            "cached_tokens": 0
+          },
+          "output_tokens": 1992,
+          "output_tokens_details": {
+            "reasoning_tokens": 1820
+          },
+          "total_tokens": 4602
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "B",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie zawsze przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Odrzuć błędny kierunek bez przypisywania poprawki graczowi.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Notatka mówi, że plus zawsze przesuwa w prawo, ale reguła wskazuje, że x+2 daje wierzchołek przy x=-2. Spróbuję ten środek: na starcie i celu wysokość wynosi 2,25, a przy obu bramkach 0,25. Nad przeszkodą krzywa pozostaje poniżej jej dolnej krawędzi, także z obrysem Piko.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25*(x+2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_0d448ad4c5fed9e2016af304d75fe487d29d6a25b747850ee4",
+      "inputTokens": 2584,
+      "outputTokens": 1358,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25*(x+2)^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": 16521,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_6bf60d6de91748f1ab661931b30913ca",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2584,
+          "input_tokens_details": {
+            "cache_write_tokens": 80,
+            "cached_tokens": 2501
+          },
+          "output_tokens": 1358,
+          "output_tokens_details": {
+            "reasoning_tokens": 1197
+          },
+          "total_tokens": 3942
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "C",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż brak użytecznej wskazówki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Nie odczytuję reguły matematycznej z notatki „abc”, więc opieram się na zapisanej regule o wierzchołku i wybieram x=-2. Wzór daje 2,25 na starcie i celu oraz 0,25 przy obu bramkach; z obrysem ±0,12 mieszczą się w przedziałach. Przy przeszkodzie łuk pozostaje nisko. Spróbuję tej trasy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25*(x+2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_03cbbf53fec64db7016af304e69cb887d296e9ec610919aa36",
+      "inputTokens": 2571,
+      "outputTokens": 2108,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25*(x+2)^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": 20306,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_188aa95ef73a482d951b188b63e0f52e",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2571,
+          "input_tokens_details": {
+            "cache_write_tokens": 67,
+            "cached_tokens": 2501
+          },
+          "output_tokens": 2108,
+          "output_tokens_details": {
+            "reasoning_tokens": 1944
+          },
+          "total_tokens": 4679
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "D",
+      "lessonNote": null,
+      "rubric": "Skorzystaj z reguły bez przypisywania komukolwiek nieistniejącej notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Nie mam notatki, więc opieram się na symetrii startu, celu i bramek wokół x=-2. Przy x=-5 i x=1 wzór daje 2,25, a w obu bramkach 0,25. Nad przeszkodą wartości pozostają nisko, także z uwzględnieniem obrysu Piko. Spróbuję tego wzoru.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25*(x+2)^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_077084ffde2b43ad016af304faec6087d2bd5809979fd678ab",
+      "inputTokens": 2523,
+      "outputTokens": 890,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25*(x+2)^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": 8895,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_b158652e868e4cf3b0911fd16f7099d2",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2523,
+          "input_tokens_details": {
+            "cache_write_tokens": 19,
+            "cached_tokens": 2501
+          },
+          "output_tokens": 890,
+          "output_tokens_details": {
+            "reasoning_tokens": 738
+          },
+          "total_tokens": 3413
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "A",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "W (x+1) nawias zeruje się dla x=-1, więc wierzchołek jest po lewej; w (x-p) wierzchołek jest przy p.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż poprawną metodę z notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Z notatki próbuję użyć zasady, że (x-p) daje wierzchołek przy p. G1 i G2 wspólnie wskazują p=4. Wysokości przy x=0, 2, 5 i 7 wyniosą 9, 3, 1,5 i 5,5. Nad odcinkiem przeszkody krzywa ma y od 1 do 1,32; z obrysem Piko sięga najwyżej 1,44, poniżej y=2. Spróbuję tego wzoru.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.5*(x-4)^2+1\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_0fe0aeb9a2d537ef016af30503cd1487d2a18a0214328cacaa",
+      "inputTokens": 2601,
+      "outputTokens": 1525,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.5*(x-4)^2+1",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 0,
+            "y": 9,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 2,
+            "y": 3,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 5,
+            "y": 1.5,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 7,
+            "y": 5.5,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.5,
+          "c1": -4,
+          "c0": 9
+        }
+      },
+      "latencyMs": 14519,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_54c7ef04824d494ab1de8e35d67c921a",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2601,
+          "input_tokens_details": {
+            "cache_write_tokens": 2598,
+            "cached_tokens": 0
+          },
+          "output_tokens": 1525,
+          "output_tokens_details": {
+            "reasoning_tokens": 1334
+          },
+          "total_tokens": 4126
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "B",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie zawsze przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Odrzuć błędny kierunek bez przypisywania poprawki graczowi.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Notatka mówi, że plus w nawiasie przesuwa parabolę w prawo, ale to sprzeczne z regułą o wierzchołku, więc oprę próbę na regule kanonicznej i trasie. Przy wierzchołku x=4 mam y(0)=9, y(2)=3, y(5)=1,5 i y(7)=5,5. Przy przeszkodzie obrys nie sięga jej dolnej krawędzi.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.5*(x-4)^2+1\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_0d83439fcc1f5fa6016af305125eec87d2a1986683ea15e66d",
+      "inputTokens": 2575,
+      "outputTokens": 1790,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.5*(x-4)^2+1",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 0,
+            "y": 9,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 2,
+            "y": 3,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 5,
+            "y": 1.5,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 7,
+            "y": 5.5,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.5,
+          "c1": -4,
+          "c0": 9
+        }
+      },
+      "latencyMs": 17596,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_590d286a916f4083953e7dfe8985cbdd",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2575,
+          "input_tokens_details": {
+            "cache_write_tokens": 80,
+            "cached_tokens": 2492
+          },
+          "output_tokens": 1790,
+          "output_tokens_details": {
+            "reasoning_tokens": 1617
+          },
+          "total_tokens": 4365
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "C",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż brak użytecznej wskazówki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Niejasna notatka „abc” nie pomaga mi dobrać parametru, więc opieram się na bramkach: wierzchołek przy x=4 daje y=3 przy G1 i y=1,5 przy G2. Wtedy start ma y=9, a cel y=5,5. Na zakresie przeszkody trasa sięga najwyżej y=1,32, więc z obrysem Piko pozostaje pod nią. Spróbuję tego wzoru.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.5*(x-4)^2+1\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "gpt-6-luna",
+      "responseId": "resp_00cb2628d4ea2181016af30523edbc87d29b981d42982a9051",
+      "inputTokens": 2562,
+      "outputTokens": 1307,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.5*(x-4)^2+1",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 0,
+            "y": 9,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 2,
+            "y": 3,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 5,
+            "y": 1.5,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 7,
+            "y": 5.5,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.5,
+          "c1": -4,
+          "c0": 9
+        }
+      },
+      "latencyMs": 12993,
+      "api": {
+        "httpStatus": 200,
+        "providerRequestId": "req_a9b06ef1a84340f382c49189571c07c9",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "serviceTier": "default",
+        "usage": {
+          "input_tokens": 2562,
+          "input_tokens_details": {
+            "cache_write_tokens": 67,
+            "cached_tokens": 2492
+          },
+          "output_tokens": 1307,
+          "output_tokens_details": {
+            "reasoning_tokens": 1134
+          },
+          "total_tokens": 3869
+        },
+        "incompleteDetails": null
+      }
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "D",
+      "lessonNote": null,
+      "rubric": "Skorzystaj z reguły bez przypisywania komukolwiek nieistniejącej notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "AI_TIMEOUT",
+      "actualModel": null,
+      "text": null,
+      "schemaValid": false,
+      "accepted": false,
+      "proposal": null,
+      "engine": null,
+      "latencyMs": 597180,
+      "api": null
+    }
+  ],
+  "status": "COMPLETE"
+}
