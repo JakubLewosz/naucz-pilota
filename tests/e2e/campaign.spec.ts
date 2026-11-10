@@ -191,6 +191,8 @@ for(const path of ['demo','skip'] as const)test(`two failed live turns, reload, 
  await page.getByRole('button',{name:'Piko, spróbuj sam'}).click();
  await expect(page.getByTestId('ai-mode')).toContainText('AI niedostępne');
  await page.getByRole('button',{name:'Spróbuj ponownie'}).click();
+ await expect.poll(()=>requests.length).toBe(2);
+ await expect(page.getByRole('alert')).toBeVisible();
  await expect(page.getByRole('button',{name:'Spróbuj ponownie'})).toHaveCount(0);
  await page.reload();
  await page.getByText('Notatka z lekcji Piko',{exact:true}).click();
