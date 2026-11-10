@@ -31,6 +31,8 @@ Test sprawdza także `AI_NOT_CONFIGURED` dla odrzuconego parametru i niedostępn
 
 ## Protokół porównania M04
 
+Poniższe ustawienia dokumentują przebieg bazowy. Aktualną próbę promptu 1.2.0 na geometriach spoza kampanii opisuje [protokół A/B/C/D](17-odbior-live.md#uogólnienie-m04-na-czterech-geometriach-testowych).
+
 Przebieg z 10 listopada użył poniższych ustawień. Porównanie wykorzystało [zapis GPT-5.4 mini](../checks/ai-live-m04-abc-1.1.0.md) dla tego samego promptu 1.1.0 i tej samej geometrii. Runner tworzy trzy osobne sesje z identycznego stanu, każdą z jedną turą teach i jedną turą transferu. Ustawienie jednej próby wyłącza techniczne ponowienie i ogranicza budżet na granicy HTTP do sześciu żądań. Każdy kolejny przebieg wymaga zgody na wydatki i własnego identyfikatora.
 
 ```sh

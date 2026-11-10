@@ -2,16 +2,33 @@
 
 Publiczny HTTPS i osobny komputer odbiorcy mają status **NOT RUN**. Dla GPT-6 Luna z `xhigh` obowiązuje [plan próby z osobnym budżetem](19-gpt-6-luna-xhigh.md). Przed próbą zanotuj SHA kodu, wersję promptu, model, datę, urządzenie i zgodę na liczbę wywołań. Lokalna atrapa i przebieg CI są oddzielnymi dowodami.
 
+## Uogólnienie M04 na czterech geometriach testowych
+
+```sh
+npm run test:m04:offline
+npm test -- tests/m04-generalization.test.ts
+```
+
+Trzy translacje o −4, +3 i −6 oraz przebudowana geometria wykorzystują produkcyjny silnik. Dla każdej geometrii sprawdź A, B, C i kontrolę D bez notatki. Warianty mają tę samą symboliczną regułę oraz dowody liczbowe z nauczania. A, B i C przechodzą walidację zapisu z dosłowną notatką oraz źródłem `skipped`, ponieważ w aparaturze pomijamy modelową parafrazę. Testy badają przekazanie notatki jako danych `user`, brak rozwiązań i izolację sceny. [Wyniki i warunki](../checks/m04-generalization-1.2.0.md).
+
+Następna kontrolowana próba ma status **NOT RUN** i wymaga zgody operatora na maksymalnie **8 żądań**. Obejmuje translację −4 i przebudowaną planszę, cztery warunki na każdej, po jednym żądaniu transferu. Model to `gpt-6-luna` z `xhigh`, limit 8192 tokenów oraz 90 s. Każdy przypadek ma oddzielny kontekst bez historii. Ponowienia są wyłączone.
+
+```sh
+npx tsx tests/live/run-m04-generalization.ts --live --max-calls 8 unikalny-id
+```
+
+Oceń osobno kod wyniku silnika, użycie lub odrzucenie notatki i powiązanie wzoru ze współrzędnymi. W D model ma korzystać z reguły i geometrii bez przypisywania graczowi wypowiedzi. Zapisz (n), minimum, medianę i maksimum czasu, tokeny oraz status każdego żądania. Wyniki trafiają do ignorowanego przez Git `var/ai-live/`. Ocenę człowieka wpisz osobno.
+
 ## Odbiór M04 A/B/C przez interfejs gry
 
-Runner `tests/live/m04-browser.ts` jest protokołem dla gałęzi `codex/jury-readiness` i promptu 1.1.0. Na lokalnym backendzie odtwarza trzy osobne sesje Chromium ze wspólnego stanu tuż po naprawie i prognozach M04. W każdej sesji używa interfejsu do rozmowy, potwierdza zapis rzeczywistej parafrazy, odświeża grę i zleca transfer. Porównuje notatkę z wiadomością wysłaną do OpenAI oraz sprawdza propozycję silnikiem w aplikacji.
+Runner `tests/live/m04-browser.ts` działa na gałęzi `codex/jury-readiness` i zapisuje bieżącą wersję promptu. Na lokalnym backendzie odtwarza trzy osobne sesje Chromium ze wspólnego stanu tuż po naprawie i prognozach M04. W każdej sesji używa interfejsu do rozmowy, potwierdza zapis parafrazy, odświeża grę i zleca transfer. Porównuje notatkę z wiadomością wysłaną do SDK oraz sprawdza propozycję silnikiem w aplikacji.
 
 ```sh
 npm run build
 npx tsx tests/live/m04-browser.ts --mock moj-id-proby-technicznej
 ```
 
-Po odrębnej zgodzie na wywołania OpenAI uruchom poniższą komendę z nowym identyfikatorem. Klucz i model ustaw w lokalnym `.env` backendu. Polecenie wymaga Chromium Playwright i dopuszcza najwyżej 12 żądań HTTP do OpenAI łącznie z ponowieniami. Próba używa sesji SQLite w pamięci, a raport i dziennik żądań zapisuje w `var/ai-live/`.
+Po odrębnej zgodzie na wywołania OpenAI uruchom poniższą komendę z nowym identyfikatorem. Klucz i model ustaw w lokalnym `.env` backendu. Polecenie wymaga Chromium Playwright i dopuszcza najwyżej 9 żądań HTTP do OpenAI, z ponowieniami tylko w nauczaniu. Przy `AI_MAX_PROVIDER_REQUESTS_PER_TURN=1` limit wynosi 6. Próba używa sesji SQLite w pamięci, a raport i dziennik żądań zapisuje w `var/ai-live/`.
 
 ```sh
 npx tsx tests/live/m04-browser.ts --allow-paid moj-id-proby-live
@@ -87,6 +104,7 @@ curl --fail --silent --show-error "${PIKO_PUBLIC_ORIGIN:?Ustaw zatwierdzony orig
 | Jedna prawdziwa tura po zgodzie | Odpowiedź live, rzeczywiste ID i model, oddzielny wynik silnika | NOT RUN |
 | Odświeżenie, zapis i reset rozmowy | Wzór i notatka zostają. Następna rozmowa po resecie ma pustą historię | NOT RUN |
 | Utrata sieci i niedostępny serwer | Wpisy zachowane, jawny błąd, przejście do demo po decyzji gracza | NOT RUN |
+| Pominięcie podczas oczekiwania | Samodzielna scena zachowuje pierwszą próbę mimo spóźnionej odpowiedzi | NOT RUN |
 | Electron z zatwierdzonym HTTPS | Dostęp z drugiej sieci, bezpośrednie połączenie bez redirectu i poprawny reset | NOT RUN |
 | Ponowny start backendu | Poprzednia sesja i limit pozostają w wolumenie SQLite | NOT RUN |
 

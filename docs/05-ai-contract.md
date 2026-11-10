@@ -309,9 +309,11 @@ Podstawa techniczna, sprawdzona 2026-11-03: [Structured Outputs](https://develop
 
 ## 8. Jedna naprawa, budżet, czas i współbieżność
 
-Cała tura wraz z ewentualną naprawą ma domyślnie **90 s** od przyjęcia poprawnego żądania. Maksymalnie **2 żądania do dostawcy**. Drugie jest dopuszczalne tylko po technicznie niepoprawnym outputcie: JSON/schemat, niedozwolone pole/ID, naruszony kontrakt fazy lub nieparsowalna propozycja. Naprawa zawiera te same fakty, poprzedni output jako nieufne dane i listę naruszeń; nie zawiera wzoru wzorcowego ani wyniku przyszłej planszy.
+Cała tura ma domyślnie **90 s** od przyjęcia poprawnego żądania. Transfer wysyła **jedno żądanie do dostawcy**. W nauczaniu dopuszcza się drugie żądanie po błędzie JSON, schematu, identyfikatorów lub kontraktu fazy. Naprawa zawiera te same fakty, poprzedni output jako nieufne dane i listę naruszeń.
 
 Nie ponawiaj automatycznie po timeout, 429, 5xx, odmowie, braku klucza ani po niekompletnym outputcie. Poprawnie zapisany wzór, który uderza w przeszkodę albo nie spełnia geometrii, jest widoczną pomyłką robota i nie uruchamia technicznego retry. Pozwala to uczciwie policzyć wynik pierwszej propozycji.
+
+Prompt 1.2.0 poleca Piko wyprowadzić parametry z bieżącej geometrii oraz sprawdzić start, każdą bramkę, cel, granice i przeszkody przed podaniem wzoru. Komentarz modelu ma wskazać przydatny fragment notatki albo wyjaśnić, dlaczego Piko opiera się na sprawdzonej zasadzie. Zaliczenie wciąż rozstrzyga silnik. Ocena wyjaśnienia w nauczaniu to osobna opinia modelu i nie blokuje zapisu notatki.
 
 Jeżeli po naprawie nadal nie ma poprawnego payloadu: `mode=unavailable`, `learner:null`, `error.code=AI_INVALID_OUTPUT`. Nie pokazuj uszkodzonego tekstu i nie zapisuj go do historii. Jeżeli propozycja ma prawidłową składnię, lecz silnik odrzuca rodzinę lub geometrię, zwróć prawdziwą propozycję z wynikiem `failed`.
 
@@ -381,7 +383,7 @@ Minimalna telemetria lokalna: turnId, missionId, sceneRole, mode, model, latency
 - [ ] Utrata klucza, timeout i błąd modelu nie udają odpowiedzi live.
 - [ ] Ocena tekstowa nie zmienia wyniku ani reguł.
 - [ ] Pamięć po restarcie odtwarzana jest z ponownie sprawdzonego evidence.
-- [ ] Maksymalnie 2 wywołania dostawcy z jednym technicznym ponowieniem w ramach wspólnego limitu czasu.
+- [ ] Jedno wywołanie dostawcy w transferze. W nauczaniu najwyżej jedno ponowienie techniczne w ramach wspólnego limitu czasu.
 - [ ] Globalny limit przetrwa restart; wynik opóźniony nie nadpisuje nowej sceny.
 - [ ] Nieparsowalne wyrażenie nie może zostać uruchomione jako kod.
 - [ ] Raport odróżnia mock, demo i rzeczywiste testy live.

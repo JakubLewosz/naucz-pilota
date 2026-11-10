@@ -3,6 +3,16 @@ Aktualizacja: 2026-11-10. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live z GPT-5.4 mini wykonano na `a751a1c`, a z GPT-6 Luna na `95a55ca`.
 
+## Transfer M04 i odbiór lokalny promptu 1.2.0
+
+- `bab6283` dodaje cztery geometrie testowe, warunki A/B/C/D i instrukcję sprawdzania punktów bieżącej trasy przed podaniem wzoru. Transfer wykonuje jedno żądanie dostawcy na turę. Model roboczy to GPT-6 Luna Extra High.
+- `b8502bd` oddziela opinię Piko o notatce od wyniku silnika. Umożliwia pominięcie podczas oczekiwania i zapisuje je jako `skipped`. Test ze spóźnioną odpowiedzią po 21 s potwierdził ochronę pierwszej próby i archiwum.
+- PASS dla kodu `b8502bd`: typecheck, lint, build, 206 testów Vitest, 62 testy treści, walidatory matematyki, Electron na macOS, build i smoke Docker. Playwright przeszedł 15 testów po synchronizacji regresji odświeżenia w `6370947`. Cross-build Windows x64 przeszedł inspekcję PE, ASAR i ZIP. Lokalna kontrola wydania oznaczyła starszą paczkę w `release/bin` jako STALE.
+- Testy geometrii potwierdziły 4 bezpieczne tory kontrolne i 4 kontrolne `START_MISS`. Historyczny wzór `0.25*(x-2)^2` odrzucono na wszystkich czterech. W 16 turach aparatury z atrapą sprawdzono schemat, role wiadomości, brak rozwiązań w kontekście i zachowanie oryginalnych propozycji. To pomiar techniczny, ocena uogólnienia modelu pozostaje **NOT RUN**.
+- **0 nowych płatnych wywołań.** Gotowy jest [protokół do 8 wywołań](docs/17-odbior-live.md#uogólnienie-m04-na-czterech-geometriach-testowych), zaktualizowany opis jednostronicowy, instrukcja PDF i scenopis 4 min 20 s. Windows CI bieżącego kodu, osobny Windows, zewnętrzny HTTPS, pilotaż i aktualne nagranie pozostają **NOT RUN**.
+
+Demo jest gotowe do lokalnej próby prezentacji. Pełny odbiór wymaga próby aktualnego promptu z rzeczywistym modelem i sprawdzenia docelowego urządzenia. [Raport testów i odbioru](checks/m04-generalization-1.2.0.md) · [Surowe wyniki atrapy](checks/m04-generalization-1.2.0.mock.json).
+
 ## M04 A/B/C live z GPT-6 Luna xhigh
 
 Próba z 10 listopada na `95a55ca` przeszła lokalnie w Chromium z promptem 1.1.0. W trzech osobnych sesjach wykonano **6/6** zatwierdzonych żądań, bez ponowień. Wszystkie odpowiedzi HTTP 200 miały status `completed`. Niezależny silnik zaliczył **3/3** pierwsze loty Luny przy tym samym wielomianie `0.25(x-2)^2`. W historycznym przebiegu GPT-5.4 mini każdy z trzech lotów zakończył się `START_MISS`. Build przed próbą przeszedł.

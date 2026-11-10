@@ -1,0 +1,985 @@
+{
+  "mode": "mock",
+  "source": "sdk-stub",
+  "promptVersion": "1.2.0",
+  "configuredModel": "gpt-6-luna",
+  "reasoningEffort": "xhigh",
+  "maxOutputTokens": 8192,
+  "timeoutMs": 90000,
+  "seed": 20261110,
+  "commit": "b8502bd014904d4210c16df87145d18c768029a8",
+  "dirty": false,
+  "maxCalls": 0,
+  "providerCalls": 0,
+  "cases": [
+    {
+      "geometry": "shift--4",
+      "condition": "A"
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "B"
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "C"
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "D"
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "A"
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "B"
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "C"
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "D"
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "A"
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "B"
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "C"
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "D"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "A"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "B"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "C"
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "D"
+    }
+  ],
+  "geometryControls": [
+    {
+      "id": "shift--4",
+      "reference": "0.25(x-(-2))^2",
+      "knownFailure": "0.25(x-(-6))^2"
+    },
+    {
+      "id": "shift-3",
+      "reference": "0.25(x-(5))^2",
+      "knownFailure": "0.25(x-(1))^2"
+    },
+    {
+      "id": "shift--6",
+      "reference": "0.25(x-(-4))^2",
+      "knownFailure": "0.25(x-(-8))^2"
+    },
+    {
+      "id": "rebuilt",
+      "reference": "0.5(x-4)^2+1",
+      "knownFailure": "0.5(x-1)^2+1"
+    }
+  ],
+  "results": [
+    {
+      "geometry": "shift--4",
+      "condition": "A",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "W (x+1) nawias zeruje się dla x=-1, więc wierzchołek jest po lewej; w (x-p) wierzchołek jest przy p.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż poprawną metodę z notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-2))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-2))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "B",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie zawsze przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Odrzuć błędny kierunek bez przypisywania poprawki graczowi.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-2))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-2))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "C",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż brak użytecznej wskazówki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-2))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-2))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--4",
+      "condition": "D",
+      "lessonNote": null,
+      "rubric": "Skorzystaj z reguły bez przypisywania komukolwiek nieistniejącej notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-2))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-2))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -5,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": -3,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": -1,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 1,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 1,
+          "c0": 1
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "A",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "W (x+1) nawias zeruje się dla x=-1, więc wierzchołek jest po lewej; w (x-p) wierzchołek jest przy p.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż poprawną metodę z notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(5))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(5))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 2,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 4,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 6,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 8,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": -2.5,
+          "c0": 6.25
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "B",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie zawsze przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Odrzuć błędny kierunek bez przypisywania poprawki graczowi.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(5))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(5))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 2,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 4,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 6,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 8,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": -2.5,
+          "c0": 6.25
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "C",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż brak użytecznej wskazówki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(5))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(5))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 2,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 4,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 6,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 8,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": -2.5,
+          "c0": 6.25
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift-3",
+      "condition": "D",
+      "lessonNote": null,
+      "rubric": "Skorzystaj z reguły bez przypisywania komukolwiek nieistniejącej notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(5))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(5))^2",
+      "engine": {
+        "ok": true,
+        "parseable": true,
+        "primaryCode": "SUCCESS",
+        "messagePL": "Bezpieczny lot. Wszystkie bramki zaliczone.",
+        "diagnostics": [],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": 2,
+            "y": 2.25,
+            "passed": true
+          },
+          {
+            "id": "G1",
+            "x": 4,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "G2",
+            "x": 6,
+            "y": 0.25,
+            "passed": true
+          },
+          {
+            "id": "goal",
+            "x": 8,
+            "y": 2.25,
+            "passed": true
+          }
+        ],
+        "firstPhysicalEvent": null,
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": -2.5,
+          "c0": 6.25
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "A",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "W (x+1) nawias zeruje się dla x=-1, więc wierzchołek jest po lewej; w (x-p) wierzchołek jest przy p.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż poprawną metodę z notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-8))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-8))^2",
+      "engine": {
+        "ok": false,
+        "parseable": true,
+        "primaryCode": "START_MISS",
+        "messagePL": "Tor omija otwór startowy. Sprawdź wysokość przy starcie.",
+        "diagnostics": [
+          "START_MISS",
+          "OUT_OF_BOUNDS",
+          "GATE_MISS"
+        ],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -7,
+            "y": 0.25,
+            "passed": false
+          },
+          {
+            "id": "G1",
+            "x": -5,
+            "y": 2.25,
+            "passed": false
+          },
+          {
+            "id": "G2",
+            "x": -3,
+            "y": 6.25,
+            "passed": false
+          },
+          {
+            "id": "goal",
+            "x": -1,
+            "y": 12.25,
+            "passed": false
+          }
+        ],
+        "firstPhysicalEvent": {
+          "x": -7,
+          "y": 0.25,
+          "code": "START_MISS",
+          "subject": "start"
+        },
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 4,
+          "c0": 16
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "B",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie zawsze przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Odrzuć błędny kierunek bez przypisywania poprawki graczowi.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-8))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-8))^2",
+      "engine": {
+        "ok": false,
+        "parseable": true,
+        "primaryCode": "START_MISS",
+        "messagePL": "Tor omija otwór startowy. Sprawdź wysokość przy starcie.",
+        "diagnostics": [
+          "START_MISS",
+          "OUT_OF_BOUNDS",
+          "GATE_MISS"
+        ],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -7,
+            "y": 0.25,
+            "passed": false
+          },
+          {
+            "id": "G1",
+            "x": -5,
+            "y": 2.25,
+            "passed": false
+          },
+          {
+            "id": "G2",
+            "x": -3,
+            "y": 6.25,
+            "passed": false
+          },
+          {
+            "id": "goal",
+            "x": -1,
+            "y": 12.25,
+            "passed": false
+          }
+        ],
+        "firstPhysicalEvent": {
+          "x": -7,
+          "y": 0.25,
+          "code": "START_MISS",
+          "subject": "start"
+        },
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 4,
+          "c0": 16
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "C",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż brak użytecznej wskazówki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-8))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-8))^2",
+      "engine": {
+        "ok": false,
+        "parseable": true,
+        "primaryCode": "START_MISS",
+        "messagePL": "Tor omija otwór startowy. Sprawdź wysokość przy starcie.",
+        "diagnostics": [
+          "START_MISS",
+          "OUT_OF_BOUNDS",
+          "GATE_MISS"
+        ],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -7,
+            "y": 0.25,
+            "passed": false
+          },
+          {
+            "id": "G1",
+            "x": -5,
+            "y": 2.25,
+            "passed": false
+          },
+          {
+            "id": "G2",
+            "x": -3,
+            "y": 6.25,
+            "passed": false
+          },
+          {
+            "id": "goal",
+            "x": -1,
+            "y": 12.25,
+            "passed": false
+          }
+        ],
+        "firstPhysicalEvent": {
+          "x": -7,
+          "y": 0.25,
+          "code": "START_MISS",
+          "subject": "start"
+        },
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 4,
+          "c0": 16
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "shift--6",
+      "condition": "D",
+      "lessonNote": null,
+      "rubric": "Skorzystaj z reguły bez przypisywania komukolwiek nieistniejącej notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":\"0.25(x-(-8))^2\",\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"propose_attempt\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": "0.25(x-(-8))^2",
+      "engine": {
+        "ok": false,
+        "parseable": true,
+        "primaryCode": "START_MISS",
+        "messagePL": "Tor omija otwór startowy. Sprawdź wysokość przy starcie.",
+        "diagnostics": [
+          "START_MISS",
+          "OUT_OF_BOUNDS",
+          "GATE_MISS"
+        ],
+        "checkpoints": [
+          {
+            "id": "start",
+            "x": -7,
+            "y": 0.25,
+            "passed": false
+          },
+          {
+            "id": "G1",
+            "x": -5,
+            "y": 2.25,
+            "passed": false
+          },
+          {
+            "id": "G2",
+            "x": -3,
+            "y": 6.25,
+            "passed": false
+          },
+          {
+            "id": "goal",
+            "x": -1,
+            "y": 12.25,
+            "passed": false
+          }
+        ],
+        "firstPhysicalEvent": {
+          "x": -7,
+          "y": 0.25,
+          "code": "START_MISS",
+          "subject": "start"
+        },
+        "canonicalPolynomial": {
+          "c2": 0.25,
+          "c1": 4,
+          "c0": 16
+        }
+      },
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "A",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "W (x+1) nawias zeruje się dla x=-1, więc wierzchołek jest po lewej; w (x-p) wierzchołek jest przy p.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż poprawną metodę z notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":null,\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"acknowledge_uncertainty\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": null,
+      "engine": null,
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "B",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "Plus w nawiasie zawsze przesuwa parabolę w prawo.",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Odrzuć błędny kierunek bez przypisywania poprawki graczowi.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":null,\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"acknowledge_uncertainty\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": null,
+      "engine": null,
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "C",
+      "lessonNote": {
+        "version": 1,
+        "ruleId": "RULE_QUAD_HORIZONTAL",
+        "explanationPL": "abc",
+        "pikoParaphrasePL": null,
+        "source": "skipped",
+        "confirmation": "saved_by_player"
+      },
+      "rubric": "Wskaż brak użytecznej wskazówki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":null,\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"acknowledge_uncertainty\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": null,
+      "engine": null,
+      "latencyMs": null,
+      "api": null
+    },
+    {
+      "geometry": "rebuilt",
+      "condition": "D",
+      "lessonNote": null,
+      "rubric": "Skorzystaj z reguły bez przypisywania komukolwiek nieistniejącej notatki.",
+      "semanticReview": "NOT REVIEWED",
+      "status": "completed",
+      "text": "{\"utterancePL\":\"Przygotowana odpowiedź atrapy.\",\"followUpPL\":null,\"explanationAssessment\":\"not_applicable\",\"proposedExpression\":null,\"suggestedRuleId\":null,\"usedFactIds\":[],\"action\":\"acknowledge_uncertainty\"}",
+      "actualModel": "offline-stub",
+      "responseId": "resp_mock",
+      "inputTokens": null,
+      "outputTokens": null,
+      "schemaValid": true,
+      "accepted": true,
+      "proposal": null,
+      "engine": null,
+      "latencyMs": null,
+      "api": null
+    }
+  ],
+  "status": "COMPLETE"
+}

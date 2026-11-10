@@ -30,6 +30,7 @@ Użyj osobnego komputera z Windows x64 bez narzędzi projektu. Pobierz dokładni
 | Pierwsza parsowalna próba zachowana po poprawce i restarcie | NOT RUN |
 | Pełna kampania sześciu misji | NOT RUN |
 | Klawiatura, reduced motion i powiększony tekst | NOT RUN |
+| W live pominięcie oczekującego lotu, zachowana pierwsza próba po restarcie | NOT RUN |
 | Live z rzeczywiście skonfigurowanym HTTPS backendu | NOT RUN |
 | Odłączenie sieci w live: zachowane wpisy, jawny błąd i wybór demo | NOT RUN |
 
