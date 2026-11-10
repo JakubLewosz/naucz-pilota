@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import data from '../content/missions.v1.json';
 import type {Envelope} from '@piko/contracts';
 import {PROMPT_VERSION} from '../apps/server/src/system';
+import {AI_RESPONSE_WAIT_MS} from '../apps/server/src/config';
 const args=process.argv.slice(2);
 if(args.some(a=>a!=='--live')||args.length>1)throw new Error('Use no arguments for demo, or explicit --live for paid real-model recording.');
 const live=args.includes('--live'),mode=live?'live':'demo';
@@ -14,7 +15,7 @@ async function play(p:Page,m:typeof data.missions[number],slow=false){
  const caption=async(text:string)=>{if(!slow)return;await p.evaluate(({text,label})=>{let el=document.getElementById('recording-caption');if(!el){el=document.createElement('div');el.id='recording-caption';Object.assign(el.style,{position:'fixed',bottom:'10px',left:'20px',right:'20px',padding:'12px',background:'#172033',color:'#fff',zIndex:'10000',borderRadius:'8px',font:'16px system-ui',textAlign:'center'});document.body.append(el);}el.textContent=label+' · '+text;},{text,label:live?'AUTOMATYCZNY POKAZ LIVE':'NAGRANIE DEMO'});await pause(3500);};
  const ask=async(name:string)=>{
   if(!slow||!live){await p.getByRole('button',{name,exact:true}).click();return;}
-  const next=p.waitForResponse(r=>r.url().endsWith('/api/learner-turn')&&r.request().method()==='POST',{timeout:20000});
+  const next=p.waitForResponse(r=>r.url().endsWith('/api/learner-turn')&&r.request().method()==='POST',{timeout:AI_RESPONSE_WAIT_MS});
   await p.getByRole('button',{name,exact:true}).click();const response=await next,envelope=await response.json() as Envelope;
   assert.equal(response.status(),200,envelope.error?.code??'Live response failed');assert.equal(envelope.mode,'live');assert.ok(envelope.learner);assert.equal(envelope.model.provider,'openai');responses.push(envelope);
   await p.getByLabel('Komentarz Piko').getByText('MODEL LIVE',{exact:false}).first().waitFor();

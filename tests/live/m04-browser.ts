@@ -14,11 +14,11 @@ import {missionById} from '@piko/content';
 import authoring from '../../content/missions.v1.json';
 import {createApp} from '../../apps/server/src/app';
 import {openAIProvider} from '../../apps/server/src/provider';
+import {AI_RESPONSE_WAIT_MS,readOpenAIConfig} from '../../apps/server/src/config';
 import {Store} from '../../apps/server/src/store';
 import {PROMPT_VERSION} from '../../apps/server/src/system';
 import {M04_LESSON_VARIANTS} from './cases';
 
-const maxCalls=12;
 const paid=process.argv[2]==='--allow-paid';
 const runId=process.argv[3];
 if(!['--mock','--allow-paid'].includes(process.argv[2])||process.argv.length!==4||!/^[a-zA-Z0-9-]{1,60}$/.test(runId)){
@@ -26,7 +26,8 @@ if(!['--mock','--allow-paid'].includes(process.argv[2])||process.argv.length!==4
 }
 assert.equal(PROMPT_VERSION,'1.1.0','This protocol expects prompt 1.1.0.');
 const key=paid?process.env.OPENAI_API_KEY:'offline-stub-key';
-const model=paid?process.env.AI_MODEL:'offline-stub';
+const {model,reasoningEffort,maxOutputTokens,timeoutMs,maxProviderRequests}=readOpenAIConfig(paid?process.env:{AI_MODEL:'gpt-6-luna'});
+const maxCalls=M04_LESSON_VARIANTS.length*2*maxProviderRequests;
 if(!key||!model)throw new Error('NOT RUN: configure the backend key and model first.');
 const branch=execFileSync('git',['branch','--show-current'],{encoding:'utf8'}).trim();
 const commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
@@ -54,8 +55,8 @@ type VariantResult={
 const attempts:Attempt[]=[];
 const variants:VariantResult[]=M04_LESSON_VARIANTS.map(variant=>({...variant,status:'NOT RUN'}));
 const report={
- date,mode:paid?'live':'mock',promptVersion:PROMPT_VERSION,model,branch,commit,maxCalls,
- platform:process.platform,node:process.version,maxAttemptsPerTurn:2,attempts,variants,
+ date,mode:paid?'live':'mock',promptVersion:PROMPT_VERSION,model,reasoningEffort:reasoningEffort??null,maxOutputTokens,timeoutMs,branch,commit,maxCalls,
+ platform:process.platform,node:process.version,maxAttemptsPerTurn:maxProviderRequests,attempts,variants,
  baselineSha256:undefined as string|undefined,baseline:undefined as unknown,
  phase:'RUNNING',error:undefined as string|undefined,providerCalls:0,
  semanticReview:'NOT REVIEWED'
@@ -87,9 +88,11 @@ const meteredFetch:typeof fetch=async(input,init)=>{
  assert.equal(init?.method,'POST');
  assert.notEqual(activeVariant,'setup','Demo setup cannot invoke the provider.');
  if(attempts.length>=maxCalls)throw new Error('Hard OpenAI HTTP budget exhausted.');
- const request=JSON.parse(String(init?.body)) as {input:{role:string;content:string}[];model:string;store:boolean};
+ const request=JSON.parse(String(init?.body)) as {input:{role:string;content:string}[];model:string;store:boolean;reasoning?:{effort:string};max_output_tokens:number};
  assert.equal(request.model,model);
  assert.equal(request.store,false);
+ assert.deepEqual(request.reasoning,reasoningEffort?{effort:reasoningEffort}:undefined);
+ assert.equal(request.max_output_tokens,maxOutputTokens);
  const context=JSON.parse(request.input[0].content);
  assert.equal(request.input[0].role,'developer');
  assert.ok(['M04-teach','M04-robot_transfer'].includes(context.scene.id));
@@ -134,8 +137,8 @@ const bound=server.address();
 assert.ok(bound&&typeof bound!=='string');
 const origin=`http://127.0.0.1:${bound.port}`;
 const store=new Store(':memory:');
-const provider=openAIProvider(key,model,1200,'https://api.openai.com/v1',meteredFetch);
-const app=createApp({store,provider,config:{mode:'live',model,publicOrigin:origin,dailyBudget:maxCalls,maxProviderRequests:2}});
+const provider=openAIProvider(key,model,maxOutputTokens,{baseURL:'https://api.openai.com/v1',fetch:meteredFetch,reasoningEffort});
+const app=createApp({store,provider,config:{mode:'live',model,publicOrigin:origin,dailyBudget:maxCalls,maxProviderRequests,timeoutMs}});
 app.use(express.static('apps/web/dist'));
 server.on('request',app);
 const browser=await chromium.launch();
@@ -177,7 +180,7 @@ async function advanceDemo(page:Page,mission:MissionFixture){
 async function ask(page:Page,name:string):Promise<Turn>{
  assert.ok(attempts.length<maxCalls,'Hard OpenAI HTTP budget exhausted before the next turn.');
  const [response]=await Promise.all([
-  page.waitForResponse(r=>r.url()===origin+'/api/learner-turn'&&r.request().method()==='POST',{timeout:22000}),
+  page.waitForResponse(r=>r.url()===origin+'/api/learner-turn'&&r.request().method()==='POST',{timeout:AI_RESPONSE_WAIT_MS}),
   button(page,name).click()
  ]);
  return {httpStatus:response.status(),request:response.request().postDataJSON() as LearnerRequest,

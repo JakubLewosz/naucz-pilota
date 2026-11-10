@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {mkdtemp,rm,writeFile} from 'node:fs/promises';
+import {setTimeout as delay} from 'node:timers/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {_electron as electron,type ElectronApplication} from 'playwright';
@@ -8,13 +9,15 @@ import {Store} from '../apps/server/src/store';
 import type {Exchange} from '@piko/contracts';
 const directory=await mkdtemp(path.join(tmpdir(),'piko-chat-audit-'));
 const seen:Exchange[][]=[],store=new Store(':memory:');
+const slowReplyMs=17000; // Exercise the previous 16 s Electron cutoff.
 const stubReply=(turn:number)=>`Próba ${turn}. Stała ustawia wysokość.`;
 const report={
  date:new Date().toISOString(),status:'FAIL',platform:process.platform,stubCalls:0,paidProviderCalls:0,
- transport:'Electron IPC to local HTTP relay',oldContextCleared:false,error:undefined as string|undefined
+ transport:'Electron IPC to local HTTP relay',slowReplyMs,oldContextCleared:false,error:undefined as string|undefined
 };
 const server=createApp({store,config:{mode:'live',model:'local-stub'},provider:async context=>{
  seen.push(context.recentExchanges);
+ if(seen.length===3)await delay(slowReplyMs);
  return {text:JSON.stringify({
   utterancePL:stubReply(seen.length),followUpPL:null,
   explanationAssessment:'partial',proposedExpression:null,suggestedRuleId:null,usedFactIds:[],action:'explain_back'
@@ -42,7 +45,8 @@ try{
  const send=async(text:string,turn:number)=>{
   await input.fill(text);
   await page.getByRole('button',{name:'Powiedz Piko'}).click();
-  await page.getByText(stubReply(turn),{exact:true}).waitFor();
+  if(turn===3)await page.getByRole('status').filter({hasText:'Oczekiwanie na odpowiedź Piko'}).waitFor();
+  await page.getByText(stubReply(turn),{exact:true}).waitFor({timeout:25000});
   assert.match(await page.getByTestId('ai-mode').innerText(),/Live/,(await page.getByRole('alert').allTextContents()).join(' '));
  };
  await send('Pierwsze wyjaśnienie.',1);

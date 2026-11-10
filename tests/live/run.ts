@@ -6,6 +6,7 @@ import {buildContext} from '@piko/contracts';
 import {createApp} from '../../apps/server/src/app';
 import {Store} from '../../apps/server/src/store';
 import {openAIProvider} from '../../apps/server/src/provider';
+import {integer,readOpenAIConfig} from '../../apps/server/src/config';
 import {PROMPT_VERSION} from '../../apps/server/src/system';
 import {selectLiveCases} from './cases';
 import {executeLiveCases,observeProvider,type LiveResult} from './runner';
@@ -23,10 +24,12 @@ if(args.length===1&&args[0]==='--help'){
 const {filter,maxProviderCalls,allowPaid,dryRun}=parseLiveOptions(args);
 const selected=selectLiveCases(filter);
 if(!selected.length)throw new Error('No matching live cases.');
+const {model,reasoningEffort,maxOutputTokens,timeoutMs,maxProviderRequests}=readOpenAIConfig();
+const key=process.env.OPENAI_API_KEY;
 
 const date=new Date().toISOString();
 const report={
- date,provider:'openai',model:process.env.AI_MODEL||null,promptVersion:PROMPT_VERSION,
+ date,provider:'openai',model:model||null,reasoningEffort:reasoningEffort??null,maxOutputTokens,timeoutMs,maxProviderRequests,promptVersion:PROMPT_VERSION,
  commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
  dirty:execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).length>0,
  selection:filter??'standard',platform:process.platform,node:process.version,
@@ -50,19 +53,17 @@ if(dryRun){
 }else if(!allowPaid){
  report.reason='Brak jawnego --allow-paid i zatwierdzonego budżetu.';
  process.exitCode=2;
-}else if(!process.env.OPENAI_API_KEY||!process.env.AI_MODEL){
+}else if(!key||!model){
  report.reason='Brak OPENAI_API_KEY lub AI_MODEL. Dostawcy nie wywołano.';
  process.exitCode=2;
 }else{
  let store:Store|undefined;
  try{
   store=new Store(process.env.STATE_DB_PATH??'var/piko.sqlite');
-  const observed=observeProvider(openAIProvider(
-   process.env.OPENAI_API_KEY,process.env.AI_MODEL,Number(process.env.AI_MAX_OUTPUT_TOKENS??1200)
-  ));
+  const observed=observeProvider(openAIProvider(key,model,maxOutputTokens,{reasoningEffort}));
   const app=createApp({
    store,provider:observed.provider,
-   config:{mode:'live',model:process.env.AI_MODEL,dailyBudget:Number(process.env.AI_DAILY_REQUEST_BUDGET??200)}
+   config:{mode:'live',model,timeoutMs,maxProviderRequests,dailyBudget:integer('AI_DAILY_REQUEST_BUDGET',200,0)}
   });
   report.status='RUNNING';
   await save();

@@ -4,9 +4,10 @@ import cookieParser from 'cookie-parser';
 import {buildContext,checkModel,ContractError,demoTurn,makeEnvelope,validateRequest,type Envelope,type LearnerRequest} from '@piko/contracts';
 import {Store} from './store';
 import {ProviderError,type Provider} from './provider';
+import {DEFAULT_AI_TIMEOUT_MS} from './config';
 export type ServerConfig={mode:'demo'|'live';model:string;publicOrigin:string;production:boolean;timeoutMs:number;dailyBudget:number;sessionLimit:number;bodyBytes:number;maxProviderRequests:number};
-const defaultConfig:ServerConfig={mode:'demo',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:15000,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2};
-const errorText:Record<string,string>={AI_NOT_CONFIGURED:'Model live nie jest skonfigurowany.',AI_TIMEOUT:'Nie udało się otrzymać odpowiedzi w limicie czasu. Twoje wpisy są zachowane.',AI_PROVIDER_UNAVAILABLE:'Usługa AI jest chwilowo niedostępna.',AI_REFUSED:'Piko nie otrzymał odpowiedzi od usługi AI.',AI_INCOMPLETE:'Odpowiedź modelu była niekompletna.',AI_INVALID_OUTPUT:'Model nie zwrócił poprawnej odpowiedzi.',DAILY_BUDGET_EXHAUSTED:'Dzienny limit wywołań AI został wyczerpany.',TURN_INTERRUPTED:'Poprzednia tura została przerwana. Możesz wysłać nową.'};
+const defaultConfig:ServerConfig={mode:'demo',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:DEFAULT_AI_TIMEOUT_MS,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2};
+const errorText:Record<string,string>={AI_NOT_CONFIGURED:'Sprawdź konfigurację modelu live i dostęp konta do tego modelu.',AI_TIMEOUT:'Nie udało się otrzymać odpowiedzi w limicie czasu. Twoje wpisy są zachowane.',AI_PROVIDER_UNAVAILABLE:'Usługa AI jest chwilowo niedostępna.',AI_REFUSED:'Piko nie otrzymał odpowiedzi od usługi AI.',AI_INCOMPLETE:'Odpowiedź modelu była niekompletna.',AI_INVALID_OUTPUT:'Model nie zwrócił poprawnej odpowiedzi.',DAILY_BUDGET_EXHAUSTED:'Dzienny limit wywołań AI został wyczerpany.',TURN_INTERRUPTED:'Poprzednia tura została przerwana. Możesz wysłać nową.'};
 export function createApp(options:{store:Store;provider?:Provider;config?:Partial<ServerConfig>}){
  const app=express(),config={...defaultConfig,...options.config},store=options.store;
  const pending=new Map<string,Promise<{status:number;envelope:Envelope}>>(),ipWindow=new Map<string,{count:number;start:number}>();

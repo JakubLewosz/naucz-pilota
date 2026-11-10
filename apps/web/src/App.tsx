@@ -118,7 +118,7 @@ export function App(){
  {role==='human_check'&&<><p className="notice">Pierwszy parsowalny wzór zostaje zapisany na stałe, również po odświeżeniu.</p>{r.firstHuman&&<p>Pierwsza próba: <strong>{r.firstHuman.result.ok?'poprawna':'do poprawy'}</strong>. Liczba prób: {r.counts.human_check}.</p>}{r.completed&&<><p className="success">✓ Misja ukończona{(r.counts.human_check??0)>1?` w ${r.counts.human_check}. próbie. Pierwsza próba pozostaje w podsumowaniu.`:'.'}</p><button onClick={()=>dispatch({type:'NEXT'})}>Zobacz podsumowanie →</button></>}</>}
  {['teach','robot_transfer'].includes(role)&&<section aria-label="Komentarz Piko">
   <div className="conversation">
-   {s.busy&&<p role="status">Piko czeka na zakończenie żądania…</p>}
+   <div role="status">{s.busy&&<p>Oczekiwanie na odpowiedź Piko. W tym czasie możesz przejść do innego ekranu.</p>}</div>
    {r.messages.map((msg,i)=><div className="message" key={i}>
     <small>{msg.speaker==='player'?'TY':`KOMENTARZ PIKO · ${msg.source==='live'?'MODEL LIVE':'DEMONSTRACJA'}`}</small><p>{msg.text}</p>
    </div>)}

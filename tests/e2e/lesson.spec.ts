@@ -42,7 +42,7 @@ test('MOCK: exact player lesson survives reload and reaches the SDK as user data
  const store=new Store(':memory:');
  const api=createApp({
   store,config:{mode:'live',model:'loopback-stub'},
-  provider:openAIProvider('local-test-credential','loopback-stub',1200,address(providerStub)+'/v1')
+  provider:openAIProvider('local-test-credential','loopback-stub',1200,{baseURL:address(providerStub)+'/v1'})
  }).listen(0,'127.0.0.1');
  await once(api,'listening');
  try{
