@@ -25,7 +25,7 @@ try{
  app=await launch();const page=await app.firstWindow();await page.getByRole('button',{name:'Zacznij'}).click();await assertIsolation(app,page);
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('1');await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Teraz naucz Piko'}).click();
  await page.getByLabel('Twój poprawiony wzór').fill('2');await page.locator('#prediction0').fill('2');await page.locator('#prediction1').fill('2');await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała określa wysokość toru.');
- await page.getByRole('button',{name:'Sprawdź naprawę'}).click();await page.getByRole('button',{name:'Powiedz Piko'}).click();await page.getByRole('button',{name:'Zapisz tę zasadę dla Piko'}).click();
+ await page.getByRole('button',{name:'Sprawdź naprawę'}).click();await page.getByRole('button',{name:'Powiedz Piko'}).click();await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
  await page.getByRole('button',{name:'Piko, spróbuj sam'}).click();await page.getByLabel('Przeleci',{exact:true}).check();await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();await page.getByRole('button',{name:'Teraz mój samodzielny lot'}).click();
  if(await page.getByTestId('trajectory').count()||await page.getByRole('button',{name:'Dziennik zasad'}).count())throw new Error('Independent assistance leaked');
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('0');await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');

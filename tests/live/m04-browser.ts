@@ -165,7 +165,7 @@ async function advanceDemo(page:Page,mission:MissionFixture){
  await practice(page,mission);
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(mission.ruleText);
  await repair(page,mission);
- await button(page,'Zapisz tę zasadę dla Piko').click();
+ await button(page,'Zapisz notatkę dla Piko').click();
  await button(page,'Piko, spróbuj sam').click();
  await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
  await button(page,'Sprawdź lot Piko').click();
@@ -238,7 +238,7 @@ try{
    assert.equal(sessions.has(variant.teach.request.sessionId),false);
    sessions.add(variant.teach.request.sessionId);
    await page.getByText('Tak zrozumiałem — Piko (live)',{exact:true}).waitFor();
-   await button(page,'Zapisz tę zasadę dla Piko').click();
+   await button(page,'Zapisz notatkę dla Piko').click();
    await page.getByText('Notatka z lekcji Piko',{exact:true}).waitFor();
    variant.note=(await readRun(page)).rule.lessonNote;
    assert.deepEqual(variant.note,{

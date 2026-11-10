@@ -14,17 +14,21 @@ async function teach(page:Page,mission:typeof data.missions[number]){
  for(const [i,g] of scene.gates.entries())await page.locator(`#prediction${i}`).fill(String((w.c2*g.x+w.c1)*g.x+w.c0));
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(mission.ruleText);
  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
- await expect(page.getByText('Tor i prognozy sprawdzone',{exact:true})).toBeVisible();
+ await expect(page.getByText('Tor i prognozy sprawdzone przez silnik',{exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
  await expect(page.getByLabel('Komentarz Piko')).toContainText('DEMONSTRACJA');
- await page.getByRole('button',{name:'Zapisz tę zasadę dla Piko'}).click();
+ await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
 }
-async function transfer(page:Page){
+async function transfer(page:Page,checkStartMiss=false){
  await page.getByRole('button',{name:'Piko, spróbuj sam'}).click();
  await expect(page.getByRole('heading',{name:'Propozycja Piko'})).toBeVisible();
  await expect(page.getByTestId('trajectory')).toHaveCount(0);
  await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
  await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
+ if(checkStartMiss){
+  await expect(page.locator('.proposal code')).toHaveText('f(x) = 0.25(x+2)^2');
+  await expect(page.getByTestId('engine-result')).toContainText('Przy x = -1 tor osiągnął y = 0.25. Otwór startowy sięga od y = 1.87 do y = 2.63.');
+ }
  await page.getByRole('button',{name:'Teraz mój samodzielny lot'}).click();
 }
 async function blind(page:Page){
@@ -47,7 +51,7 @@ test('M01 complete, first attempt survives correction and reload, replay preserv
 test('E4 all six missions, 24 distinct scenes, M04 robot failure does not block campaign',async({page})=>{
  let apiCalls=0;page.on('request',r=>{if(r.url().includes('learner-turn'))apiCalls++;});
  await page.goto('/');await page.getByRole('button',{name:'Zacznij'}).click();
- for(const m of data.missions){await practice(page,m);await teach(page,m);await transfer(page);await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.witness.expression);await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();if(m.order<6)await page.getByRole('button',{name:'Następna misja'}).click();}
+ for(const m of data.missions){await practice(page,m);await teach(page,m);await transfer(page,m.id==='M04');await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.witness.expression);await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();if(m.order<6)await page.getByRole('button',{name:'Następna misja'}).click();}
  await expect(page.getByRole('heading',{name:'Dobra robota — ukończyłeś sześć misji'})).toBeVisible();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!));expect(Object.values(saved.runs).every((r:unknown)=>(r as {completed:boolean}).completed)).toBe(true);expect(saved.runs.M04.attempts.robot_transfer[0].result.ok).toBe(false);expect(apiCalls).toBe(0);
  await openMission(page,data.missions[1].title);
@@ -85,7 +89,7 @@ test('keyboard path, offline demo and 200% text keep primary actions available',
  await page.getByLabel('Twój poprawiony wzór').fill('2');await page.locator('#prediction0').fill('2');await page.locator('#prediction1').fill('2');
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała daje wysokość każdego punktu.');await page.keyboard.press('Enter');
  await expect(page.getByTestId('engine-result')).toHaveCount(0);
- for(const name of ['Sprawdź naprawę','Powiedz Piko','Zapisz tę zasadę dla Piko','Piko, spróbuj sam']){await page.getByRole('button',{name}).focus();await page.keyboard.press('Enter');}
+ for(const name of ['Sprawdź naprawę','Powiedz Piko','Zapisz notatkę dla Piko','Piko, spróbuj sam']){await page.getByRole('button',{name}).focus();await page.keyboard.press('Enter');}
  await page.getByLabel('Przeleci',{exact:true}).focus();await page.keyboard.press('Space');
  for(const name of ['Sprawdź lot Piko','Teraz mój samodzielny lot']){await page.getByRole('button',{name}).focus();await page.keyboard.press('Enter');}
  await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill('-1');await page.keyboard.press('Enter');
@@ -97,6 +101,72 @@ async function selectMode(page:Page,mode:'live'|'demo'){
  await page.getByRole('button',{name:`Wybierz ${mode}`,exact:true}).click();
  await page.getByRole('button',{name:'Wróć do gry'}).click();
 }
+test('MOCK: skip during a 21 s desktop reply preserves the independent attempt and archive',async({page})=>{
+ const requests:LearnerRequest[]=[];
+ await page.exposeFunction('mockPikoTurn',async(request:LearnerRequest)=>{
+  requests.push(request);
+  await new Promise(resolve=>setTimeout(resolve,21000));
+  return {...demoTurn(request),mode:'live'};
+ });
+ await page.addInitScript(()=>{
+  const {mockPikoTurn}=window as unknown as {mockPikoTurn:NonNullable<Window['piko']>['sendLearnerTurn']};
+  window.piko={
+   getAiStatus:async()=>({mode:'live',available:true}),
+   startAiSession:async()=>({sessionId:crypto.randomUUID(),sessionRevision:0}),
+   clearConversation:async()=>({ok:true}),
+   sendLearnerTurn:async request=>{
+    const reply=await mockPikoTurn(request);
+    document.documentElement.dataset.stubReply='delivered';
+    return reply;
+   }
+  };
+ });
+ await page.setViewportSize({width:1366,height:768});
+ await page.goto('/');
+ await page.getByRole('button',{name:'Zacznij'}).click();
+ await practice(page,data.missions[0]);
+ await teach(page,data.missions[0]);
+ await page.getByRole('button',{name:'Ustawienia',exact:true}).click();
+ await page.getByLabel('Wielkość tekstu').selectOption('2');
+ await page.getByRole('button',{name:'Wybierz live',exact:true}).click();
+ await page.getByRole('button',{name:'Wróć do gry'}).click();
+
+ const ask=page.getByRole('button',{name:'Piko, spróbuj sam'});
+ await ask.evaluate((button:HTMLButtonElement)=>{button.click();button.click();});
+ await expect(page.getByRole('status').filter({hasText:'Piko analizuje nową trasę'})).toBeVisible();
+ await expect(ask).toBeDisabled();
+ await expect.poll(()=>requests.length).toBe(1);
+ const skip=page.getByRole('button',{name:'Pomiń lot Piko i przejdź do własnej próby'});
+ await expect(skip).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.setViewportSize({width:390,height:844});
+ await expect(skip).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await skip.focus();
+ await page.keyboard.press('Enter');
+ await blind(page);
+
+ const readRun=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!).runs.M01);
+ await page.getByLabel('Wzór funkcji',{exact:true}).fill('0');
+ await page.getByRole('button',{name:'Sprawdź mój lot'}).click();
+ const first=(await readRun()).firstHuman;
+ expect(first.expression).toBe('0');
+ await expect(page.locator('html')).toHaveAttribute('data-stub-reply','delivered',{timeout:27000});
+ expect(await readRun()).toMatchObject({role:'human_check',robotDisposition:'skipped',firstHuman:first,robot:null,robotTurns:0,robotFailures:0});
+ expect(await readRun()).not.toHaveProperty('attempts.robot_transfer');
+ expect(requests).toHaveLength(1);
+ await expect(page.getByLabel('Komentarz Piko')).toHaveCount(0);
+ await page.reload();
+ await page.getByLabel('Wzór funkcji',{exact:true}).fill('-1');
+ await page.getByRole('button',{name:'Sprawdź mój lot'}).click();
+ await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();
+ await expect(page.getByText('Pominięto lot Piko.',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Powtórz misję'}).click();
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!));
+ expect(saved.archive.M01[0]).toMatchObject({firstHuman:first,robotDisposition:'skipped'});
+ expect(saved.runs.M01.firstHuman).toBeNull();
+ expect(saved.runs.M01.robotDisposition).toBeUndefined();
+});
 async function stubSession(page:Page){
  await page.route('**/api/session',route=>route.fulfill({json:{sessionId:crypto.randomUUID(),sessionRevision:0}}));
 }

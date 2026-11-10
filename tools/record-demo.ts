@@ -31,7 +31,7 @@ async function play(p:Page,m:typeof data.missions[number],slow=false){
  await caption('Gracz poprawia wzór, przewiduje wartości w G1 i G2 oraz wyjaśnia zmianę.');
  await p.getByRole('button',{name:'Sprawdź naprawę'}).click();await ask('Powiedz Piko');
  await caption(live?'LIVE: to rzeczywista odpowiedź modelu na widoczne wyjaśnienie gracza.':'DEMO: odpowiedź jest scenariuszowa. Prawdziwy model live wymaga klucza i osobnego sprawdzenia.');
- await p.getByRole('button',{name:'Zapisz tę zasadę dla Piko'}).click();await ask('Piko, spróbuj sam');
+ await p.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();await ask('Piko, spróbuj sam');
  if(slow)assert.equal(await p.getByTestId('trajectory').count(),0,'Robot trajectory shown before prediction');
  await caption('Nowa plansza. Zanim odsłonimy tor i wynik, gracz przewiduje skuteczność pomysłu Piko.');
  await p.getByLabel(live&&slow?'Jeszcze nie wiem':'Nie przeleci',{exact:true}).check();await p.getByRole('button',{name:'Sprawdź lot Piko'}).click();
