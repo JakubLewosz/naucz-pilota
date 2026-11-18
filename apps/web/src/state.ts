@@ -4,7 +4,7 @@ import type {Envelope,LearnedEvidence,ModelPayload} from '@piko/contracts';
 import {canOpenPage,markJournalReview} from './review';
 export {SAVE_KEY,loadState,persistState,backupSave,removeSave} from './save';
 export const roles:Role[]=['practice','teach','robot_transfer','human_check'];
-export const roleLabels:Record<Role,string>={practice:'Sprawdź tor',teach:'Naucz Piko',robot_transfer:'Lot Piko',human_check:'Twój samodzielny lot'};
+export const roleLabels:Record<Role,string>={practice:'Twój lot',teach:'Naucz Piko',robot_transfer:'Lot Piko',human_check:'Sprawdź siebie'};
 export type Attempt={id:string;expression:string;sceneId:string;result:EngineResult;index:number;hintCount:number;timestamp:string;source:'human'|'demo'|'live';afterReview:boolean};
 export type Message={text:string;source:'live'|'demo';speaker:'player'|'piko'};
 export type LessonReply=Pick<Message,'text'|'source'>&{assessment?:ModelPayload['explanationAssessment']};

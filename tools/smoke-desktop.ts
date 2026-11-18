@@ -28,7 +28,7 @@ try{
   const resources=process.platform==='darwin'?path.join(path.dirname(executable),'..','Resources'):path.join(path.dirname(executable),'resources');
   report.appAsarSHA256=createHash('sha256').update(await readFile(path.join(resources,'app.asar'))).digest('hex');
  }
- app=await launch();const page=await app.firstWindow();await page.getByRole('button',{name:'Zacznij'}).click();await assertIsolation(app,page);
+ app=await launch();const page=await app.firstWindow();await page.getByRole('button',{name:'Rozpocznij'}).click();await assertIsolation(app,page);
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('1');await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Teraz naucz Piko'}).click();
  await page.getByLabel('Twój poprawiony wzór').fill('2');await page.locator('#prediction0').fill('2');await page.locator('#prediction1').fill('2');await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała określa wysokość toru.');
  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();await page.getByRole('button',{name:'Powiedz Piko'}).click();await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();

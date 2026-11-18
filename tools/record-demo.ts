@@ -57,7 +57,7 @@ async function play(p:Page,m:typeof data.missions[number],slow=false){
  await caption('Podsumowanie rozdziela wynik robota i pierwszą samodzielną próbę. To zapis wykonania zadania, nie diagnoza wiedzy.');
 }
 try{
- await page.goto('http://127.0.0.1:5173/');await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.goto('http://127.0.0.1:5173/');await page.getByRole('button',{name:'Rozpocznij'}).click();
  for(const m of data.missions.slice(0,3)){await play(page,m);await page.getByRole('button',{name:'Następna misja'}).click();}
  const storage=await setup.storageState();await setup.close();
  await mkdir('var/video',{recursive:true});await mkdir('release/media',{recursive:true});

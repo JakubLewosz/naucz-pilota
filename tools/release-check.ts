@@ -52,7 +52,7 @@ if(existsSync(archive)){
  const main=asar.extractFile(archive,'main.cjs').toString();
  assert('desktop sandbox',main.includes('nodeIntegration:false')&&main.includes('contextIsolation:true')&&main.includes('sandbox:true'),'Static configuration plus separate macOS runtime smoke.');
  checks.push({name:'jury live endpoint',status:config.apiBaseUrl?'CONFIGURED, NOT VERIFIED':'NOT READY',detail:config.apiBaseUrl||'No HTTPS endpoint supplied; offline demo only.'});
- const exe=await readFile(path.join(windowsDir,'win-unpacked','Naucz Pilota.exe'));assert('Windows PE executable',exe.subarray(0,2).toString()==='MZ','PE inspection. Runtime evidence is reported separately.');
+ const exe=await readFile(path.join(windowsDir,'win-unpacked','Piko Misja Funkcja.exe'));assert('Windows PE executable',exe.subarray(0,2).toString()==='MZ','PE inspection. Runtime evidence is reported separately.');
  executableSHA256=createHash('sha256').update(exe).digest('hex');
 }else checks.push({name:'desktop matches current build',status:'NOT RUN',detail:'No local desktop package was inspected.'});
 if(windowsArg!==-1&&!desktopMatchesBuild)process.exitCode=1;

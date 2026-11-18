@@ -24,7 +24,7 @@ services:
     network_mode: host
     environment:
       PIKO_JURY_SITE: https://${PIKO_JURY_HOST:?Set the jury DNS hostname}
-      PIKO_JURY_ALLOWED_IPS: ${PIKO_JURY_ALLOWED_IPS:?Set the space-separated jury IPs or CIDRs}
+      PIKO_JURY_ALLOWED_IPS: ${PIKO_JURY_ALLOWED_IPS:-127.0.0.1 ::1}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - certificates:/data

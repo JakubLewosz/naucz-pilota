@@ -16,6 +16,7 @@ const executable=executableIndex>=0?process.argv[executableIndex+1]:undefined;
 if(executableIndex>=0&&!executable)throw new Error('--executable requires a packaged Electron executable path');
 const tls=Boolean(executable)||process.argv.includes('--https');
 const tlsPort=3443;
+const testAccessCode='offline-desktop-access-code-for-tests';
 const directory=await mkdtemp(path.join(tmpdir(),'piko-chat-audit-'));
 const seen:Exchange[][]=[],store=new Store(':memory:');
 const slowReplyMs=17000; // Exercise the previous 16 s Electron cutoff.
@@ -24,9 +25,10 @@ const report={
  date:new Date().toISOString(),status:'FAIL',platform:process.platform,stubCalls:0,paidProviderCalls:0,
  transport:`Electron IPC to local ${tls?'HTTPS':'HTTP'} relay`,packaged:Boolean(executable),
  slowReplyMs,oldContextCleared:false,untrustedCertificateRejected:false,transferChecked:false,
- disconnectedStateVerified:false,error:undefined as string|undefined
+ disconnectedStateVerified:false,accessCodeVerified:false,error:undefined as string|undefined
 };
-const backend=createApp({store,config:{mode:'live',model:'local-stub',production:tls},provider:async context=>{
+const backend=createApp({store,config:{mode:'live',model:'local-stub',production:tls,
+ accessCode:tls?testAccessCode:'',requireAccessCode:tls},provider:async context=>{
  seen.push(context.recentExchanges);
  if(seen.length===3)await delay(slowReplyMs);
  const transfer=context.phase==='robot_propose';
@@ -61,6 +63,8 @@ try{
  if(tls){
   app=await launch();
   const untrusted=await app.firstWindow();
+  await untrusted.getByRole('button',{name:'Rozpocznij'}).waitFor();
+  await untrusted.evaluate(code=>window.piko!.setAccessCode!(code),testAccessCode);
   assert.equal((await untrusted.evaluate(()=>window.piko!.getAiStatus())).available,false);
   report.untrustedCertificateRejected=true;
   await app.close();app=undefined;
@@ -68,8 +72,20 @@ try{
  }
  app=await launch();
  const page=await app.firstWindow();
+ await page.getByRole('button',{name:'Rozpocznij'}).waitFor();
+ if(tls){
+  assert.equal((await page.evaluate(()=>window.piko!.getAiStatus())).available,false);
+  await page.getByRole('button',{name:'Ustawienia',exact:true}).click();
+  await page.getByText('Masz kod dostępu do live?',{exact:true}).click();
+  await page.getByLabel('Kod dostępu do live',{exact:true}).fill(testAccessCode);
+  await page.getByRole('button',{name:'Połącz z kodem'}).click();
+  await page.getByText('Serwer potwierdził dostęp.',{exact:false}).waitFor();
+  assert.ok(!(await page.evaluate(()=>JSON.stringify(localStorage))).includes(testAccessCode));
+  report.accessCodeVerified=true;
+  await page.getByRole('button',{name:'Piko: Misja Funkcja — strona główna'}).click();
+ }
  assert.equal((await page.evaluate(()=>window.piko!.getAiStatus())).available,true);
- await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.getByRole('button',{name:'Rozpocznij'}).click();
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('1');
  await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');
  await page.getByRole('button',{name:'Teraz naucz Piko'}).click();
@@ -101,14 +117,14 @@ try{
   await page.getByText('Proponuję stałą 3.',{exact:true}).waitFor();
   await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
   await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
-  assert.match(await page.getByRole('region',{name:'Wynik silnika'}).innerText(),/Bezpieczny lot/);
+  assert.match(await page.getByRole('region',{name:'Sprawdzone obliczenia'}).innerText(),/Bezpieczny lot/);
   report.transferChecked=true;
   const listener=server;
   await new Promise<void>(resolve=>listener.close(()=>resolve()));
   await page.getByRole('button',{name:'Jedna poprawka Piko'}).click();
   await page.getByText('Brak połączenia z serwerem live.',{exact:false}).waitFor();
   assert.match(await page.getByTestId('ai-mode').innerText(),/AI niedostępne/);
-  assert.match(await page.getByRole('region',{name:'Wynik silnika'}).innerText(),/Bezpieczny lot/);
+  assert.match(await page.getByRole('region',{name:'Sprawdzone obliczenia'}).innerText(),/Bezpieczny lot/);
   report.disconnectedStateVerified=true;
  }
  report.status='PASS';

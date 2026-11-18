@@ -71,7 +71,7 @@ for(const scenario of [
    await route.fulfill({response});
   });
   await page.goto('/');
-  await page.getByRole('button',{name:'Zacznij'}).click();
+  await page.getByRole('button',{name:'Rozpocznij'}).click();
   const mission=authoring.missions[0];
   await page.getByLabel('Wzór funkcji',{exact:true}).fill(mission.scenes.practice.witness.expression);
   await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');
@@ -95,7 +95,7 @@ for(const scenario of [
   await expect(page.getByTestId('engine-result')).toHaveCount(0);
   await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
   await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
-  const verified=page.getByRole('region',{name:'Wynik silnika'});
+  const verified=page.getByRole('region',{name:'Sprawdzone obliczenia'});
   await expect(verified).toContainText('Bezpieczny lot');
   await expect(verified).toContainText('f(x) = 3');
   await verified.getByText('Dlaczego? Wartości obliczone przez silnik').click();

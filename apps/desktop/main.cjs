@@ -2,8 +2,10 @@ const {app,BrowserWindow,protocol,net,ipcMain}=require('electron');
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const fs=require('node:fs');
+// Keep Electron's existing profile directory when changing the display name.
+app.setName('naucz-pilota');
 protocol.registerSchemesAsPrivileged([{scheme:'app',privileges:{standard:true,secure:true,supportFetchAPI:true}}]);
-let windowRef,token=null;
+let windowRef,token=null,accessCode='';
 const root=app.isPackaged?path.join(__dirname,'web'):path.join(__dirname,'../web/dist');
 const configPath=path.join(__dirname,'distribution.json');
 const distribution=fs.existsSync(configPath)?JSON.parse(fs.readFileSync(configPath,'utf8')):{apiBaseUrl:''};
@@ -20,7 +22,7 @@ async function relay(route,body){
  // Allow the backend's maximum 120 s learner turn plus time for transport.
  const url=endpoint(route),signal=AbortSignal.timeout(route==='/api/learner-turn'?130000:16000);
  try{
-  const response=await fetch(url,{method:body?'POST':'GET',redirect:'error',headers:{'Origin':'app://piko','X-Piko-Desktop':'1',...(body?{'Content-Type':'application/json'}:{}),...(token?{'Authorization':`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{}),signal});
+  const response=await fetch(url,{method:body?'POST':'GET',redirect:'error',headers:{'Origin':'app://piko','X-Piko-Desktop':'1',...(accessCode?{'X-Piko-Access-Code':accessCode}:{}),...(body?{'Content-Type':'application/json'}:{}),...(token?{'Authorization':`Bearer ${token}`}:{})},...(body?{body:JSON.stringify(body)}:{}),signal});
   const result=await response.json().catch(()=>null);
   if(!result)throw new Error(response.status===403?'Brak dostępu do serwera live z tej sieci.':'Serwer live zwrócił nieczytelną odpowiedź.');
   if(result.token){token=result.token;delete result.token;}
@@ -43,6 +45,11 @@ app.whenReady().then(()=>{
   return net.fetch(pathToFileURL(filename).href);
  });
  const validateRequest=app.isPackaged?require('./relay-validator.cjs').validateRequest:require('../../dist/desktop/relay-validator.cjs').validateRequest;
+ ipcMain.handle('piko:access-code',(event,code)=>{
+  assertSender(event);
+  if(typeof code!=='string'||code.length>256)throw new Error('Nieprawidłowy kod dostępu.');
+  accessCode=code;return {ok:true};
+ });
  ipcMain.handle('piko:status',event=>{assertSender(event);return base?relay('/api/health').catch(()=>({mode:'unavailable',available:false})):{mode:'demo',available:false};});
  ipcMain.handle('piko:session',event=>{assertSender(event);return relay('/api/session',{});});
  ipcMain.handle('piko:clear-chat',(event,sceneId)=>{
@@ -51,7 +58,7 @@ app.whenReady().then(()=>{
   return token?relay('/api/conversation/reset',{sceneId}):{ok:true};
  });
  ipcMain.handle('piko:turn',(event,request)=>{assertSender(event);if(!validateRequest(request)||request.requestedMode!=='live')throw new Error('Nieprawidłowe żądanie.');return relay('/api/learner-turn',request);});
- windowRef=new BrowserWindow({width:1440,height:900,minWidth:390,minHeight:600,title:'Naucz Pilota',backgroundColor:'#f4f6fb',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
+ windowRef=new BrowserWindow({width:1440,height:900,minWidth:390,minHeight:600,title:'Piko: Misja Funkcja',backgroundColor:'#0d171d',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
  windowRef.webContents.setWindowOpenHandler(()=>({action:'deny'}));
  windowRef.webContents.on('will-navigate',(event,url)=>{if(url!=='app://piko/index.html')event.preventDefault();});
  windowRef.webContents.session.setPermissionRequestHandler((_wc,_permission,callback)=>callback(false));

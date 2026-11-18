@@ -37,7 +37,8 @@ const env={...process.env,PIKO_SECRET_ENV_FILE:environment,PIKO_JURY_HOST:hostna
  PIKO_JURY_ALLOWED_IPS:allowed,PIKO_JURY_DAILY_BUDGET:'0'};
 const run=(args:string[])=>execFileSync('docker',args,{encoding:'utf8',env,stdio:['ignore','pipe','pipe']}).trim();
 const stack=['compose','--env-file',environment,'-p',project,'-f','deploy/jury/compose.yaml'];
-const compose=(...args:string[])=>run([...stack,'-f',override,...args]);
+let codeAccess=false;
+const compose=(...args:string[])=>run([...stack,...(codeAccess?['-f','deploy/jury/compose-code.yaml']:[]),'-f',override,...args]);
 const client=(script:string,options:{allow?:boolean;trust?:boolean;args?:string[]}={})=>run([
  'run','--rm','--network',`${project}_default`,...(options.allow?['--ip',allowed]:[]),
  ...(options.trust?['-v',`${rootCA}:/jury-root.crt:ro`,'-e','NODE_EXTRA_CA_CERTS=/jury-root.crt']:[]),
@@ -75,7 +76,7 @@ try{
   const origin=process.argv[1];
   const post=(route,body,headers={})=>fetch(origin+route,{method:'POST',headers:{
    'Content-Type':'application/json',Origin:origin,...headers},body:JSON.stringify(body)});
-  const home=await fetch(origin);assert.equal(home.status,200);assert.match(await home.text(),/Naucz Pilota/);
+  const home=await fetch(origin);assert.equal(home.status,200);assert.match(await home.text(),/Piko: Misja Funkcja/);
   assert.deepEqual(await(await fetch(origin+'/api/health')).json(),{ok:true,mode:'live',available:true,provider:'openai',model:'gpt-6-luna'});
   const badOrigin=await post('/api/session',{},{Origin:'https://foreign.invalid'});
   assert.equal(badOrigin.status,403);assert.equal((await badOrigin.json()).error.code,'ORIGIN_NOT_ALLOWED');
@@ -106,6 +107,31 @@ try{
   }
   throw new Error('Backend session not reachable after restart.');`,{allow:true,trust:true,args:[session.id,session.cookie]});
  report.checks.push('Authenticated session survives backend restart on SQLite volume');
+ const accessCode='offline-https-access-code-for-tests';
+ await writeFile(environment,`OPENAI_API_KEY=${testKey}\nJURY_ACCESS_CODE=${accessCode}\n`,{mode:0o600});
+ codeAccess=true;
+ compose('up','-d','backend','proxy');
+ const codeConfig=JSON.parse(compose('config','--format','json','--no-env-resolution'));
+ assert.equal(codeConfig.services.backend.environment.JURY_ACCESS_REQUIRED,'1');
+ assert.equal(codeConfig.services.proxy.environment.PIKO_JURY_ALLOWED_IPS,'0.0.0.0/0 ::/0');
+ assert.ok(!JSON.stringify(codeConfig.services.proxy).includes(accessCode));
+ client(`import assert from 'node:assert/strict';
+  import {setTimeout as delay} from 'node:timers/promises';
+  const origin=process.argv[1],code=process.argv[3];
+  for(let i=0;i<30;i++){
+   const reply=await fetch(origin+'/api/health');
+   if(reply.status===403)break;
+   if(i===29)throw new Error('Access-code backend did not become ready');
+   await delay(200);
+  }
+  const missing=await fetch(origin+'/api/health');
+  assert.equal((await missing.json()).error.code,'JURY_ACCESS_REQUIRED');
+  const wrong=await fetch(origin+'/api/health',{headers:{'X-Piko-Access-Code':'incorrect'}});
+  assert.equal(wrong.status,403);
+  const valid=await fetch(origin+'/api/health',{headers:{'X-Piko-Access-Code':code}});
+  assert.equal(valid.status,200);assert.equal((await valid.json()).model,'gpt-6-luna');
+  assert.equal((await fetch(origin)).status,200);`,{trust:true,args:[accessCode]});
+ report.checks.push('Optional access-code stack admits an unknown source IP only with the correct code; static demo stays accessible');
  report.status='PASS';
 }catch(error){
  const message=error instanceof Error?error.message:'HTTPS smoke failed';

@@ -1,15 +1,18 @@
 import express from 'express';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import {createHash,timingSafeEqual} from 'node:crypto';
 import {buildContext,checkModel,ContractError,demoTurn,makeEnvelope,validateRequest,type Envelope,type LearnerRequest} from '@piko/contracts';
 import {Store} from './store';
 import {ProviderError,type Provider} from './provider';
 import {DEFAULT_AI_TIMEOUT_MS} from './config';
-export type ServerConfig={mode:'demo'|'live';model:string;publicOrigin:string;production:boolean;timeoutMs:number;dailyBudget:number;sessionLimit:number;bodyBytes:number;maxProviderRequests:number};
-const defaultConfig:ServerConfig={mode:'demo',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:DEFAULT_AI_TIMEOUT_MS,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2};
+export type ServerConfig={mode:'demo'|'live';model:string;publicOrigin:string;production:boolean;timeoutMs:number;dailyBudget:number;sessionLimit:number;bodyBytes:number;maxProviderRequests:number;accessCode:string;requireAccessCode:boolean};
+const defaultConfig:ServerConfig={mode:'demo',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:DEFAULT_AI_TIMEOUT_MS,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2,accessCode:'',requireAccessCode:false};
 const errorText:Record<string,string>={AI_NOT_CONFIGURED:'Sprawdź konfigurację modelu live i dostęp konta do tego modelu.',AI_TIMEOUT:'Nie udało się otrzymać odpowiedzi w limicie czasu. Twoje wpisy są zachowane.',AI_PROVIDER_UNAVAILABLE:'Usługa AI jest chwilowo niedostępna.',AI_REFUSED:'Piko nie otrzymał odpowiedzi od usługi AI.',AI_INCOMPLETE:'Odpowiedź modelu była niekompletna.',AI_INVALID_OUTPUT:'Model nie zwrócił poprawnej odpowiedzi.',DAILY_BUDGET_EXHAUSTED:'Dzienny limit wywołań AI został wyczerpany.',TURN_INTERRUPTED:'Poprzednia tura została przerwana. Możesz wysłać nową.'};
 export function createApp(options:{store:Store;provider?:Provider;config?:Partial<ServerConfig>}){
  const app=express(),config={...defaultConfig,...options.config},store=options.store;
+ if((config.requireAccessCode||config.accessCode)&&(config.accessCode.length<32||config.accessCode.length>256))throw new Error('JURY_ACCESS_CODE requires 32–256 characters.');
+ const accessHash=config.accessCode?createHash('sha256').update(config.accessCode).digest():null;
  const pending=new Map<string,Promise<{status:number;envelope:Envelope}>>(),ipWindow=new Map<string,{count:number;start:number}>();
  app.disable('x-powered-by');app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],connectSrc:["'self'"],objectSrc:["'none'"],upgradeInsecureRequests:config.production?[]:null}}}));
  const minimal=(code:string)=>({error:{code,messagePL:errorText[code]??'Żądanie odrzucone. Sprawdź sesję i dane, a następnie spróbuj ponownie.',retryable:['AI_TIMEOUT','AI_PROVIDER_UNAVAILABLE','SESSION_REQUIRED','STALE_SESSION_REVISION'].includes(code)}});
@@ -21,6 +24,9 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
   if(!window||now-window.start>60000){window={count:0,start:now};ipWindow.set(ip,window);}
   if(++window.count>60){res.status(429).json(minimal('IP_RATE_LIMIT'));return;}
   if(ipWindow.size>10000)for(const [key,w] of ipWindow)if(now-w.start>60000)ipWindow.delete(key);
+  if(accessHash&&!timingSafeEqual(accessHash,createHash('sha256').update(req.get('x-piko-access-code')??'').digest())){
+   res.status(403).json({error:{code:'JURY_ACCESS_REQUIRED',messagePL:'Wpisz kod dostępu do live w Ustawieniach.',retryable:false}});return;
+  }
   next();
  });
  app.use(express.json({limit:config.bodyBytes,strict:true}));app.use(cookieParser());

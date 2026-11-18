@@ -199,7 +199,7 @@ try{
  const setup=await browser.newContext({reducedMotion:'reduce'});
  const prep=await setup.newPage();
  await prep.goto(origin);
- await button(prep,'Zacznij').click();
+ await button(prep,'Rozpocznij').click();
  for(const mission of authoring.missions.slice(0,3))await advanceDemo(prep,mission);
  const m04=authoring.missions.find(mission=>mission.id==='M04')!;
  await practice(prep,m04);

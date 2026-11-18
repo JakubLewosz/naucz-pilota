@@ -40,7 +40,7 @@ async function blind(page:Page){
  await expect(page.getByText(/Twój wzór daje y/)).toHaveCount(0);
 }
 test('M01 complete, first attempt survives correction and reload, replay preserves archive',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:'Zacznij'}).click();await practice(page,data.missions[0]);await teach(page,data.missions[0]);await transfer(page);await blind(page);
+ await page.goto('/');await page.getByRole('button',{name:'Rozpocznij'}).click();await practice(page,data.missions[0]);await teach(page,data.missions[0]);await transfer(page);await blind(page);
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('sin(x)');await page.getByRole('button',{name:'Sprawdź mój lot'}).click();await blind(page);
  await page.getByLabel('Wzór funkcji',{exact:true}).fill('0');await page.getByRole('button',{name:'Sprawdź mój lot'}).click();
  await page.reload();await page.getByLabel('Wzór funkcji',{exact:true}).fill('-1');await page.getByRole('button',{name:'Sprawdź mój lot'}).click();await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();
@@ -50,7 +50,7 @@ test('M01 complete, first attempt survives correction and reload, replay preserv
 });
 test('E4 all six missions, 24 distinct scenes, M04 robot failure does not block campaign',async({page})=>{
  let apiCalls=0;page.on('request',r=>{if(r.url().includes('learner-turn'))apiCalls++;});
- await page.goto('/');await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.goto('/');await page.getByRole('button',{name:'Rozpocznij'}).click();
  for(const m of data.missions){await practice(page,m);await teach(page,m);await transfer(page,m.id==='M04');await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.witness.expression);await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();if(m.order<6)await page.getByRole('button',{name:'Następna misja'}).click();}
  await expect(page.getByRole('heading',{name:'Dobra robota — ukończyłeś sześć misji'})).toBeVisible();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!));expect(Object.values(saved.runs).every((r:unknown)=>(r as {completed:boolean}).completed)).toBe(true);expect(saved.runs.M04.attempts.robot_transfer[0].result.ok).toBe(false);expect(apiCalls).toBe(0);
@@ -65,13 +65,13 @@ for(const size of [{width:1366,height:768},{width:1440,height:900},{width:390,he
  await page.setViewportSize(size);await page.goto('/');
  const a11y=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa']).analyze();expect(a11y.violations).toEqual([]);
  await page.screenshot({path:`checks/home-${size.width}.png`,fullPage:true});
- await page.getByRole('button',{name:'Zacznij'}).click();await expect(page.getByLabel('Wzór funkcji',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Rozpocznij'}).click();await expect(page.getByLabel('Wzór funkcji',{exact:true})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  const game=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa']).analyze();expect(game.violations).toEqual([]);
  await page.screenshot({path:`checks/practice-${size.width}.png`,fullPage:true});
 });
 test('live connection error preserves input and requires explicit demo selection',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:'Zacznij'}).click();await practice(page,data.missions[0]);
+ await page.goto('/');await page.getByRole('button',{name:'Rozpocznij'}).click();await practice(page,data.missions[0]);
  await page.getByRole('button',{name:'Ustawienia',exact:true}).click();await page.getByRole('button',{name:'Wybierz live'}).click();await page.getByRole('button',{name:'Wróć do gry'}).click();
  await page.route('**/api/session',r=>r.abort('failed'));
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Podnoszę cały wykres.');await page.getByRole('button',{name:'Powiedz Piko'}).click();
@@ -123,7 +123,7 @@ test('MOCK: skip during a 21 s desktop reply preserves the independent attempt a
  });
  await page.setViewportSize({width:1366,height:768});
  await page.goto('/');
- await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.getByRole('button',{name:'Rozpocznij'}).click();
  await practice(page,data.missions[0]);
  await teach(page,data.missions[0]);
  await page.getByRole('button',{name:'Ustawienia',exact:true}).click();
@@ -179,7 +179,7 @@ function unavailable(request:LearnerRequest){
 for(const path of ['demo','skip'] as const)test(`two failed live turns, reload, then ${path}`,async({page})=>{
  const mission=data.missions[0];
  await page.goto('/');
- await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.getByRole('button',{name:'Rozpocznij'}).click();
  await practice(page,mission);
  await teach(page,mission);
  await selectMode(page,'live');
@@ -212,7 +212,7 @@ for(const path of ['demo','skip'] as const)test(`two failed live turns, reload, 
 });
 test('live retry restores the badge and a later demo chat reset reaches the live session',async({page})=>{
  await page.goto('/');
- await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.getByRole('button',{name:'Rozpocznij'}).click();
  await practice(page,data.missions[0]);
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała ustawia wysokość toru.');
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
@@ -268,7 +268,7 @@ test('global journal protects another mission before its first attempt, includin
   await page.getByRole('button',{name:'Sprawdź mój lot'}).click();
  };
  await page.goto('/');
- await page.getByRole('button',{name:'Zacznij'}).click();
+ await page.getByRole('button',{name:'Rozpocznij'}).click();
  await practice(page,m1);await teach(page,m1);await transfer(page);
  await checkHuman(m1.scenes.human_check.witness.expression);
  await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();

@@ -1,6 +1,6 @@
 {
   "appId": "pl.nauczpilota.app",
-  "productName": "Naucz Pilota",
+  "productName": "Piko Misja Funkcja",
   "directories": {
     "app": "apps/desktop/staging",
     "output": "release/bin"
@@ -25,7 +25,8 @@
         ]
       }
     ],
-    "signAndEditExecutable": false
+    "icon": "apps/desktop/icon.ico",
+    "signExecutable": false
   },
-  "artifactName": "Naucz_Pilota_${version}_Windows_${arch}.${ext}"
+  "artifactName": "Piko_Misja_Funkcja_${version}_Windows_${arch}.${ext}"
 }

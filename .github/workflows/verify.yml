@@ -26,7 +26,7 @@ jobs:
       - name: Launch packaged Windows EXE and test restart persistence
         shell: pwsh
         run: |
-          $exe = Join-Path $PWD 'release/bin/win-unpacked/Naucz Pilota.exe'
+          $exe = Join-Path $PWD 'release/bin/win-unpacked/Piko Misja Funkcja.exe'
           npm run desktop:smoke -- --executable "$exe"
       - name: Check desktop conversation reset against a local stub
         run: npx tsx tools/smoke-desktop-relay.ts
@@ -45,7 +45,7 @@ jobs:
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           npx electron-builder --config apps/desktop/builder.json --config.directories.output=release/bin/tls-smoke --win zip --x64
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          $exe = Join-Path $PWD 'release/bin/tls-smoke/win-unpacked/Naucz Pilota.exe'
+          $exe = Join-Path $PWD 'release/bin/tls-smoke/win-unpacked/Piko Misja Funkcja.exe'
           npx tsx tools/smoke-desktop-relay.ts --executable "$exe"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()

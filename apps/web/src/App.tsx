@@ -3,8 +3,9 @@ import {hints,missionById,missions} from '@piko/content';
 import {deriveRuleEvidence,parseExpression,type EngineResult,type Event} from '@piko/core';
 import type {LearnerRequest} from '@piko/contracts';
 import {Board} from './Board';
+import {Piko} from './Piko';
 import {canOpenPage,hasIndependentAttempt,rulesForAiTurn,visibleJournalRules} from './review';
-import {clearConversation,getStatus,sendTurn,startSession} from './transport';
+import {clearConversation,getStatus,sendTurn,setAccessCode,startSession} from './transport';
 import {backupSave,canAskRobot,hasCompleted,loadState,numericEvidence,persistState,reducer,removeSave,roles,roleLabels,type Attempt,type GameState,type LessonReply,type Run} from './state';
 const modeText={demo:'Demo — odpowiedzi scenariuszowe',live:'Live — prawdziwy model',unavailable:'AI niedostępne — brak odpowiedzi'};
 const familyName={constant:'funkcja stała',linear:'funkcja liniowa',quadratic:'funkcja kwadratowa'};
@@ -20,8 +21,8 @@ function eventLabel(event:Event){
 function FlightResult({attempt,robotStart}:{attempt:Attempt;robotStart?:{yMin:number;yMax:number}}){
  const {expression,result}=attempt;
  const missedStart=result.primaryCode==='START_MISS'?result.checkpoints.find(point=>point.id==='start'):undefined;
- return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Wynik silnika">
-  <h3>Wynik silnika</h3>
+ return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Sprawdzone obliczenia">
+  <h3>Sprawdzone obliczenia</h3>
   <p>Sprawdzony wzór <code>f(x) = {expression}</code></p>
   <strong>{result.ok?'✓':'×'} {result.messagePL}</strong>
   {result.firstPhysicalEvent&&<p>Pierwsze zdarzenie: {eventLabel(result.firstPhysicalEvent)}, x ≈ {result.firstPhysicalEvent.x.toFixed(3)}.</p>}
@@ -58,7 +59,6 @@ function robotOutcome(r?:Run){
  if(attempt)return `${attempt.result.ok?'Bezpieczny lot':'Lot nieudany'} · ${attempt.source==='live'?'model live':'demonstracja'}`;
  return r?.robotDisposition==='skipped'?'Pominięto lot Piko.':'Brak sprawdzonego lotu Piko.';
 }
-function Piko({large=false}:{large?:boolean}){return <svg className={large?'piko large':'piko'} viewBox="0 0 100 110" aria-hidden="true"><path d="M50 22V8m-7 0h14" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/><rect x="12" y="23" width="76" height="70" rx="22" fill="currentColor"/><rect x="24" y="36" width="52" height="38" rx="13" fill="#e7f1ff"/><circle cx="37" cy="53" r="5" fill="#172033"/><circle cx="63" cy="53" r="5" fill="#172033"/><path d="M39 82h22" stroke="#fff" strokeWidth="4" strokeLinecap="round"/><path d="M8 48v21m84-21v21" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/></svg>;}
 function Summary({r}:{r:Run}){
  const first=r.firstHuman;
  return <div className="summary-grid">
@@ -78,6 +78,7 @@ function Summary({r}:{r:Run}){
 export function App(){
  const [s,dispatch]=useReducer(reducer,undefined,()=>loadState());
  const [saveError,setSaveError]=useState<string|null>(null),[systemReduced,setSystemReduced]=useState(false),[confirmReset,setConfirmReset]=useState(false);
+ const [accessInput,setAccessInput]=useState(''),[accessFeedback,setAccessFeedback]=useState(''),[checkingAccess,setCheckingAccess]=useState(false);
  const heading=useRef<HTMLHeadingElement>(null),abort=useRef<AbortController|null>(null);
  const m=missionById(s.missionId),r=s.runs[s.missionId],role=r.role,scene=m.scenes[role];
  const last=r.attempts[role]?.at(-1),blind=role==='human_check'&&!hasIndependentAttempt(s,m.id);
@@ -117,6 +118,20 @@ export function App(){
    dispatch({type:'CLEAR_CHAT',turnId,revision,error:error instanceof Error?error.message:'Nie udało się wyczyścić rozmowy.'});
   }
  }
+ async function connectWithCode(){
+  if(checkingAccess)return;
+  setCheckingAccess(true);setAccessFeedback('Sprawdzanie dostępu do live…');
+  try{
+   const status=await setAccessCode(accessInput);
+   setAccessInput('');
+   dispatch({type:'STATUS',live:status.mode==='live'&&status.available});
+   if(status.mode==='live'&&status.available){
+    dispatch({type:'MODE',mode:'live'});
+    setAccessFeedback('Serwer potwierdził dostęp. Możesz wrócić do gry.');
+   }else setAccessFeedback('Serwer nie potwierdził dostępu. Sprawdź kod i połączenie.');
+  }catch(error){setAccessFeedback(error instanceof Error?error.message:'Nie udało się sprawdzić dostępu.');}
+  finally{setCheckingAccess(false);}
+ }
  const canRule=role==='teach'&&r.repairChecked&&r.explanation.trim()&&deriveRuleEvidence(m,r.drafts.teach,numericEvidence(s));
  const journalAvailable=canOpenPage(s,'journal');
  const journalRules=visibleJournalRules(s);
@@ -126,15 +141,61 @@ export function App(){
   {saveError&&<p role="alert">{saveError}</p>}
   <button onClick={()=>{const error=backupSave();setSaveError(error);if(!error)dispatch({type:'RECOVER'});}}>Zachowaj kopię i rozpocznij nowy zapis</button>
  </main>;
- return <div className="app" style={{fontSize:`${s.settings.fontScale}rem`}}>
- <header className="header"><button className="brand" onClick={()=>go('home')}><Piko/><span>Naucz Pilota<small>FUNKCJE W LOCIE</small></span></button><nav aria-label="Główna nawigacja"><button className="quiet" onClick={()=>go('missions')}>Misje <span className="count">{missions.filter(m=>hasCompleted(s,m.id)).length}/6</span></button>{journalAvailable&&<button className="quiet" onClick={()=>go('journal')}>Dziennik zasad</button>}<button className="quiet" onClick={()=>go('settings')}>Ustawienia</button></nav><span className={`mode ${s.mode}`} data-testid="ai-mode"><i/>{modeText[s.mode]}</span></header>
+ return <div className={`app page-${s.page}${reduced?' reduced-motion':''}`} style={{fontSize:`${s.settings.fontScale}rem`}}>
+ <header className="header"><button className="brand" onClick={()=>go('home')} aria-label="Piko: Misja Funkcja — strona główna"><Piko/><span>PIKO<small>MISJA FUNKCJA</small></span></button><nav aria-label="Główna nawigacja"><button className="quiet" onClick={()=>go('missions')}>Misje <span className="count">{missions.filter(m=>hasCompleted(s,m.id)).length}/6</span></button>{journalAvailable&&<button className="quiet" onClick={()=>go('journal')}>Dziennik zasad</button>}<button className="quiet" onClick={()=>go('settings')}>Ustawienia</button></nav><span className={`mode ${s.mode}`} data-testid="ai-mode"><i aria-hidden="true"/>{modeText[s.mode]}</span></header>
  <main>
  {saveError&&<p role="alert" className="notice">{saveError}</p>}
- {s.page==='home'&&<><section className="hero"><div><span className="eyebrow">LABORATORIUM FUNKCJI / 6 MISJI</span><h1 ref={heading} tabIndex={-1}>Twój wzór.<br/>Jego <span>bezpieczny lot.</span></h1><p className="lead">Napisz funkcję. Wyznacz bezpieczny tor.<br/>Naucz Piko, dlaczego działa.</p><p>Najpierw sprawdź swój pomysł. Potem zostań nauczycielem małego robota i spróbuj sam na nowej trasie.</p><div className="actions"><button onClick={()=>go('game')}>{Object.values(r.counts).length?'Kontynuuj':'Zacznij'} — misja {m.order} z 6 <span>↗</span></button><button className="secondary" onClick={()=>go('about')}>Jak działa Piko?</button></div><p className="muted">Postęp zapisuje się na tym urządzeniu. Bez konta i bez pośpiechu.</p></div><div className="hero-art"><div className="orbital-grid"/><span className="formula-tag">f(x) = Twoja trasa</span><Piko large/><div className="piko-caption"><strong>Cześć, jestem Piko.</strong><span>Pokażesz mi, jak to działa?</span></div></div></section><section className="steps-overview">{roles.map((step,i)=><div key={step}><b>0{i+1}</b><strong>{roleLabels[step]}</strong><p>{['Eksperymentuj z wykresem.','Popraw i wyjaśnij zasadę.','Sprawdź propozycję robota.','Nowa plansza. Twoja odpowiedź.'][i]}</p></div>)}</section><p className="availability">{s.liveAvailable?'Model live jest dostępny. Możesz go wybrać w ustawieniach.':'Live nie jest obecnie dostępne. Lokalna demonstracja działa bez serwera i internetu.'}</p></>}
- {s.page==='missions'&&<><span className="eyebrow">TWOJA KAMPANIA</span><h1 ref={heading} tabIndex={-1}>Sześć kroków do bezpiecznej trasy</h1><p className="lead">Każda misja to cztery różne plansze. Wynik Piko i Twój wynik zapisujemy osobno.</p><div className="mission-grid">{missions.map(mission=>{const run=s.runs[mission.id],unlocked=mission.order===1||hasCompleted(s,`M0${mission.order-1}`);return <article className={`panel mission-card ${!unlocked?'locked':''}`} key={mission.id}><span className="eyebrow">MISJA 0{mission.order}</span><h2>{mission.title}</h2><p>{mission.learningGoal}</p><p className="mission-status">{run?.completed?'✓ Ukończona':unlocked?(run?.counts.practice?'W toku':'Dostępna'):`Odblokujesz po misji ${mission.order-1}`}</p>{run?.firstHuman&&<p>Pierwszy samodzielny lot: {run.firstHuman.result.ok?'poprawny':'do poprawy'}</p>}{unlocked&&<button className="secondary" onClick={()=>dispatch({type:'MISSION',id:mission.id})}>{run?.completed?'Zobacz misję':'Otwórz misję'} ↗</button>}</article>;})}</div></>}
- {s.page==='game'&&<><div className="mission-heading"><div><span className="eyebrow">MISJA {m.order} / 6 · {scene.id}</span><h1 ref={heading} tabIndex={-1}>{m.title}</h1></div><button className="secondary" onClick={()=>go('missions')}>Wróć do misji</button></div><ol className="phase-list">{roles.map((step,i)=><li key={step} aria-current={role===step?'step':undefined} className={role===step?'active':roles.indexOf(role)>i?'done':''}><span>{roles.indexOf(role)>i?'✓':i+1}</span>{roleLabels[step]}</li>)}</ol>
- <div className="game-grid"><section className="flight panel"><div className="board-heading"><h2>{roleLabels[role]}</h2><span className="muted">x → / y ↑</span></div><Board scene={scene} expression={role==='robot_transfer'?(r.robotChecked?r.robot?.learner?.proposedExpression??'':''):r.drafts[role]} showPath={!blind&&(role!=='robot_transfer'||r.robotChecked)} result={role==='robot_transfer'?r.robotChecked?r.attempts.robot_transfer?.at(-1)?.result??null:null:currentResult} flightId={last?.id} reduced={reduced} hitbox={s.settings.hitbox}/>
+ {s.page==='home'&&<>
+  <section className="hero">
+   <div>
+    <span className="eyebrow">PRACOWNIA LOTÓW / 6 MISJI</span>
+    <h1 ref={heading} tabIndex={-1}>Piko:<br/><span>Misja Funkcja.</span></h1>
+    <h2 className="tagline">Naucz Piko. Sprawdź siebie.</h2>
+    <p className="lead">Ułóż wzór, który przeprowadzi robota przez bramki. Wyjaśnij mu zasadę, a potem spróbuj sam na nowej trasie.</p>
+    <div className="actions">
+     <button onClick={()=>go('game')}>{Object.values(r.counts).length?'Kontynuuj':'Rozpocznij'} — misja {m.order} z 6 <span aria-hidden="true">↗</span></button>
+     <button className="secondary" onClick={()=>go('about')}>Jak działa Piko?</button>
+    </div>
+    <p className="muted">Bez konta. We własnym tempie. Postęp zostaje na tym urządzeniu.</p>
+   </div>
+   <div className="hero-art">
+    <div className="orbital-grid"/>
+    <span className="art-label">PRACOWNIA / PIKO 01</span>
+    <svg className="hero-trajectory" viewBox="0 0 500 420" aria-hidden="true">
+     <path d="M-40 300C100 300 180 110 290 110S470 280 560 160" fill="none" stroke="#79e7d9" strokeWidth="2"/>
+     <circle cx="410" cy="185" r="8" fill="#0d171d" stroke="#79e7d9" strokeWidth="2"/>
+    </svg>
+    <Piko large/>
+    <div className="piko-caption"><strong>Masz pomysł na mój lot?</strong><span>Wszystko zaczyna się od Twojego wzoru.</span></div>
+    <span className="formula-tag">f(x) = Twój pomysł</span>
+   </div>
+  </section>
+  <section className="steps-overview" aria-label="Jak przebiega misja">
+   {roles.map((step,i)=><div key={step}><b>0{i+1}</b><strong>{roleLabels[step]}</strong><p>{['Przetestuj własny wzór.','Wyjaśnij, dlaczego działa.','Przewidź i sprawdź jego pomysł.','Nowa plansza. Twój samodzielny lot.'][i]}</p></div>)}
+  </section>
+  <p className="availability">{s.liveAvailable?'Połączenie live jest skonfigurowane. Wybierzesz je w ustawieniach.':'Możesz przejść całą kampanię w demo. Odpowiedzi Piko są wtedy przygotowane.'}</p>
+ </>}
+ {s.page==='missions'&&<>
+  <span className="eyebrow">PRACOWNIA LOTÓW / TWOJA KAMPANIA</span>
+  <h1 ref={heading} tabIndex={-1}>Sześć misji. Twój tor.</h1>
+  <p className="lead">Każde stanowisko to nowy pomysł na funkcję. Wynik Piko i Twój pierwszy lot zapisujemy osobno.</p>
+  <div className="mission-grid">{missions.map(mission=>{
+   const run=s.runs[mission.id],unlocked=mission.order===1||hasCompleted(s,`M0${mission.order-1}`);
+   const status=run?.completed?'complete':unlocked?'available':'locked';
+   return <article className={`panel mission-card ${status}`} key={mission.id}>
+    <div className="station-number" aria-hidden="true">0{mission.order}<span>{run?.completed?'✓':unlocked?'↗':'◇'}</span></div>
+    <span className="eyebrow">STANOWISKO 0{mission.order}</span>
+    <h2>{mission.title}</h2><p>{mission.learningGoal}</p>
+    <p className="mission-status">{run?.completed?'✓ Ukończona':unlocked?(run?.counts.practice?'W toku':'Dostępna'):`Odblokujesz po misji ${mission.order-1}`}</p>
+    {run?.firstHuman&&<p>Pierwszy samodzielny lot: {run.firstHuman.result.ok?'poprawny':'do poprawy'}</p>}
+    {unlocked&&<button className="secondary" onClick={()=>dispatch({type:'MISSION',id:mission.id})}>{run?.completed?'Zobacz misję':'Otwórz misję'} ↗</button>}
+   </article>;
+  })}</div>
+ </>}
+ {s.page==='game'&&<><div className="mission-heading"><div><span className="eyebrow">MISJA {m.order} / 6 · PRACOWNIA LOTÓW</span><h1 ref={heading} tabIndex={-1}>{m.title}</h1></div><button className="secondary" onClick={()=>go('missions')}>Wróć do misji</button></div><ol className="phase-list">{roles.map((step,i)=><li key={step} aria-current={role===step?'step':undefined} className={role===step?'active':roles.indexOf(role)>i?'done':''}><span>{roles.indexOf(role)>i?'✓':i+1}</span>{roleLabels[step]}</li>)}</ol>
+ <div className="game-grid"><section className="flight panel"><div className="board-heading"><h2>{roleLabels[role]}</h2><span className="muted">x → / y ↑</span></div>
  {role!=='robot_transfer'&&<form className="expression-form" onSubmit={e=>{e.preventDefault();dispatch({type:'CHECK'});}}>{role==='teach'&&<h3>1. Popraw wzór Piko</h3>}<label htmlFor="expression">{role==='teach'?'Twój poprawiony wzór':'Wzór funkcji'}</label><div className="expression-row"><span>f(x) =</span><input id="expression" data-testid="expression" value={r.drafts[role]} maxLength={120} autoComplete="off" spellCheck={false} onChange={e=>dispatch({type:'EDIT',field:'expression',value:e.target.value})}/><button disabled={s.busy}>{role==='human_check'?'Sprawdź mój lot':role==='teach'?'Sprawdź naprawę':'Leć'} ↗</button></div><p className="muted">Użyj x, liczb, + − × /, nawiasów i potęgi 2. Przecinek dziesiętny też działa.</p></form>}
+ <Board scene={scene} expression={role==='robot_transfer'?(r.robotChecked?r.robot?.learner?.proposedExpression??'':''):r.drafts[role]} showPath={!blind&&(role!=='robot_transfer'||r.robotChecked)} result={role==='robot_transfer'?r.robotChecked?r.attempts.robot_transfer?.at(-1)?.result??null:null:currentResult} flightId={last?.id} reduced={reduced} hitbox={s.settings.hitbox}/>
  <div className="constraints">
   <strong>Dozwolone funkcje:</strong> {scene.allowedFamilies.map(f=>familyName[f]).join(', ')}.
   {Object.keys(scene.coefficientLocks).length>0&&<p>
@@ -160,7 +221,15 @@ export function App(){
   <p className="muted">Potwierdzasz treść notatki do kolejnego lotu. Silnik sprawdził wzór i prognozy. Wyjaśnienie i parafraza pozostają wypowiedziami z lekcji.</p>
   <button disabled={s.busy} onClick={()=>dispatch({type:'CONFIRM_RULE'})}>Zapisz notatkę dla Piko →</button>
  </div>}{!canRule&&<p className="muted">Sprawdź bezpieczny tor, obie prognozy i wpisz własne wyjaśnienie, aby przygotować notatkę.</p>}</>}
- {role==='robot_transfer'&&<>{r.rule?.lessonNote&&<details className="rule-card">
+ {role==='robot_transfer'&&<> <div role="status" id="transfer-wait">{s.busy&&<div className="notice ai-wait">
+  <Piko busy/>
+  <div>
+  <strong>{s.mode==='demo'?'Ładowanie propozycji demonstracyjnej':'Piko analizuje nową trasę'}</strong>
+  <p>Po odpowiedzi możesz przewidzieć wynik i sprawdzić go silnikiem. Jeśli wolisz przejść dalej, Twoja notatka pozostanie zapisana. Pominięcie zapisze się oddzielnie od wyniku Twojego lotu.</p>
+  </div>
+ </div>}</div>
+ {s.busy&&<button className="secondary" aria-describedby="transfer-wait" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>}
+{r.rule?.lessonNote&&<details className="rule-card">
   <summary>Notatka z lekcji Piko</summary>
   <LessonText explanation={r.rule.lessonNote.explanationPL} paraphrase={r.rule.lessonNote.pikoParaphrasePL} source={r.rule.lessonNote.source}/>
   <p><strong>Sprawdzona zasada</strong><br/>{m.ruleText}</p>
@@ -175,17 +244,13 @@ export function App(){
   {!r.prediction&&<p className="muted">Wybierz przewidywanie, by zobaczyć wynik.</p>}
  </div>}
  {s.mode!=='unavailable'&&canAskRobot(s,r)&&<button disabled={s.busy} onClick={()=>void askPiko()}>{r.robotTurns===0?'Piko, spróbuj sam':'Jedna poprawka Piko'}</button>}
- <div role="status" id="transfer-wait">{s.busy&&<div className="notice">
-  <strong>{s.mode==='demo'?'Ładowanie propozycji demonstracyjnej':'Piko analizuje nową trasę'}</strong>
-  <p>Po odpowiedzi możesz przewidzieć wynik i sprawdzić go silnikiem. Jeśli wolisz przejść dalej, Twoja notatka pozostanie zapisana. Pominięcie zapisze się oddzielnie od wyniku Twojego lotu.</p>
- </div>}</div>
- {r.robotChecked&&!s.busy
+ {!s.busy&&(r.robotChecked
   ? <button onClick={()=>dispatch({type:'NEXT'})}>Teraz mój samodzielny lot →</button>
-  : <button className="secondary" aria-describedby={s.busy?'transfer-wait':undefined} onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>}</>}
+  : <button className="secondary" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>)}</>}
  {role==='human_check'&&<><p className="notice">Pierwszy parsowalny wzór zostaje zapisany na stałe, również po odświeżeniu.</p>{r.firstHuman&&<p>Pierwsza próba: <strong>{r.firstHuman.result.ok?'poprawna':'do poprawy'}</strong>. Liczba prób: {r.counts.human_check}.</p>}{r.completed&&<><p className="success">✓ Misja ukończona{(r.counts.human_check??0)>1?` w ${r.counts.human_check}. próbie. Pierwsza próba pozostaje w podsumowaniu.`:'.'}</p><button onClick={()=>dispatch({type:'NEXT'})}>Zobacz podsumowanie →</button></>}</>}
  {['teach','robot_transfer'].includes(role)&&<section aria-label="Komentarz Piko">
   <div className="conversation">
-   <div role="status">{role==='teach'&&s.busy&&<p>Oczekiwanie na odpowiedź Piko. W tym czasie możesz przejść do innego ekranu.</p>}</div>
+   <div role="status">{role==='teach'&&s.busy&&<div className="notice ai-wait"><Piko busy/><p>Oczekiwanie na odpowiedź Piko. W tym czasie możesz przejść do innego ekranu.</p></div>}</div>
    {r.messages.map((msg,i)=><div className="message" key={i}>
     <small>{msg.speaker==='player'?'TY':`KOMENTARZ PIKO · ${msg.source==='live'?'MODEL LIVE':'DEMONSTRACJA'}`}</small><p>{msg.text}</p>
    </div>)}
@@ -203,8 +268,16 @@ export function App(){
  </div>}
  </aside></div></>}
  {s.page==='journal'&&journalAvailable&&<><span className="eyebrow">PAMIĘĆ PIKO</span><h1 ref={heading} tabIndex={-1}>Dziennik sprawdzonych zasad</h1><p>To pamięć aplikacji i kontekst rozmowy. Nie zmieniamy wag modelu.</p>{journalRules.length===0&&<p className="panel">Zasada pojawi się po pierwszej samodzielnej próbie w danej misji.</p>}{journalRules.map(e=>{const mission=missionById(e.missionId),run=s.runs[e.missionId];return <article className="panel journal-entry" key={e.missionId}><span className="eyebrow">{mission.id} · PRZEĆWICZONA</span><h2>{mission.title}</h2><p>{mission.ruleText}</p><p>Wynik Piko · {robotOutcome(run)} · Twoja pierwsza próba: {run?.firstHuman?(run.firstHuman.result.ok?'poprawna':'do poprawy'):'przed Tobą'}</p></article>;})}<button onClick={()=>go('game')}>Wróć do lotu</button></>}
- {s.page==='summary'&&canOpenPage(s,'summary')&&<><span className="eyebrow">MISJA {m.order} / 6</span><h1 ref={heading} tabIndex={-1}>{m.order===6?'Dobra robota — ukończyłeś sześć misji':'Misja ukończona'}</h1><Summary r={r}/>{s.archive[m.id]?.length>0&&<details><summary>Poprzednie podejścia ({s.archive[m.id].length})</summary>{s.archive[m.id].map(old=><Summary key={old.id} r={old}/>)}</details>}<div className="actions">{m.order<6?<button onClick={()=>dispatch({type:'MISSION',id:`M0${m.order+1}`})}>Następna misja →</button>:<button onClick={()=>go('missions')}>Zobacz wszystkie misje</button>}<button className="secondary" onClick={()=>dispatch({type:'REPLAY',id:m.id})}>Powtórz misję</button></div><p className="muted">Powtórka zachowuje pełny zapis poprzedniego podejścia. Wynik opisuje to zadanie; nie jest diagnozą trwałej wiedzy.</p>{m.order===6&&missions.filter(mission=>hasIndependentAttempt(s,mission.id)).map(mission=><section key={mission.id}><h2>{mission.title}</h2>{s.runs[mission.id]&&<Summary r={s.runs[mission.id]}/>}</section>)}</>}
+ {s.page==='summary'&&canOpenPage(s,'summary')&&<><div className="summary-mark" aria-hidden="true"><Piko/><span>✓</span></div><span className="eyebrow">MISJA {m.order} / 6</span><h1 ref={heading} tabIndex={-1}>{m.order===6?'Dobra robota — ukończyłeś sześć misji':'Misja ukończona'}</h1><Summary r={r}/>{s.archive[m.id]?.length>0&&<details><summary>Poprzednie podejścia ({s.archive[m.id].length})</summary>{s.archive[m.id].map(old=><Summary key={old.id} r={old}/>)}</details>}<div className="actions">{m.order<6?<button onClick={()=>dispatch({type:'MISSION',id:`M0${m.order+1}`})}>Następna misja →</button>:<button onClick={()=>go('missions')}>Zobacz wszystkie misje</button>}<button className="secondary" onClick={()=>dispatch({type:'REPLAY',id:m.id})}>Powtórz misję</button></div><p className="muted">Powtórka zachowuje pełny zapis poprzedniego podejścia. Wynik opisuje to zadanie; nie jest diagnozą trwałej wiedzy.</p>{m.order===6&&missions.filter(mission=>hasIndependentAttempt(s,mission.id)).map(mission=><section key={mission.id}><h2>{mission.title}</h2>{s.runs[mission.id]&&<Summary r={s.runs[mission.id]}/>}</section>)}</>}
  {s.page==='about'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Jak działa Piko?</h1><Piko/><p>Piko jest symulowanym uczniem. Model językowy odgrywa jego rolę, a aplikacja zapisuje sprawdzone zasady w pamięci sesji. Nie trenujemy modelu na rozmowie. Trafienia, przeszkody i zaliczenia oblicza silnik matematyczny.</p><p>W demo oglądasz przygotowane odpowiedzi. W live model odnosi się do Twojego wyjaśnienia i proponuje własny wzór. Może się pomylić — sprawdzamy każdą propozycję.</p><p>Postęp zapisujemy na tym urządzeniu. W live backend gry zapisuje bieżącą rozmowę w sesji SQLite i przekazuje potrzebne fragmenty wraz z opisem planszy do usługi AI. Sesja wygasa po 24 godzinach. Przycisk „Wyczyść rozmowę” usuwa wiadomości tej lekcji z widoku i aktywnego kontekstu serwera, zachowując zapisaną notatkę i wyniki.</p><button onClick={()=>go('game')}>Przejdź do lotu</button></section>}
- {s.page==='settings'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Ustawienia</h1><h2>Połączenie</h2><p>{modeText[s.mode]}</p><div className="actions"><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'demo'})}>Wybierz demo</button><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'live'})}>Wybierz live</button></div><p className="muted">{s.liveAvailable?'Backend zgłasza dostępny model.':'Backend nie zgłasza dostępnego modelu. Próba live może zakończyć się jawnym błędem.'} Klucz konfiguruje autor na backendzie.</p><h2>Czytelność</h2><label className="check-label"><input type="checkbox" checked={s.settings.reducedMotion} onChange={e=>dispatch({type:'SETTINGS',settings:{reducedMotion:e.target.checked}})}/>Ogranicz animacje</label><p className="muted">Preferencja systemowa ograniczonego ruchu jest zawsze respektowana.</p><label className="check-label"><input type="checkbox" checked={s.settings.hitbox} onChange={e=>dispatch({type:'SETTINGS',settings:{hitbox:e.target.checked}})}/>Pokaż obrys robota</label><label>Wielkość tekstu<select value={s.settings.fontScale} onChange={e=>dispatch({type:'SETTINGS',settings:{fontScale:Number(e.target.value)}})}><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select></label><h2>Lokalny postęp</h2><p>Usunięcie obejmuje wszystkie misje, pierwsze próby i dziennik na tym urządzeniu.</p>{confirmReset?<div className="notice"><p>Usunąć cały lokalny postęp? Tej operacji nie można cofnąć.</p><button onClick={()=>{const error=removeSave();setSaveError(error);if(!error){dispatch({type:'RESET'});setConfirmReset(false);}}}>Tak, usuń cały postęp</button><button className="secondary" onClick={()=>setConfirmReset(false)}>Anuluj</button></div>:<button className="secondary" onClick={()=>setConfirmReset(true)}>Usuń lokalny postęp</button>}<p><button className="quiet" onClick={()=>go('game')}>Wróć do gry</button></p></section>}
- </main><footer><span>Naucz Pilota · małe kroki, sprawdzone zasady.</span><button className="quiet" onClick={()=>go('about')}>O projekcie i danych ↗</button></footer></div>;
+ {s.page==='settings'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Ustawienia</h1><h2>Połączenie</h2><p>{modeText[s.mode]}</p><div className="actions"><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'demo'})}>Wybierz demo</button><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'live'})}>Wybierz live</button></div><p className="muted">{s.liveAvailable?'Backend zgłasza dostępny model.':'Backend nie zgłasza dostępnego modelu. Próba live może zakończyć się jawnym błędem.'} Klucz konfiguruje autor na backendzie.</p><details className="access-panel"><summary>Masz kod dostępu do live?</summary>
+ <form onSubmit={event=>{event.preventDefault();void connectWithCode();}}>
+  <p className="muted">Jeśli prowadzący udostępnił Ci kod, wpisz go tutaj. Dostęp będzie pamiętany do zamknięcia aplikacji lub odświeżenia strony.</p>
+  <label htmlFor="access-code">Kod dostępu do live</label>
+  <input id="access-code" type="password" autoComplete="off" maxLength={256} value={accessInput} onChange={event=>setAccessInput(event.target.value)}/>
+  <button disabled={checkingAccess||!accessInput} type="submit">Połącz z kodem</button>
+  <p role="status">{accessFeedback}</p>
+ </form>
+ </details><h2>Czytelność</h2><label className="check-label"><input type="checkbox" checked={s.settings.reducedMotion} onChange={e=>dispatch({type:'SETTINGS',settings:{reducedMotion:e.target.checked}})}/>Ogranicz animacje</label><p className="muted">Preferencja systemowa ograniczonego ruchu jest zawsze respektowana.</p><label className="check-label"><input type="checkbox" checked={s.settings.hitbox} onChange={e=>dispatch({type:'SETTINGS',settings:{hitbox:e.target.checked}})}/>Pokaż obrys robota</label><label>Wielkość tekstu<select value={s.settings.fontScale} onChange={e=>dispatch({type:'SETTINGS',settings:{fontScale:Number(e.target.value)}})}><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select></label><h2>Lokalny postęp</h2><p>Usunięcie obejmuje wszystkie misje, pierwsze próby i dziennik na tym urządzeniu.</p>{confirmReset?<div className="notice"><p>Usunąć cały lokalny postęp? Tej operacji nie można cofnąć.</p><button onClick={()=>{const error=removeSave();setSaveError(error);if(!error){dispatch({type:'RESET'});setConfirmReset(false);}}}>Tak, usuń cały postęp</button><button className="secondary" onClick={()=>setConfirmReset(false)}>Anuluj</button></div>:<button className="secondary" onClick={()=>setConfirmReset(true)}>Usuń lokalny postęp</button>}<p><button className="quiet" onClick={()=>go('game')}>Wróć do gry</button></p></section>}
+ </main><footer><span>Piko: Misja Funkcja <span aria-hidden="true">·</span> Naucz Piko. Sprawdź siebie.</span><button className="quiet" onClick={()=>go('about')}>O projekcie i danych ↗</button></footer></div>;
 }

@@ -1,0 +1,9 @@
+# Optional access from a jury network whose source IP is unknown.
+# Backend startup fails if JURY_ACCESS_CODE is absent from the secret env file.
+services:
+  backend:
+    environment:
+      JURY_ACCESS_REQUIRED: '1'
+  proxy:
+    environment:
+      PIKO_JURY_ALLOWED_IPS: '0.0.0.0/0 ::/0'

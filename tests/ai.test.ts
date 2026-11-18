@@ -14,6 +14,35 @@ const fixtures:Record<string,unknown>={...evals.modelPayloadFixtures,...evals.in
 const result=(payload:unknown):ProviderResult=>({text:JSON.stringify(payload),actualModel:'mock-model',responseId:'mock-response',inputTokens:10,outputTokens:20});
 const sleep=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms));
 const semantic=evals.cases.filter(c=>c.kind==='semantic');
+it('jury access protects every API route and requires the code alongside a desktop session',async()=>{
+ const store=new Store(':memory:');stores.push(store);
+ const accessCode='offline-jury-access-code-for-tests-only';
+ let calls=0;
+ const app=createApp({store,config:{mode:'live',model:'local-stub',dailyBudget:0,accessCode,requireAccessCode:true},
+  provider:async()=>{calls++;throw new Error('Provider must not be reached');}});
+ for(const route of ['/api/health','/api/session','/api/conversation/reset','/api/learner-turn']){
+  const response=await request(app).post(route).send({});
+  expect(response.status).toBe(403);
+  expect(response.body.error.code).toBe('JURY_ACCESS_REQUIRED');
+ }
+ expect((await request(app).get('/api/health').set('X-Piko-Access-Code','wrong')).status).toBe(403);
+ const session=await request(app).post('/api/session').set('X-Piko-Access-Code',accessCode)
+  .set('Origin','app://piko').set('X-Piko-Desktop','1').send({});
+ expect(session.status).toBe(200);expect(session.body.token).toBeTruthy();
+ const denied=await request(app).post('/api/session').set('Authorization','Bearer '+session.body.token).send({});
+ expect(denied.status).toBe(403);
+ const authorized=await request(app).get('/api/health').set('X-Piko-Access-Code',accessCode);
+ expect(authorized.status).toBe(200);expect(JSON.stringify(authorized.body)).not.toContain(accessCode);
+ const turn=await request(app).post('/api/learner-turn').set('X-Piko-Access-Code',accessCode)
+  .set('Authorization','Bearer '+session.body.token).send({...semantic[0].request,
+   sessionId:session.body.sessionId,sessionRevision:0,turnId:crypto.randomUUID()});
+ expect(turn.status).toBe(429);expect(turn.body.error.code).toBe('DAILY_BUDGET_EXHAUSTED');
+ expect(turn.body.model.requestCount).toBe(0);expect(calls).toBe(0);
+});
+it('fails closed when the deployment requires an absent or short access code',()=>{
+ const store=new Store(':memory:');stores.push(store);
+ for(const accessCode of ['', 'short'])expect(()=>createApp({store,config:{accessCode,requireAccessCode:true}})).toThrow(/32–256/);
+});
 it('10 semantic evals are valid inputs, NOT evidence of live quality',()=>{
  for(const c of semantic){const r=c.request as LearnerRequest;expect(()=>buildContext(r)).not.toThrow();}
 });
