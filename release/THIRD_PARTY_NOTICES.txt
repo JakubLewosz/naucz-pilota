@@ -1,4 +1,4 @@
-NAUCZ PILOTA 1.0.0 — THIRD-PARTY NOTICES
+PIKO: MISJA FUNKCJA 1.0.0 — THIRD-PARTY NOTICES
 
 Runtime and author tools resolved by package-lock.json. Electron distribution includes LICENSE and LICENSES.chromium.html. Source code author identity and licensing are to be confirmed by its owner.
 

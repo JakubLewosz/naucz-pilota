@@ -53,3 +53,7 @@ Technicznie można użyć lokalnego backendu z syntetycznym kluczem i `AI_DAILY_
 ## Po próbach
 
 Pogrupuj problemy według częstotliwości i wpływu na ukończenie misji. Najpierw napraw blokady i mylące komunikaty. Powtórz problematyczny fragment po poprawce. W raporcie podaj rzeczywistą liczbę osób, tryb i ograniczenia, zachowując status NOT RUN dla nieprzeprowadzonych prób. Nie wyciągaj wniosków o skuteczności nauczania z samego ukończenia gry.
+
+## Odbiór oprawy z 18 listopada
+
+Użyj kandydata „Piko: Misja Funkcja” i nazw etapów „Twój lot”, „Naucz Piko”, „Lot Piko”, „Sprawdź siebie”. Zapytaj po wykonaniu zadania, co oznaczało „Sprawdzone obliczenia” i skąd pochodził komentarz Piko. Zapisz zauważone problemy z kontrastem, rozmiarem wykresu i odnajdywaniem pola wzoru. Nie podpowiadaj odpowiedzi przed obserwacją. Docelowe terminy pilotażu to 22–24 listopada. Dopiero faktycznie przeprowadzona sesja zmienia status NOT RUN.

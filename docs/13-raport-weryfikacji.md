@@ -1,72 +1,24 @@
 # Raport weryfikacji
 
-## Lokalny kandydat konkursowy, 10 listopada 2026
+Piko: Misja Funkcja. Lokalny odbiór na gałęzi codex/jury-readiness, 18 listopada 2026. Środowisko autora to macOS arm64, Node 24.11.0 i npm 11.6.1.
 
-Na macOS arm64 przeszły 206 testów Vitest, 15 prób Playwright oraz kontrola typów, lint i build. Walidator potwierdził 24 poprawne tory, 37 kontrolnych porażek i 42 kontrole parsera i geometrii. Regresja odtworzyła odpowiedź po 21 sekundach oraz celowo błędne liczby w komentarzu Piko. Pierwsza próba i archiwum pozostały zachowane, a wynik sprawdzonego wzoru pochodził z silnika.
+## Wykonane sprawdzenia
 
-Lokalny Caddy przeszedł test ograniczenia dostępu i zaufania TLS. Backend przy budżecie zero nie wysłał żadnego żądania do OpenAI. Test Electrona na macOS używał lokalnego zastępnika dostawcy. Wcześniejsza rzeczywista próba GPT-6 Luna Extra High z promptem 1.2.0 przyniosła siedem zaliczonych propozycji na dwóch geometriach M04. Ósma próba przekroczyła czas.
+- Kontrola typów, lint, build i 208 testów Vitest przeszły. Parser, geometria i zasady oceniania korzystają z dotychczasowego silnika TypeScript.
+- 17 testów Playwright przeszło. Obejmują całą kampanię, ochronę pierwszej próby, opóźnioną odpowiedź, reset rozmowy, tryb demo i awarie live. Osobna regresja sprawdza współrzędne zatrzymania, brak zaliczenia bramek za miejscem kolizji i pominięcie animacji bez kolejnego zapisu lub wywołania AI.
+- Sprawdzono 1366 × 768, 1440 × 900, 390 × 844, tekst 200%, klawiaturę i ograniczenie ruchu. Zrzuty dziewięciu stanów interfejsu przeszły kontrolę axe A/AA i zostały przejrzane wzrokowo. Jest to zakres wykonanych prób dostępności.
+- Treść ma 62 testy. Walidator Python potwierdził 24 poprawne tory, 37 kontrolnych porażek i 42 kontrole parsera i geometrii. Niezależny audyt treści również przeszedł.
+- Lokalny Caddy sprawdził zaufanie TLS, listę adresów, limit 16 KiB, odrzucenie obcego originu, bezpieczne cookie i trwałą sesję po restarcie. Przy budżecie zero backend odrzucił turę z requestCount=0. Dodatkowy wariant wpuszcza nieznaną sieć z poprawnym kodem odbioru i odrzuca kod błędny lub brakujący.
+- Spakowany Electron na macOS odtworzył M01 offline i zachował pierwszą próbę po restarcie. Nowa paczka otworzyła profil poprzedniej wersji z notatką oraz nieudaną pierwszą próbą. Techniczna nazwa profilu pozostała naucz-pilota.
+- Relay spakowanej aplikacji przeszedł rozmowę i reset, odpowiedź po 17 sekundach, transfer oraz awarię sieci przez lokalny HTTPS. Dostawca był atrapą. Sprawdzono kod dostępu wpisywany przez interfejs i odrzucenie niezaufanego certyfikatu.
+- Windows x64 przeszedł cross-build, kontrolę pliku PE i zgodności ASAR z bieżącym buildem. Paczka ma nową nazwę i ikonę oraz kompletny renderer bez sekretów i rozwiązań autora.
 
-Paczki Windows x64 w wariantach demo i testowego HTTPS przeszły inspekcję PE, ASAR i ZIP. Uruchomienie aktualnego EXE na Windows, docelowy HTTPS, pilotaż i montaż filmu konkursowego pozostają NOT RUN. Zakres i źródła dowodów zapisano w IMPLEMENTATION_STATUS.md.
+## Rzeczywisty model
 
-## Historia odbioru v1.0.0
+W tej rundzie wykonano zero płatnych żądań. Wcześniejszy test GPT-6 Luna Extra High, prompt 1.2.0, objął dwa nowe układy M04 i osiem prób A/B/C/D. Wszystkie siedem otrzymanych wzorów silnik zaliczył. Ósma próba zakończyła się timeoutem. Warunki i dosłowne wypowiedzi są w checks/m04-generalization-1.2.0.live.md. Wynik dotyczy tego zestawu. Piko odgrywa ucznia przez kontekst i notatkę zapisaną w aplikacji.
 
-Naucz Pilota 1.0.0. Odbiór poprawek po audycie 9 listopada 2026. macOS arm64, Node 24.11.0, npm 11.6.1, Playwright oraz runner GitHub Actions Windows i Linux.
+## Do odbioru zewnętrznego
 
-## Wyniki po audycie
+Uruchomienie aktualnego EXE na rzeczywistym Windows, docelowy HTTPS z innej sieci oraz ograniczona tura z dostawcą na tym hostingu mają status NOT RUN. Wymagają komputera odbiorcy, hosta, DNS i osobnej zgody na wywołanie. Historyczny Windows CI dotyczy starszego kodu 52ac710.
 
-- Typecheck, lint, build, 174 testy jednostkowe i integracyjne oraz 10 E2E przeszły. Odtworzono dwie awarie z osobnym przejściem do demo i pominięciem lotu po odświeżeniu. Testy obejmują przywrócenie statusu live, czyszczenie kontekstu, uszkodzone zapisy i migrację wersji 1.
-- Porównanie identycznej planszy z notatką i bez notatki wykazało te same sprawdzone fakty i regułę. Warianty poprawnego, niepełnego oraz błędnego wyjaśnienia zachowują tekst jako cytat. Test HTTP potwierdził pozycję obu cytatów w roli user oraz brak przyszłej geometrii. Zaliczenie oblicza silnik.
-- W teach przy 1366 x 768 axe nie wykrył naruszeń A/AA. Zatwierdzono notatkę klawiaturą przy tekście 200% i sprawdzono brak poziomego przewijania. Pełna kampania i pierwsza samodzielna próba po korekcie oraz wznowieniu przeszły.
-- Przed poprawką transportu Electron otrzymywał 403 przy preflight. Bezpośrednie żądania z procesu głównego przeszły trzy tury z lokalną atrapą na macOS i Windows. Po czyszczeniu model zastępczy otrzymał pustą historię. Kontener z wolumenem zachował stan po restarcie.
-- GitHub Actions Windows i Linux przeszły dla 52ac710, przebieg 42685071630. Windows uruchomił spakowane EXE, przeszedł M01 offline i zachował pierwszą próbę po zamknięciu oraz ponownym starcie. Raport i sumę paczki zapisano w checks/windows-actions-audit.json.
-- NOT RUN dla promptu 1.1.0 z rzeczywistym modelem, oceny tonu i użycia notatki przez model, pomiaru jego czasu odpowiedzi, HTTPS na innym urządzeniu i pilotażu. Testy aktualnej wersji zużyły 0 żądań płatnego API. Osobny komputer odbiorcy Windows wymaga odbioru.
-
-## Wyniki historyczne z 3 listopada
-
-- Silnik TypeScript: 24 rozwiązania witness dają SUCCESS; 37 knownFailures odrzucanych dokładnie oczekiwanym kodem. Przeniesiono 42 kontrole parsera i geometrii z walidatora Python, w tym dokładne skracanie dziesiętne, limity, cienką przeszkodę i wewnętrzny wierzchołek.
-- Testy jednostkowe/integracyjne: 158 PASS w siedmiu plikach Vitest. Obejmują silnik, maszynę stanów, 32 deterministyczne scenariusze INT z ai-evals i oficjalny SDK na lokalnej atrapie HTTP. Dodano regresję błędu zaobserwowanego w SEM05: schemat dostawcy nie pozwala wskazać reguły bez dowodu ani nieistniejących faktów.
-- Python: PASS, 6 misji / 24 sceny / 24 witness / 37 błędów / 42 kontrole. Niezależny od TypeScript walidator referencyjny potwierdza dane, nie zastępuje testu aplikacji.
-- Playwright: 7 PASS. Pełna kampania demo z 24 scenami; porażka robota w M04 nie blokuje gracza. Pierwszy wynik jest zachowany po odświeżeniu, poprawkach i powtórce. Przed human_check brak toru, robota, dziennika, wskazówek, obliczonych y i rozmowy.
-- Interfejs: widoki 1366×768, 1440×900, 390×844; axe WCAG A/AA bez wykrytych naruszeń na starcie i practice; brak poziomego przewijania, klawiaturowa M01, tekst 200%, reduced motion i demo po wyłączeniu sieci. Zrzuty obejrzano wzrokowo. To ograniczony zakres, bez deklaracji pełnej dostępności dla wszystkich użytkowników.
-- AI bez płatnego API: walidacja requestów i faz, ponowne obliczanie dowodów, odmowa, incomplete, deadline, maksymalnie jedna naprawa techniczna, jawna błędna propozycja, idempotencja, konflikt body/revision, limity, brak ukrytego demo i brak kontekstu przyszłych scen. Trwały licznik SQLite sprawdzony po zamknięciu i ponownym otwarciu bazy.
-- Oficjalny SDK: testy HTTP completed, incomplete, refusal i 429; strict text.format, store:false, brak narzędzi i wyłączone automatyczne retry. To lokalna atrapa protokołu, nie prawdziwy model.
-- Produkcyjny build: frontend bez source maps i bez danych witness/knownFailures. Statyczne walidatory zamiast runtime kompilacji Ajv. Serwer bundluje współdzielone pakiety do JavaScript.
-- Electron macOS: cała M01 z lokalnych zasobów app://, bez backendu; izolacja kontekstu, sandbox, brak require/process w rendererze; rzeczywiste zamknięcie i wznowienie z zachowaniem błędnej pierwszej próby po korekcie; PASS w checks/desktop-smoke.json.
-- Windows x64: utworzono ZIP zawierający EXE PE i zasoby. Inspekcja ASAR wyklucza node_modules, .env, mapy źródeł i dane autora. Paczka niepodpisana. Cross-build jest osobną czynnością od testu uruchomienia.
-- Nagrano rzeczywiste automatyczne przebiegi M04: demo (37,56 s) oraz live (45,28 s), MP4 1440×900 z napisami. Nagranie live wykonało 2 prawdziwe żądania, pokazało oryginalną propozycję robota i zachowało pierwszą nieudaną próbę człowieka po korekcie i odświeżeniu. Nie udaje pilotażu z użytkownikami.
-
-## Uczciwe ograniczenia
-
-Prawdziwe AI: WYKONANO lokalnie. Prompt 1.0.2, model gpt-5.4-mini-2026-03-17, 22 tury i 22 żądania dostawcy w końcowym przebiegu. Wszystkie odpowiedzi przeszły kontrolę struktury, fazy, potwierdzonej pamięci i niezależnego wyniku silnika. Opóźnienia: 1069–2330 ms, mediana 1426 ms; 49505 tokenów wejścia i 2595 wyjścia. To obserwacja tego przebiegu, bez gwarancji podobnych wyników w przyszłości. Wcześniejsze błędy i przerwane próby zachowano osobno w checks/.
-
-Jakość dialogu: wstępny przegląd asystenta jest zapisany w checks/ai-semantic-review.json; akceptacja przez człowieka PENDING. SEM03 otrzymał sound zamiast oczekiwanego partial, a SEM09 partial zamiast incorrect. Piko czasem proponuje objaśnianie lub liczenie za gracza. Komentarz i etykieta modelu nie odblokowują misji. W sześciu końcowych transferach robot zaliczył 2 plansze; 4 propozycje silnik odrzucił. Porażki robota są zachowane i nie blokują zadania człowieka.
-
-Windows runtime: NOT RUN. Nie ma dostępu do czystego komputera Windows. Paczkę należy rozpakować i przetestować niezależnie od środowiska autora. Dostępny jest tylko smoke macOS i inspekcja formatu PE/ASAR.
-
-Hosting jury: NOT READY. distribution.json ma pusty origin HTTPS. Przygotowano Dockerfile, trwały magazyn i instrukcję, ale nie wykonano wdrożenia ani sprawdzenia z innego urządzenia. Docker Desktop został następnie uruchomiony. Obraz produkcyjny zbudowano i sprawdzono lokalnie: health HTTP 200, brak .env i danych autora, proces bez uprawnień root oraz sesja zachowana po restarcie z zamontowanym wolumenem. Publiczny HTTPS nadal nie jest wdrożony.
-
-Pilotaż: NOT RUN. Nie uczestniczyły osoby testujące. Nie podano czasów użytkowników, ich liczby ani wzrostu wiedzy. Cel 30–45 minut pozostaje założeniem produktu.
-
-Bezpieczeństwo zależności: npm audit --omit=dev wykazał 0 podatności produkcyjnych. Po celowanej aktualizacji minimatch w zgodnych wywołaniach API liczba moderate spadła z 25 do 15. Pozostałe dotyczą starszego API minimatch w narzędziach developerskich; zmiana ich interfejsu wymaga migracji zależnych narzędzi. Lint, build i pakowanie po aktualizacji przeszły. Zależności te nie są pakowane do desktopu.
-
-Formalności: nie uzupełniono danych i podpisów autora, sprawdzono oficjalną stronę i treść regulaminu 3 listopada 2026; lokalne pobranie oryginałów zwróciło HTTP 403, nie opublikowano linku i nie wysłano zgłoszenia. Materiały mają status lokalnego pakietu do dalszego odbioru.
-
-## Naprawy ujawnione podczas testów
-
-Naprawiono eksport fixture parsera, niezgodność runtime Ajv z CSP, eksporty statycznych walidatorów ESM, pozycję Piko przed lotem, pomijanie animacji, odblokowania po powtórce i nadmiarowe zależności pierwszego ASAR. Kontrola listy pól danych publicznych została rozszerzona o opcjonalne vertexLock z dalszych misji. Wyniki PASS dotyczą powtórzeń po tych naprawach.
-
-## Reprodukcja i dalszy odbiór
-
-Uruchom npm ci; npm run typecheck; npm run lint; npm test; npm run test:content; npm run test:e2e; npm run build; npm run desktop:dist; npm run release:check. Test AI live jest osobny i może zużywać płatne API. Raporty maszynowe w checks/ podają rzeczywiste wyniki, a IMPLEMENTATION_STATUS.md określa końcowy stan etapów.
-
-Przeczytaj zapisane odpowiedzi live według rubryk i zatwierdź jakość dialogu. Następnie przetestuj publiczny endpoint na urządzeniu odbiorcy, odbierz Windows i pilotaż. Nie powtarzaj płatnych prób bez konkretnego powodu. Nie łącz sukcesu robota z samodzielnym wynikiem gracza.
-
-
-## Dalszy odbiór
-
-Runner live obsługuje filtr --case i limit --max-calls, sprawdza teach i transfer misji w jednej sesji, zatrzymuje test po pierwszym błędzie i zwraca niezerowy kod przy awarii. Cztery dodatkowe testy sprawdzają ten mechanizm bez płatnego API. W pierwszym lokalnym przebiegu ręczny workflow GitHub Actions pozostawał NOT RUN. Nowszy wynik starszego EXE podano przy commicie 52ac710. Dostępne są protokoły pilotażu i ręcznego odbioru Windows w docs/15-pilotaz.md i docs/16-windows-odbior.md.
-
-
-## Poprawki po wywołaniach prawdziwego modelu
-
-Po krótkiej odpowiedzi bez dowodów model sugerował niekwalifikowaną regułę. Schemat przekazywany dostawcy jest teraz zawężany do bieżących faktów, dozwolonych sugestii i fazy, przy zachowaniu źródłowego kontraktu i niezależnej walidacji. Doprecyzowano rolę Piko i pojedyncze pytanie. Runner zapisuje wyniki po każdej turze i stan INTERRUPTED po zatrzymaniu, zachowując informację o możliwym wywołaniu w toku. Nowy klucz po podmianie wymagał usunięcia jednego dodatkowego znaku i przywrócenia pola AI_MODEL; sekret nie został wypisany ani zapisany w raportach.
+Pilotaż, finalny film, podpisy i udostępnienie zgłoszenia pozostają NOT RUN. Instrukcje, klip demo i protokół są gotowe lokalnie. Dowody i ograniczenia opisano w IMPLEMENTATION_STATUS.md.

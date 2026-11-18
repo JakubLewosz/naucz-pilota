@@ -1,7 +1,32 @@
-# Stan implementacji — Naucz Pilota
-Aktualizacja: 2026-11-10. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
+# Stan implementacji — Piko: Misja Funkcja
+Aktualizacja: 2026-11-18. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live z GPT-5.4 mini wykonano na `a751a1c`, a z GPT-6 Luna na `95a55ca`.
+
+## Oprawa i kandydat z 18 listopada 2026
+
+Wykonano brief `PIKO_plan_dokonczenia_2026-11-18.txt` na czystej lokalnej bazie `fb20877`. Przyjęto rekomendowaną nazwę „Piko: Misja Funkcja” i hasło „Naucz Piko. Sprawdź siebie.”. Kod oprawy i dostępu zapisano w `2f4ef0a`. Silnik, geometrie, progi zaliczenia, prompty i konfiguracja GPT-6 Luna Extra High są zgodne z bazą. Wykonano **0 płatnych wywołań**.
+
+Najpierw przygotowano trzy widoki M01 i sprawdzono je przed uogólnieniem oprawy. Końcowe dziewięć ekranów jest w `checks/piko-2026-11-18/`. Wzór i główna akcja są nad wykresem, a pominięcie podczas oczekiwania znajduje się wysoko w panelu. Znaczniki bramek bazują na checkpointach silnika i dotarciu animacji do punktu. Zatrzymanie korzysta z pierwszego zdarzenia fizycznego. Ograniczenie ruchu od razu pokazuje stan końcowy. [Ekrany i opis odbioru](docs/20-odbior-kandydata.md)
+
+Wariant wdrożenia z kodem rozwiązuje dostęp z nieznanej sieci jury. Serwer sprawdza kod przed endpointami API, także przy istniejącej sesji. Przeglądarka i Electron przechowują kod w pamięci bieżącego uruchomienia. Kod jest odrębny od klucza OpenAI. Domyślny budżet wdrożenia nadal wynosi zero.
+
+| Polecenie lub próba | Wynik końcowy |
+|---|---|
+| `npm run typecheck`, `npm run lint`, `npm run build` | PASS. |
+| `npm test` | PASS, 208 w 8 plikach. Dwie nowe regresje chronią API kodem i odrzucają brak wymaganej konfiguracji. |
+| `npm run test:e2e` | PASS, 17 w 55,1 s, bez flaky i skip. Nowe próby obejmują ulotny kod w przeglądarce, punkt kolizji i brak zaliczenia późniejszej bramki oraz pominięcie animacji bez nowego zapisu i API. |
+| Kontrola po ostatniej zmianie animacji | PASS, dwa testy prezentacji. Pierwsza robocza fixtura trafiała w bramkę przed przeszkodą. Poprawiono fixturę i ponowiono próby. Logika silnika jest zgodna z bazą. |
+| Treść i matematyka | PASS, 62 testy, 24 poprawne tory, 37 kontrolnych porażek i 42 kontrole walidatora Python. Osobny audyt treści również PASS. |
+| `npm run test:m04:offline` | PASS, 16 przypadków atrapy, 0 OpenAI HTTP. |
+| `npm run jury:https:smoke`, `npm run docker:smoke` | PASS. Kontrola IP i nagłówków, zaufanie TLS, cookie, limit treści i budżet zero, restart SQLite oraz poprawny i błędny kod z sieci spoza pierwotnej listy. |
+| Spakowany Electron macOS | PASS, M01 offline i restart. Stary profil otwarto nowym pakietem z zachowaniem notatki i pierwszej próby. Techniczna nazwa profilu to nadal `naucz-pilota`. |
+| Spakowany Electron, lokalny HTTPS i atrapa | PASS, kod dostępu, odrzucenie niezaufanego certyfikatu, odpowiedź po 17 s, reset kontekstu, transfer i jawna awaria sieci. 4 wywołania atrapy, 0 płatnych. |
+| Windows x64 | CROSS-BUILD PASS, PE/ASAR/CRC PASS. W zasobach EXE potwierdzono nową ikonę i nazwę produktu. Uruchomienie na Windows oraz skalowanie systemowe **NOT RUN**. |
+| Dostępność i zrzuty | PASS dla wykonanych prób axe A/AA, 1366 × 768, 1440 × 900 i 390 × 844, klawiatury i tekstu 200%. Przejrzano dziewięć końcowych ekranów. |
+| PDF i film pomocniczy | PASS renderu 8 stron w 5 PDF-ach. Opis i raport mają po stronie. Nowy MP4 demo ma 41,04 s, 1440 × 900 i H.264. Finalny film z narracją **NOT RUN**. |
+
+Kod jest lokalnym kandydatem do odbioru. Brakuje zatwierdzonego hosta i DNS do publicznego HTTPS, komputera Windows do uruchomienia obecnego EXE, rzeczywistego pilotażu 3–5 osób, końcowego montażu, podpisanych formularzy i linku zgłoszenia. Te próby pozostają **NOT RUN**. Poprzedni wynik Luny 7/7 otrzymanych wzorów dotyczy dwóch geometrii, z jedną dodatkową próbą zakończoną timeoutem. [Raport maszynowy](checks/piko-readiness-2026-11-18.json) · [Kandydat i zadania autora](docs/20-odbior-kandydata.md)
 
 ## Kandydat konkursowy po próbie M04
 

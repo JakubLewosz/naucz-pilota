@@ -9,7 +9,7 @@ Z katalogu źródeł, po instalacji Node 24.x:
 ```powershell
 npm ci
 npm run desktop:dist
-npm run desktop:smoke -- --executable "release/bin/win-unpacked/Naucz Pilota.exe"
+npm run desktop:smoke -- --executable "release/bin/win-unpacked/Piko Misja Funkcja.exe"
 npm run release:check
 ```
 
@@ -28,7 +28,7 @@ $env:PIKO_OPENSSL = Join-Path $env:ProgramFiles 'Git/usr/bin/openssl.exe'
 $env:PIKO_DESKTOP_RELAY_REPORT = 'checks/desktop-relay-https-win32.json'
 npx tsx tools/prepare-desktop.ts
 npx electron-builder --config apps/desktop/builder.json --config.directories.output=release/bin/tls-smoke --win zip --x64
-npx tsx tools/smoke-desktop-relay.ts --executable 'release/bin/tls-smoke/win-unpacked/Naucz Pilota.exe'
+npx tsx tools/smoke-desktop-relay.ts --executable 'release/bin/tls-smoke/win-unpacked/Piko Misja Funkcja.exe'
 Remove-Item Env:PIKO_DESKTOP_HTTPS_ORIGIN
 ```
 
@@ -52,3 +52,9 @@ Użyj osobnego komputera z Windows x64 bez narzędzi projektu. Pobierz dokładni
 | Odłączenie sieci w live: zachowane wpisy, jawny błąd i wybór demo | NOT RUN |
 
 Dołącz raport automatyczny oraz własne obserwacje. Nie podpisuj testu automatycznego jako testu ręcznego na czystym komputerze. Komunikat o nieznanym wydawcy jest możliwy, ponieważ paczka nie ma podpisu cyfrowego.
+
+## Odbiór nowej nazwy
+
+Uruchom dotychczasowy pakiet w odizolowanym profilu, zapisz notatkę i nieudaną pierwszą próbę. Zamknij go. Otwórz nowy pakiet z tym samym profilem i porównaj notatkę, pierwszą próbę oraz archiwum. Służy do tego `tools/smoke-desktop-rename.ts --legacy-executable <stary-plik> --executable <nowy-plik>`. Próba została wykonana na macOS. Windows ma osobny status NOT RUN.
+
+Sprawdź ikonę w rozpakowanej paczce, tytuł „Piko: Misja Funkcja” i dostęp kodem w Ustawieniach. Kod ma zostać zapomniany po zamknięciu. Test techniczny HTTPS korzysta z lokalnej atrapy i odrębnego certyfikatu.

@@ -1,0 +1,317 @@
+{
+  "date": "2026-11-18T11:09:43.051952+00:00",
+  "runtimeCommit": "2f4ef0abfbec138f29f030c0bb6ff0965f9037f1",
+  "branch": "codex/jury-readiness",
+  "productName": "Piko: Misja Funkcja",
+  "tagline": "Naucz Piko. Sprawdź siebie.",
+  "nameDecision": "Applied the name recommended in the author brief. Technical identity and save key retained.",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "xhigh",
+  "promptVersion": "1.2.0",
+  "paidProviderCalls": 0,
+  "newApiCostUSD": 0,
+  "checks": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "build": "PASS",
+    "unitTests": 208,
+    "contentTests": 62,
+    "playwright": {
+      "startTime": "2026-11-18T10:41:12.554Z",
+      "duration": 55083.081999999995,
+      "expected": 17,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "additionalPresentationRegression": "2 PASS after final animation adjustment",
+    "math": {
+      "ok": true,
+      "schemaVersion": "1.0.0",
+      "missions": 6,
+      "scenes": 24,
+      "successfulWitnesses": 24,
+      "checkedKnownFailures": 37,
+      "parserAndGeometryChecks": 42,
+      "schemaValid": true,
+      "expressionsMatchCoefficients": true,
+      "humanChecksDistinctFromRobotTransfer": true
+    },
+    "contentAudit": {
+      "ok": true,
+      "checkedAtUTC": "2026-11-18T10:33:53.442443+00:00",
+      "scope": "Independent fixture/content audit; not application tests or live AI.",
+      "method": "Separate AST coefficient expansion and root-partition inequalities; no import of reference validator.",
+      "scenes": 24,
+      "witnessesPassed": 24,
+      "knownFailuresMatched": 37,
+      "humanInitialExpressionsNotSolutions": true,
+      "hintCount": 18,
+      "ruleTextMatchesSkills": true,
+      "responseHasNoOutcomeAuthority": true,
+      "plannedAiCases": 42,
+      "liveAiCalls": 0,
+      "fullExternalJsonSchemaEngineUsed": false
+    },
+    "m04Offline": "PASS, 16 cases, 0 OpenAI HTTP requests",
+    "screens": {
+      "date": "2026-11-18T10:37:15.899Z",
+      "scope": "Offline UI capture; waiting uses a labelled local transport stub",
+      "paidProviderCalls": 0,
+      "screens": [
+        "home",
+        "flight",
+        "result",
+        "lesson",
+        "waiting",
+        "independent",
+        "summary",
+        "missions",
+        "settings"
+      ],
+      "checks": [
+        "Keyboard-labelled actions, no horizontal overflow, axe A/AA, engine success and protected independent attempt"
+      ]
+    },
+    "prototype": {
+      "date": "2026-11-18T10:23:24.915Z",
+      "scope": "Offline UI capture; waiting uses a labelled local transport stub",
+      "paidProviderCalls": 0,
+      "screens": [
+        "flight",
+        "result",
+        "waiting"
+      ],
+      "checks": [
+        "Keyboard-labelled actions, no horizontal overflow, axe A/AA, engine success and protected independent attempt"
+      ]
+    },
+    "windows": {
+      "date": "2026-11-18T10:36:10.235Z",
+      "status": "PASS LOCAL CHECKS",
+      "checks": [
+        {
+          "name": "public data author-only fields absent",
+          "status": "PASS",
+          "detail": "Recursive removal of author-only fields."
+        },
+        {
+          "name": "public scene keys limited",
+          "status": "PASS",
+          "detail": "No alternate embedded author corpus."
+        },
+        {
+          "name": "renderer index-CkI76Q0h.css",
+          "status": "PASS",
+          "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+        },
+        {
+          "name": "renderer index-DyD22JzV.js",
+          "status": "PASS",
+          "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+        },
+        {
+          "name": "renderer index.html",
+          "status": "PASS",
+          "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+        },
+        {
+          "name": "renderer piko.svg",
+          "status": "PASS",
+          "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+        },
+        {
+          "name": "desktop matches current build",
+          "status": "PASS",
+          "detail": "Renderer, relay and configuration match the current build."
+        },
+        {
+          "name": "desktop package allowlist",
+          "status": "PASS",
+          "detail": "Local frontend, main, preload, distribution and bundled DTO validator only."
+        },
+        {
+          "name": "desktop sandbox",
+          "status": "PASS",
+          "detail": "Static configuration plus separate macOS runtime smoke."
+        },
+        {
+          "name": "jury live endpoint",
+          "status": "NOT READY",
+          "detail": "No HTTPS endpoint supplied; offline demo only."
+        },
+        {
+          "name": "Windows PE executable",
+          "status": "PASS",
+          "detail": "PE inspection. Runtime evidence is reported separately."
+        }
+      ],
+      "artifacts": [
+        {
+          "file": "Piko_Misja_Funkcja_1.0.0_Windows_x64.zip",
+          "size": 153226511,
+          "sha256": "49a35ac1fec45f492d6d46555641ead8a4a0e1f8751f6bfcd14cea99d490ef20"
+        }
+      ],
+      "live": "NOT RUN FOR CURRENT PROMPT",
+      "liveDetails": {
+        "promptVersion": "1.0.2",
+        "reportedStatus": "PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED",
+        "currentPromptVersion": "1.2.0",
+        "humanSignoff": "PENDING",
+        "limitations": [],
+        "browser": "NOT RUN FOR CURRENT PROMPT"
+      },
+      "windowsRuntime": "NOT RUN",
+      "historicalWindowsCI": {
+        "status": "PASS",
+        "testedCommit": "52ac710dba77f6cc421440d5748310fd8c53def1",
+        "run": "https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630"
+      },
+      "remoteHTTPS": "NOT RUN",
+      "recipientWindows": "NOT RUN"
+    },
+    "windowsResources": {
+      "status": "PASS",
+      "iconPNGMatchesExecutable": true,
+      "metadata": [
+        {
+          "CompanyName": "Naucz Pilota",
+          "FileDescription": "Piko Misja Funkcja",
+          "FileVersion": "1.0.0",
+          "InternalName": "Piko Misja Funkcja",
+          "LegalCopyright": "Copyright © 2026 Naucz Pilota",
+          "OriginalFilename": "",
+          "ProductName": "Piko Misja Funkcja",
+          "ProductVersion": "1.0.0.0",
+          "SquirrelAwareVersion": "1"
+        }
+      ]
+    },
+    "windowsZipCRC": "PASS",
+    "legacyProfile": {
+      "date": "2026-11-18T10:37:15.099Z",
+      "status": "PASS",
+      "platform": "darwin",
+      "paidProviderCalls": 0,
+      "legacyName": "naucz-pilota",
+      "currentName": "naucz-pilota",
+      "sameProfile": true,
+      "firstAttemptPreserved": true,
+      "notebookPreserved": true
+    },
+    "macPackagedOffline": {
+      "date": "2026-11-18T10:37:21.321Z",
+      "platform": "darwin",
+      "packaged": true,
+      "executable": "Piko Misja Funkcja",
+      "status": "PASS",
+      "scope": "app://, sandbox, isolation, offline M01, immutable first attempt and restart persistence",
+      "windowsStatus": "NOT RUN",
+      "executableSHA256": "e1e6fcf02e1263644308692375784cf67507c3bbc7a408acae15d92a8fd4850c",
+      "appAsarSHA256": "750d40fe4708a1ef61dc54c8a95d1b1d6cac9b0c9c15d00f976e2f7ad7455893"
+    },
+    "macPackagedHttpsStub": {
+      "date": "2026-11-18T10:41:22.169Z",
+      "status": "PASS",
+      "platform": "darwin",
+      "stubCalls": 4,
+      "paidProviderCalls": 0,
+      "transport": "Electron IPC to local HTTPS relay",
+      "packaged": true,
+      "slowReplyMs": 17000,
+      "oldContextCleared": true,
+      "untrustedCertificateRejected": true,
+      "transferChecked": true,
+      "disconnectedStateVerified": true,
+      "accessCodeVerified": true
+    },
+    "localJuryHttps": {
+      "date": "2026-11-18T10:41:10.247Z",
+      "status": "PASS",
+      "checks": [
+        "Production proxy has Linux host networking; only backend loopback port and backend-only secret file",
+        "TLS without trust in the issuing CA is rejected",
+        "Source-IP restriction blocks the site and API, including spoofed forwarding headers",
+        "Trusted TLS serves the page and Luna health; secure cookie, foreign origin rejection, 16 KiB body limit and budget 0",
+        "Authenticated session survives backend restart on SQLite volume",
+        "Optional access-code stack admits an unknown source IP only with the correct code; static demo stays accessible"
+      ],
+      "paidProviderCalls": 0,
+      "publicHTTPS": "NOT RUN"
+    },
+    "docker": {
+      "date": "2026-11-18T10:41:51.890Z",
+      "status": "PASS",
+      "image": "naucz-pilota:jury",
+      "checks": [
+        "HTTP health and explicit demo",
+        "No .env or author corpus; runtime is not root",
+        "Session and SQLite survive process restart on mounted volume"
+      ],
+      "providerCalls": 0,
+      "publicHTTPS": "NOT DEPLOYED"
+    },
+    "workflowYaml": "PASS, runtime workflow NOT RUN",
+    "pdfPages": {
+      "instrukcja_uruchomienia.pdf": 1,
+      "opis_funkcjonalnosci.pdf": 1,
+      "raport_weryfikacji.pdf": 1,
+      "instrukcja_uzytkownika.pdf": 2,
+      "instrukcja_kompilacji.pdf": 3
+    },
+    "pdfVisualReview": "PASS",
+    "mathContentPromptAndModelConfig": "UNCHANGED relative to fb20877",
+    "video": {
+      "path": "release/media/Piko_Misja_Funkcja_demo.mp4",
+      "codec": "H.264",
+      "width": 1440,
+      "height": 900,
+      "durationSeconds": 41.04,
+      "mode": "demo",
+      "paidCalls": 0,
+      "sha256": "401fe3056c9164770bd8117a54e4fe5a7be72805d15a920037c4110af574dfae",
+      "capture": {
+        "date": "2026-11-18T10:38:08.117Z",
+        "status": "PASS",
+        "mode": "demo",
+        "promptVersion": "1.2.0",
+        "source": "var/video/page@4f48d7f62cb809bb1056f48393317ed0.webm",
+        "mission": "M04",
+        "automated": true,
+        "providerCalls": 0,
+        "responses": [],
+        "pageErrors": [],
+        "transferEngineCode": "START_MISS",
+        "firstIndependentAttemptPreserved": true,
+        "note": "Actual UI recording. Scripted demo; no live AI claim."
+      }
+    }
+  },
+  "notRun": [
+    {
+      "item": "Current EXE on real Windows and OS-level scaling",
+      "reason": "This host is macOS, no Windows runtime or VM available."
+    },
+    {
+      "item": "Public HTTPS and a second real network",
+      "reason": "Approved target host, DNS and operator access have not been supplied."
+    },
+    {
+      "item": "Windows with a real live host",
+      "reason": "Requires that host and a Windows recipient machine."
+    },
+    {
+      "item": "New provider call",
+      "reason": "No new paid test authorized."
+    },
+    {
+      "item": "3–5-person pilot",
+      "reason": "Requires real participants and the author observations."
+    },
+    {
+      "item": "Final contest film, signed forms and cloud submission",
+      "reason": "Author narration, review, signatures and delivery pending."
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 # Materiały do filmu konkursowego
 
-**Montaż i odbiór finalnego filmu: NOT RUN.** Rozpiska trwa 4 min 20 s. Organizator przyjmuje AVI lub MP4 do 5 minut. [Wymagania UwB](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
+**Montaż i odbiór finalnego filmu: NOT RUN.** Projekt ma teraz nazwę „Piko: Misja Funkcja” i hasło „Naucz Piko. Sprawdź siebie.”. Klip pomocniczy z 18 listopada pokazuje aktualną oprawę. Rozpiska trwa 4 min 20 s. Organizator przyjmuje AVI lub MP4 do 5 minut. [Wymagania UwB](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
 
 ## Ujęcia i tekst lektora
 
 | Czas | Ujęcie | Tekst lektora lub napis |
 |---|---|---|
-| 0:00–0:25 | Ekran tytułowy, plansza M04, wyróżnione start i bramki. | „W Naucz Pilota wzór wyznacza trasę robota. W tej misji sprawdzamy, jak znak w nawiasie zmienia położenie wierzchołka”. |
+| 0:00–0:25 | Ekran tytułowy, plansza M04, wyróżnione start i bramki. | „W Piko: Misja Funkcja wzór wyznacza trasę robota. W tej misji sprawdzamy, jak znak w nawiasie zmienia położenie wierzchołka”. |
 | 0:25–1:10 | Demo. Błędny pomysł scenariuszowy, poprawiony wzór i dwie prognozy. Zbliżenie na wynik silnika. | „Najpierw poprawiam wzór i przewiduję wysokości w dwóch punktach. Gra sprawdza tor oraz obie prognozy”. |
 | 1:10–1:45 | Demo. Własne słowa gracza, przygotowany komentarz Piko i zapis notatki. | „Gracz wyjaśnia zmianę. Piko może potem skorzystać z notatki i ze sprawdzonej reguły. Na ekranie demo odpowiedź jest przygotowana”. |
 | 1:45–2:45 | Plansze z historycznego testu live 1.2.0. Na tej samej geometrii zestaw A, B, C i D z translacji −4. W kolejnym ujęciu pokaż drugi wielomian i timeout D na przebudowanej geometrii. | „To zapis rzeczywistego testu na dwóch geometriach spoza kampanii. Silnik zaliczył siedem otrzymanych wzorów. Ósma próba zakończyła się timeoutem. Treść notatki zmieniała uzasadnienie. W obrębie każdej planszy zwrócone wzory były takie same”. |
@@ -16,7 +16,7 @@
 
 ## Źródła ujęć
 
-- Lokalny klip `var/jury-candidate/M04_demo_material.mp4` pokazuje 40,92 s aktualnej M04 w przeglądarce z napisami. Zawiera `START_MISS` oraz nieudaną pierwszą próbę i jej zachowanie po korekcie i odświeżeniu. Odtworzenie bez opłat opisuje `npx tsx tools/record-demo.ts` po uruchomieniu lokalnego backendu w demo na porcie 5173. Raport przechwycenia i parametry pliku są w `var/jury-candidate/`.
+- Lokalny klip `release/media/Piko_Misja_Funkcja_demo.mp4` pokazuje 41,04 s aktualnej M04 w przeglądarce z napisami. Zawiera `START_MISS` oraz nieudaną pierwszą próbę i jej zachowanie po korekcie i odświeżeniu. Odtworzenie bez opłat opisuje `npx tsx tools/record-demo.ts` po uruchomieniu lokalnego backendu w demo na porcie 5173. Raport przechwycenia i parametry pliku są w `var/visual-2026-11-18/`.
 - Do historycznego segmentu użyj dosłownych wypowiedzi, oryginalnych wzorów i kodów z [próby A/B/C/D](../checks/m04-generalization-1.2.0.live.md). Napis ekranowy „Zapis testu live z 10.11.2026 • GPT-6 Luna Extra High • prompt 1.2.0 • geometrie testowe”. Cytaty nie powinny wyglądać jak właśnie wygenerowane w pokazie demo.
 - Ujęcie oczekiwania można przygotować z lokalnego testu z opóźnioną atrapą albo z procedury budżetu zero w [protokole pilotażu](15-pilotaz.md#oddzielna-próba-oczekiwania-i-pominięcia). Oznacz je jako próbę techniczną. Nie ma nagrania tego ujęcia w powyższym klipie.
 - Historyczne MP4 z `release/media/` dokumentują wcześniejszy interfejs. Świeże nagranie prawdziwego modelu w aplikacji pozostaje NOT RUN i wymaga odrębnej zgody na wywołania.

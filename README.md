@@ -1,10 +1,12 @@
-# Naucz Pilota
+# Piko: Misja Funkcja
 
 Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkcje stopnia 0–2, robot Piko i osobna samodzielna próba gracza. Matematyka jest liczona analitycznie przez współdzielony silnik TypeScript. Demo działa bez klucza, serwera i internetu po załadowaniu zasobów aplikacji.
 
-**Stan na 10 listopada 2026.** Prompt 1.2.0 prosi Piko o uzasadnienie wzoru geometrią bieżącej trasy. Gra pokazuje opinię o notatce oddzielnie od wyniku silnika i pozwala pominąć oczekującą propozycję. Na dwóch dodatkowych geometriach testowych Luna z `xhigh` podała siedem wzorów zaliczonych przez silnik. Ósma próba zakończyła się timeoutem podczas uśpienia hosta. [Wyniki i zakres odbioru](IMPLEMENTATION_STATUS.md).
+**Naucz Piko. Sprawdź siebie.** Nowa oprawa pracowni lotów ma grafitowe tło, turkusowy tor i bursztynowego robota. Cztery kroki misji to „Twój lot”, „Naucz Piko”, „Lot Piko” i „Sprawdź siebie”.
 
-**Windows x64.** Opublikowane v1.0.0 pochodzi z wcześniejszego commita przetestowanego w Windows CI. Aktualny kandydat przeszedł cross-build i inspekcję paczki. Uruchomienie bieżącego EXE na Windows pozostaje NOT RUN. [GitHub Releases 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0)
+**Stan na 18 listopada 2026.** GPT-6 Luna Extra High z promptem 1.2.0 ma wcześniejszy wynik 7/7 otrzymanych propozycji na dwóch geometriach testowych M04, z jedną dodatkową próbą zakończoną timeoutem. Nowy interfejs sprawdzono lokalnie. Uruchomienie aktualnego EXE na Windows pozostaje NOT RUN. [Stan i wyniki](IMPLEMENTATION_STATUS.md)
+
+Wcześniejsza nazwa projektu to „Naucz Pilota”. Repozytorium, identyfikator `pl.nauczpilota.app`, profil Electron `naucz-pilota` i klucz zapisu są zgodne z poprzednią wersją. Otwarcie dotychczasowego profilu sprawdzono między dwiema spakowanymi aplikacjami na macOS.
 
 ## Szybki start
 
@@ -52,9 +54,9 @@ npm run release:check
 npm run release:prepare
 ```
 
-`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje niepodpisany ZIP Windows x64 w `release/bin`. Rozpakuj cały katalog i uruchom `Naucz Pilota.exe`. Node jest potrzebny do budowania aplikacji. [Odbiór Windows](docs/16-windows-odbior.md)
+`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje niepodpisany ZIP Windows x64 w `release/bin`. Rozpakuj cały katalog i uruchom `Piko Misja Funkcja.exe`. Node jest potrzebny do budowania aplikacji. [Odbiór Windows](docs/16-windows-odbior.md)
 
-Paczka domyślnie uruchamia jawne demo. Aby połączyć ją z zatwierdzonym adresem live, podaj `PIKO_DESKTOP_HTTPS_ORIGIN` przy budowie. Na hostingu użyj `deploy/jury/compose.yaml` z Caddy, listą dozwolonych sieci i domyślnym budżetem zero. Klucz ustaw wyłącznie w chronionym pliku backendu. [Wdrożenie i próba HTTPS](docs/17-odbior-live.md)
+Paczka domyślnie uruchamia jawne demo. Aby połączyć ją z zatwierdzonym adresem live, podaj `PIKO_DESKTOP_HTTPS_ORIGIN` przy budowie. Na hostingu użyj `deploy/jury/compose.yaml` z Caddy i budżetem zero. Dla odbiorcy o nieznanym IP jest opcjonalny `compose-code.yaml` oraz kod wpisywany w ustawieniach. Klucz ustaw wyłącznie w chronionym pliku backendu. [Wdrożenie i próba HTTPS](docs/17-odbior-live.md)
 
 ## Rozgrywka i zapis
 
@@ -100,3 +102,7 @@ Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Rę
 Historyczne raporty to checks/ai-live-final-v1.0.2.json, checks/ai-semantic-review.json i checks/browser-live.json. Przegląd wykonany przez asystenta jest wstępny; SEM03 i SEM09 mają etykiety oceny różniące się od rubryki, a Piko czasem mówi zbyt nauczycielsko. Akceptacja jakości dialogu przez człowieka i pilotaż pozostają do wykonania. Lokalna konfiguracja klucza działa; klucz nie jest częścią repozytorium ani wydania.
 
 Repozytorium zawiera kod, lockfile, dane autora, testy, raporty, PDF-y oraz nagrania [demo](release/media/Naucz_Pilota_demo.mp4) i [live](release/media/Naucz_Pilota_live.mp4). Komenda `npm run desktop:dist` pozwala odtworzyć paczkę Windows. Gotowy ZIP jest dostępny w [wydaniu 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0).
+
+## Odbiór oprawy i paczki
+
+`npx tsx tools/capture-presentation.ts` zapisuje ekrany i sprawdza dostępność bez API po uruchomieniu `npm run dev` w demo. `npx tsx tools/build-icon.ts` odtwarza ikony z tego samego wektora co postać. Otwarcie starego profilu sprawdza osobny runner `tools/smoke-desktop-rename.ts`. [Bieżący odbiór i ograniczenia](docs/20-odbior-kandydata.md)

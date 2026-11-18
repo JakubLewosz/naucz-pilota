@@ -1,6 +1,6 @@
 # Uruchomienie, kompilacja i wdrożenie
 
-Wersja 1.0.0, aktualizacja odbioru 10 listopada 2026. Sprawdzony host: macOS arm64; Node 24.11.0, npm 11.6.1. Lockfile przypina faktyczne wersje pakietów. Runtime gry nie wymaga Pythona.
+Piko: Misja Funkcja 1.0.0, aktualizacja odbioru 18 listopada 2026. Sprawdzony host: macOS arm64; Node 24.11.0, npm 11.6.1. Lockfile przypina faktyczne wersje pakietów. Runtime gry nie wymaga Pythona.
 
 ## Autor: kod źródłowy
 
@@ -14,7 +14,7 @@ Zwykłe sprawdzenia: `npm run typecheck`, `npm run lint`, `npm test`, `npm run t
 
 ## Windows: odbiorca
 
-Rozpakuj cały Naucz_Pilota_Windows.zip i uruchom Naucz Pilota.exe z rozpakowanego folderu. Zachowaj towarzyszące pliki i resources/. Node nie jest potrzebny. Gra zapisuje postęp w profilu lokalnym aplikacji.
+Rozpakuj cały Piko_Misja_Funkcja_Windows.zip i uruchom Piko Misja Funkcja.exe z rozpakowanego folderu. Zachowaj towarzyszące pliki i resources/. Node nie jest potrzebny. Gra zapisuje postęp w profilu lokalnym aplikacji.
 
 Paczka nie ma podpisu cyfrowego. Windows może wyświetlić komunikat o nieznanym wydawcy; autor powinien sprawdzić integralność pobranej paczki i przetestować uruchomienie na osobnym komputerze. GitHub Actions potwierdził start i wznowienie EXE starszego commita 52ac710. Aktualną paczkę zbudowano i sprawdzono statycznie. Uruchomienie tej paczki na Windows jest do wykonania. Domyślna paczka jest przeznaczona do jawnego demo.
 
@@ -63,3 +63,9 @@ Runner zatrzymuje się po pierwszym błędzie i zachowuje odrębne wyniki dla wy
 
 
 Historyczny odbiór live z 3 listopada obejmował 22 tury i M04 w UI z promptem 1.0.2 oraz modelem gpt-5.4-mini-2026-03-17. Aktualny pomiar promptu 1.2.0 dał siedem zaliczonych propozycji Luny na nowych geometriach M04 i jeden timeout. Publiczny HTTPS oraz uruchomienie aktualnego EXE na Windows pozostają NOT RUN. Narzędzie npx tsx tools/record-demo.ts --live świadomie wykonuje 2 tury płatne i nagrywa prawdziwą M04; brak flagi --live wybiera jawne demo. Nie uruchamiaj nagrania ani testów płatnych w zwykłym npm test.
+
+## Nazwa i zgodność zapisu
+
+Plik Windows to `Piko Misja Funkcja.exe`, a ZIP to `Piko_Misja_Funkcja_1.0.0_Windows_x64.zip`. Nazwa z dwukropkiem jest w oknie i dokumentach. Techniczny profil `naucz-pilota`, identyfikator aplikacji oraz klucz localStorage zachowują dotychczasowe wartości. Zamknij wcześniejszą aplikację przed aktualizacją. Odbiór lokalny potwierdził zachowanie pierwszej próby i notatki między starym i nowym pakietem na macOS. Uruchomienie na Windows trzeba wykonać osobno.
+
+Dla odbiorcy bez uzgodnionego IP wybierz wdrożenie z kodem według docs/17-odbior-live.md. Kod wpisuje się w Ustawieniach. Pozostaje on w pamięci bieżącego procesu lub strony i jest wymagany ponownie po restarcie lub odświeżeniu. Host przechowuje odrębny klucz API.

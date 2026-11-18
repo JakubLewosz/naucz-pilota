@@ -86,6 +86,21 @@ Dopiero po odbiorze dostępu ustaw `PIKO_JURY_DAILY_BUDGET` w granicach osobnej 
 
 Paczka desktop przyjmuje wyłącznie zatwierdzony origin HTTPS przez `PIKO_DESKTOP_HTTPS_ORIGIN` podczas budowania. Klucz zostaje na hoście. Zapis gry pozostaje na urządzeniu. Sesja rozmowy w SQLite wygasa po 24 godzinach i jest czyszczona przy zakładaniu sesji. Operator odpowiada za retencję kopii, czyszczenie podczas bezczynności i ustawienia dostawcy modelu.
 
+## Dostęp kodem z nieznanej sieci jury
+
+Wariant `deploy/jury/compose-code.yaml` pozwala otworzyć stronę demo z dowolnej sieci, a API wymaga kodu. W chronionym pliku backendu ustaw także `JURY_ACCESS_CODE` na losowy ciąg 32–256 znaków. Udostępnij go zaproszonym odbiorcom. Startup zakończy się błędem przy pustym lub zbyt krótkim kodzie. Globalny limiter i budżet SQLite nadal obowiązują. Zmiana kodu na hoście odcina wcześniejszy dostęp, także przy istniejącej sesji.
+
+Po zatwierdzeniu hostingu operator wykonuje:
+
+```sh
+docker compose -f deploy/jury/compose.yaml -f deploy/jury/compose-code.yaml config --quiet
+docker compose -f deploy/jury/compose.yaml -f deploy/jury/compose-code.yaml up -d --build
+```
+
+Odbiorca otwiera Ustawienia i wpisuje kod dostępu do live. W przeglądarce jest on w pamięci strony, a Electron przekazuje go do procesu głównego. Kod nie trafia do zapisu postępu, pliku dystrybucji, lekcji ani kontekstu AI. Trzeba go wpisać po odświeżeniu lub restarcie. Weryfikacja połączenia pobiera stan serwera bez tury u dostawcy. Kod odbioru jest odrębny od klucza OpenAI przechowywanego przez operatora.
+
+Lokalny `npm run jury:https:smoke` sprawdza oba warianty. Po teście listy IP odtwarza kontenery z wymuszonym kodem i sprawdza poprawny, błędny oraz brakujący kod z klienta spoza listy. Publiczny certyfikat, DNS oraz rzeczywista sieć jury pozostają NOT RUN.
+
 ## Próba z innego urządzenia
 
 Przed każdym krokiem odnotuj system, wersję, sieć, status i dowód bez sekretów. Przy zatwierdzonym `PIKO_PUBLIC_ORIGIN` sprawdź health:

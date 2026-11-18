@@ -16,20 +16,20 @@ bold=os.environ.get('PIKO_PDF_FONT_BOLD','/System/Library/Fonts/Supplemental/Ari
 pdfmetrics.registerFont(TTFont('Body',font));pdfmetrics.registerFont(TTFont('BodyBold',bold))
 styles=getSampleStyleSheet()
 styles.add(ParagraphStyle(name='TitlePL',fontName='BodyBold',fontSize=24,leading=29,textColor=colors.HexColor('#172033'),spaceAfter=18))
-styles.add(ParagraphStyle(name='HeadingPL',fontName='BodyBold',fontSize=13,leading=17,textColor=colors.HexColor('#2457d6'),spaceBefore=14,spaceAfter=8,keepWithNext=True))
+styles.add(ParagraphStyle(name='HeadingPL',fontName='BodyBold',fontSize=13,leading=17,textColor=colors.HexColor('#176b65'),spaceBefore=14,spaceAfter=8,keepWithNext=True))
 styles.add(ParagraphStyle(name='BodyPL',fontName='Body',fontSize=10.2,leading=14.5,textColor=colors.HexColor('#172033'),spaceAfter=8,alignment=TA_LEFT))
 styles.add(ParagraphStyle(name='ListPL',parent=styles['BodyPL'],leftIndent=11,firstLineIndent=-8))
 def safe(text):
  text=text.replace('–','-').replace('—','-').replace('‑','-').replace('→',' > ').replace('×','x')
  text=html.escape(text)
  text=re.sub(r'`([^`]+)`',r'<b>\1</b>',text)
- text=re.sub(r'\[([^\]]+)\]\((https?://[^ )]+)\)',r'<link href="\2" color="#2457d6">\1</link>',text)
+ text=re.sub(r'\[([^\]]+)\]\((https?://[^ )]+)\)',r'<link href="\2" color="#176b65">\1</link>',text)
  text=re.sub(r'\[([^\]]+)\]\(([^ )]+)\)',r'\1 (\2)',text)
  return text
 
 def footer(canvas,doc):
  canvas.setStrokeColor(colors.HexColor('#dce3ef'));canvas.line(48,43,547,43)
- canvas.setFont('Body',8);canvas.setFillColor(colors.HexColor('#49576d'));canvas.drawString(48,29,'NAUCZ PILOTA / 1.0.0 / '+date.today().strftime('%d.%m.%Y'));canvas.drawRightString(547,29,str(doc.page))
+ canvas.setFont('Body',8);canvas.setFillColor(colors.HexColor('#49576d'));canvas.drawString(48,29,'PIKO: MISJA FUNKCJA / 1.0.0 / '+date.today().strftime('%d.%m.%Y'));canvas.drawRightString(547,29,str(doc.page))
 
 def make(name,text):
  if SELECTED and name not in SELECTED:return None
@@ -41,7 +41,7 @@ def make(name,text):
   elif block.startswith('- ') or re.match(r'^\d+\. ',block):
    for line in block.splitlines():story.append(Paragraph(safe(line),styles['ListPL']))
   else:story.append(Paragraph(safe(block.replace('\n',' ')),styles['BodyPL']))
- SimpleDocTemplate(str(OUT/name),pagesize=(595.28,841.89),leftMargin=48,rightMargin=48,topMargin=48,bottomMargin=60,title='Naucz Pilota',author='Projekt Naucz Pilota').build(story,onFirstPage=footer,onLaterPages=footer)
+ SimpleDocTemplate(str(OUT/name),pagesize=(595.28,841.89),leftMargin=48,rightMargin=48,topMargin=48,bottomMargin=60,title='Piko: Misja Funkcja',author='Projekt Piko: Misja Funkcja').build(story,onFirstPage=footer,onLaterPages=footer)
  reader=PdfReader(OUT/name)
  assert all(p.extract_text().strip() for p in reader.pages)
  print(name,len(reader.pages),'pages')
@@ -49,14 +49,14 @@ def make(name,text):
 source=Path('docs/11-uruchomienie.md').read_text()
 launch='''# Instrukcja uruchomienia
 
-Naucz Pilota 1.0.0, kandydat konkursowy. Paczka offline udostępnia całą kampanię demo. Docelowy adres live jest do skonfigurowania.
+Piko: Misja Funkcja 1.0.0, kandydat konkursowy. Paczka offline udostępnia całą kampanię demo. Docelowy adres live jest do skonfigurowania.
 
 ## Windows x64
 
-1. Rozpakuj cały plik Naucz_Pilota_Windows.zip do własnego folderu.
-2. Uruchom Naucz Pilota.exe z rozpakowanego folderu. Zachowaj wszystkie pliki i resources/. Node i Python nie są potrzebne.
+1. Rozpakuj cały plik Piko_Misja_Funkcja_Windows.zip do własnego folderu.
+2. Uruchom Piko Misja Funkcja.exe z rozpakowanego folderu. Zachowaj wszystkie pliki i resources/. Node i Python nie są potrzebne.
 3. Etykieta Demo informuje, że odpowiedzi Piko są scenariuszowe. Cała kampania działa bez internetu.
-4. Kliknij Zacznij. Szczegóły czterech etapów znajdziesz w instrukcji użytkownika.
+4. Kliknij Rozpocznij. Szczegóły czterech etapów znajdziesz w instrukcji użytkownika.
 5. Zamknij okno. Przy kolejnym uruchomieniu postęp pozostaje na tym urządzeniu. W Ustawieniach możesz usunąć go po potwierdzeniu.
 
 Paczka jest niepodpisana. Test GitHub Actions potwierdził start i wznowienie EXE starszego commita 52ac710. Aktualny plik sprawdzono statycznie. Uruchomienie aktualnej paczki na Windows jest do wykonania.

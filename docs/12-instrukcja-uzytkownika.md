@@ -1,19 +1,19 @@
 # Instrukcja użytkownika
 
-Naucz Pilota 1.0.0. Napisz funkcję, wyznacz bezpieczny tor i naucz Piko, dlaczego działa.
+Piko: Misja Funkcja 1.0.0. Napisz funkcję, wyznacz bezpieczny tor i naucz Piko, dlaczego działa.
 
 ## Rozpoczęcie
 
-Wybierz Zacznij albo Kontynuuj. Lista misji pokazuje sześć tematów i kolejność odblokowania. W górnym pasku zawsze widzisz tryb: Demo oznacza przygotowane odpowiedzi; Live oznacza prawdziwy model; AI niedostępne oznacza brak odpowiedzi. Model może się pomylić. Zaliczenia liczy aplikacja.
+Wybierz Rozpocznij albo Kontynuuj. Lista misji pokazuje sześć tematów i kolejność odblokowania. W górnym pasku zawsze widzisz tryb: Demo oznacza przygotowane odpowiedzi; Live oznacza prawdziwy model; AI niedostępne oznacza brak odpowiedzi. Model może się pomylić. Zaliczenia liczy aplikacja.
 
 Na planszy x rośnie w prawo, y w górę. S oznacza start, G1 i G2 bramki, CEL metę. Kreskowany prostokąt jest przeszkodą. Robot ma bok 0,24 jednostki i cały musi mieścić się w otworach. W Danych planszy znajdziesz dokładne współrzędne. Pod wykresem przez cały czas widać wymagane blokady parametrów.
 
 ## Cztery etapy misji
 
-1. Sprawdź tor: wpisz wzór i naciśnij Leć. Przerywana linia jest neutralnym podglądem. Wynik pojawia się po uruchomieniu. W razie trudności odsłaniaj kolejno trzy wskazówki. Po bezpiecznym locie wybierz Teraz naucz Piko.
+1. Twój lot: wpisz wzór i naciśnij Leć. Przerywana linia jest neutralnym podglądem. Wynik pojawia się po uruchomieniu. W razie trudności odsłaniaj kolejno trzy wskazówki. Po bezpiecznym locie wybierz Teraz naucz Piko.
 2. Naucz Piko: sprawdź jego scenariuszowy pomysł, popraw wzór, przewidź y dla x obu bramek i wyjaśnij zmianę. Przycisk Sprawdź naprawę przelicza tor i prognozy. W live przycisk Powiedz Piko pozwala otrzymać parafrazę i opinię o tekście. Demo pokazuje przygotowany komentarz. Po kontroli wzoru i prognoz wybierz Zapisz notatkę dla Piko. Odpowiedź Piko jest opcjonalna.
 3. Lot Piko: robot dostaje nową planszę, notatkę i sprawdzoną zasadę. Poproś o propozycję, przeczytaj komentarz i przewidź wynik. Po wybraniu „Sprawdź lot Piko” zobaczysz sprawdzony wzór i wynik silnika. Rozwiń „Dlaczego? Wartości obliczone przez silnik”, aby odczytać wysokości w punktach trasy. Możesz poprosić o jedną poprawkę. W czasie oczekiwania możesz przejść do własnej próby przyciskiem „Pomiń lot Piko”. Notatka pozostanie zapisana, a pominięcie będzie odnotowane oddzielnie od Twojego wyniku. Gdy AI jest niedostępne, możesz jawnie wybrać demo.
-4. Twój samodzielny lot: to kolejna, osobna plansza. Przed pierwszą próbą nie ma toru, automatycznych wartości y, rozmowy, wskazówek ani dziennika. Wpisz wzór i wybierz Sprawdź mój lot. Błąd składni nie liczy się jako próba. Pierwszy parsowalny wzór i jego wynik są niezmiennie zachowane. Po porażce możesz poprawiać wzór; podsumowanie rozróżnia pierwszą próbę i późniejsze ukończenie.
+4. Sprawdź siebie: to kolejna, osobna plansza. Przed pierwszą próbą nie ma toru, automatycznych wartości y, rozmowy, wskazówek ani dziennika. Wpisz wzór i wybierz Sprawdź mój lot. Błąd składni nie liczy się jako próba. Pierwszy parsowalny wzór i jego wynik są niezmiennie zachowane. Po porażce możesz poprawiać wzór; podsumowanie rozróżnia pierwszą próbę i późniejsze ukończenie.
 
 ## Zapis wzoru
 
@@ -34,3 +34,7 @@ Aplikacja przenosi zapisy wersji 1 do wersji 2. Ekran odzyskiwania pozwala zacho
 W live do usługi AI trafia Twoje wyjaśnienie, notatka, bieżąca plansza i potrzebne reguły. Serwer gry przechowuje bieżącą rozmowę w sesji SQLite, która wygasa po 24 godzinach. Wyczyść rozmowę działa na serwerze gry. Dane wysłane do dostawcy podlegają ustawieniom konta API. W demo odpowiedzi są scenariuszowe i działają lokalnie.
 
 Piko odgrywa ucznia; nie trenujemy wag modelu. Wyniki opisują wykonanie zadań w tej sesji. Nie są diagnozą wiedzy ani dowodem trwałej skuteczności edukacyjnej.
+
+## Dostęp do live z kodem
+
+Jeżeli prowadzący przekazał Ci kod, otwórz Ustawienia, rozwiń „Masz kod dostępu do live?”, wpisz go i wybierz „Połącz z kodem”. Po potwierdzeniu wróć do gry. Kod trzeba podać ponownie po zamknięciu aplikacji lub odświeżeniu strony. Jeśli prowadzący używa dostępu z określonej sieci, postępuj według jego instrukcji.
