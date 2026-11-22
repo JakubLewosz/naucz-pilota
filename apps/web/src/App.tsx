@@ -86,6 +86,8 @@ export function App(){
  useEffect(()=>{setSaveError(persistState(undefined,s));},[s]);
  useEffect(()=>{void getStatus().then(status=>dispatch({type:'STATUS',live:status.mode==='live'&&status.available}));const media=matchMedia('(prefers-reduced-motion: reduce)');setSystemReduced(media.matches);const fn=()=>setSystemReduced(media.matches);media.addEventListener('change',fn);return()=>{media.removeEventListener('change',fn);abort.current?.abort();};},[]);
  useEffect(()=>{heading.current?.focus();},[s.page,s.missionId,r.role]);
+ // Gdy AI było niedostępne, sprawdzaj co 10 s, czy serwer już wrócił.
+ useEffect(()=>{if(s.mode!=='unavailable')return;const id=setInterval(()=>{void getStatus().then(status=>dispatch({type:'STATUS',live:status.mode==='live'&&status.available}));},10000);return()=>clearInterval(id);},[s.mode]);
  useEffect(()=>{if(!s.busy)abort.current?.abort();},[s.viewRevision,s.busy]);
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if(e.key==='Escape'&&['journal','settings','about'].includes(s.page))dispatch({type:'OPEN',page:'game'});};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);},[s.page]);
  function insertIntoFormula(text:string){

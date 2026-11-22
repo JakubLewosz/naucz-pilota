@@ -146,6 +146,8 @@ export function reducer(state:GameState,action:Action):GameState {
   case 'STATUS':s.liveAvailable=action.live;
    // Nowy gracz dostaje prawdziwe AI od razu, gdy serwer je udostępnia.
    if(action.live&&s.mode==='demo'&&Object.values(s.runs).every(run=>!run.messages.length&&!Object.keys(run.counts).length))s.mode='live';
+   // Po chwilowej awarii (np. restart serwera) wracamy do prawdziwego AI, gdy serwer znów działa.
+   if(action.live&&s.mode==='unavailable'&&!s.busy){s.mode='live';s.error='';for(const run of Object.values(s.runs))run.unavailable=false;}
    break;
   case 'SETTINGS':s.settings={...s.settings,...action.settings};break;
   case 'CLEAR_CHAT_START':
