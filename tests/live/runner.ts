@@ -31,7 +31,7 @@ export type LiveResult={
  semanticReview:'NOT REVIEWED';rubric:string[];reason?:string
 };
 export function assessLiveResponse(test:LiveCase,status:number,envelope:Envelope,observations:ProviderObservation[]=[]){
- const checks=[{name:'HTTP 200',passed:status===200},{name:'Response from configured live adapter',passed:envelope.mode==='live'&&envelope.model?.provider==='openai'&&Boolean(envelope.model.actualModel)&&envelope.model.requestCount>0},{name:'Model schema valid',passed:validateModel(envelope.learner)}];
+ const checks=[{name:'HTTP 200',passed:status===200},{name:'Response from configured live adapter',passed:envelope.mode==='live'&&(envelope.model?.provider==='openai'||envelope.model?.provider==='anthropic')&&Boolean(envelope.model.actualModel)&&envelope.model.requestCount>0},{name:'Model schema valid',passed:validateModel(envelope.learner)}];
  const learner=envelope.learner,scene=missionById(test.body.missionId).scenes[test.body.sceneRole];
  checks.push({name:'Scene identity preserved',passed:envelope.sceneId===scene.id});
  if(test.body.sceneRole==='teach')checks.push({name:'No robot solution in teach',passed:learner?.proposedExpression===null});

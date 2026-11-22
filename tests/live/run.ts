@@ -5,8 +5,8 @@ import {writeFileSync} from 'node:fs';
 import {buildContext} from '@piko/contracts';
 import {createApp} from '../../apps/server/src/app';
 import {Store} from '../../apps/server/src/store';
-import {openAIProvider} from '../../apps/server/src/provider';
-import {integer,readOpenAIConfig} from '../../apps/server/src/config';
+import {integer} from '../../apps/server/src/config';
+import {selectProvider} from '../../apps/server/src/select-provider';
 import {PROMPT_VERSION} from '../../apps/server/src/system';
 import {selectLiveCases} from './cases';
 import {executeLiveCases,observeProvider,type LiveResult} from './runner';
@@ -24,12 +24,12 @@ if(args.length===1&&args[0]==='--help'){
 const {filter,maxProviderCalls,allowPaid,dryRun}=parseLiveOptions(args);
 const selected=selectLiveCases(filter);
 if(!selected.length)throw new Error('No matching live cases.');
-const {model,reasoningEffort,maxOutputTokens,timeoutMs,maxProviderRequests}=readOpenAIConfig();
-const key=process.env.OPENAI_API_KEY;
+const ai=selectProvider();
+const {model,maxOutputTokens,timeoutMs,maxProviderRequests,key}=ai,reasoningEffort=ai.effort;
 
 const date=new Date().toISOString();
 const report={
- date,provider:'openai',model:model||null,reasoningEffort:reasoningEffort??null,maxOutputTokens,timeoutMs,maxProviderRequests,promptVersion:PROMPT_VERSION,
+ date,provider:ai.name,model:model||null,reasoningEffort:reasoningEffort??null,maxOutputTokens,timeoutMs,maxProviderRequests,promptVersion:PROMPT_VERSION,
  commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
  dirty:execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).length>0,
  selection:filter??'standard',platform:process.platform,node:process.version,
@@ -54,16 +54,16 @@ if(dryRun){
  report.reason='Brak jawnego --allow-paid i zatwierdzonego budżetu.';
  process.exitCode=2;
 }else if(!key||!model){
- report.reason='Brak OPENAI_API_KEY lub AI_MODEL. Dostawcy nie wywołano.';
+ report.reason='Brak klucza API lub AI_MODEL dla wybranego dostawcy. Dostawcy nie wywołano.';
  process.exitCode=2;
 }else{
  let store:Store|undefined;
  try{
   store=new Store(process.env.STATE_DB_PATH??'var/piko.sqlite');
-  const observed=observeProvider(openAIProvider(key,model,maxOutputTokens,{reasoningEffort}));
+  const observed=observeProvider(ai.create());
   const app=createApp({
    store,provider:observed.provider,
-   config:{mode:'live',model,timeoutMs,maxProviderRequests,dailyBudget:integer('AI_DAILY_REQUEST_BUDGET',200,0)}
+   config:{mode:'live',provider:ai.name,model,timeoutMs,maxProviderRequests,dailyBudget:integer('AI_DAILY_REQUEST_BUDGET',200,0)}
   });
   report.status='RUNNING';
   await save();
