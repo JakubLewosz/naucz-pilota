@@ -68,7 +68,7 @@ export function checkModel(value:unknown,context:Context):value is ModelPayload 
 }
 export type Envelope={schemaVersion:'1.0.0';sessionId:string;sessionRevision:number;turnId:string;sceneId:string;mode:'live'|'demo'|'unavailable';learner:ModelPayload|null;
  proposalValidation:{status:'not_proposed'|'passed'|'failed'|'invalid_expression';failureCode:string|null;normalizedExpression:string|null;facts:{id:string;textPL:string}[]};
- memory:ReturnType<typeof buildContext>['memory'];model:{provider:'openai'|null;configuredModel:string|null;actualModel:string|null;providerResponseId:string|null;requestCount:number;inputTokens:number|null;outputTokens:number|null;latencyMs:number};error:{code:string;messagePL:string;retryable:boolean}|null};
+ memory:ReturnType<typeof buildContext>['memory'];model:{provider:'openai'|'anthropic'|null;configuredModel:string|null;actualModel:string|null;providerResponseId:string|null;requestCount:number;inputTokens:number|null;outputTokens:number|null;latencyMs:number};error:{code:string;messagePL:string;retryable:boolean}|null};
 export function makeEnvelope(request:LearnerRequest,memory:Envelope['memory'],learner:ModelPayload|null,mode:Envelope['mode']):Envelope {
  const s=missionById(request.missionId).scenes[request.sceneRole],proposal=learner?.proposedExpression??null,r=proposal?evaluateScene(s,proposal):null;
  return {schemaVersion:'1.0.0',sessionId:request.sessionId,sessionRevision:request.sessionRevision+1,turnId:request.turnId,sceneId:s.id,mode,learner,

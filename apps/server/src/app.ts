@@ -6,8 +6,8 @@ import {buildContext,checkModel,ContractError,demoTurn,makeEnvelope,validateRequ
 import {Store} from './store';
 import {ProviderError,type Provider} from './provider';
 import {DEFAULT_AI_TIMEOUT_MS} from './config';
-export type ServerConfig={mode:'demo'|'live';model:string;publicOrigin:string;production:boolean;timeoutMs:number;dailyBudget:number;sessionLimit:number;bodyBytes:number;maxProviderRequests:number;accessCode:string;requireAccessCode:boolean};
-const defaultConfig:ServerConfig={mode:'demo',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:DEFAULT_AI_TIMEOUT_MS,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2,accessCode:'',requireAccessCode:false};
+export type ServerConfig={mode:'demo'|'live';provider:'openai'|'anthropic';model:string;publicOrigin:string;production:boolean;timeoutMs:number;dailyBudget:number;sessionLimit:number;bodyBytes:number;maxProviderRequests:number;accessCode:string;requireAccessCode:boolean};
+const defaultConfig:ServerConfig={mode:'demo',provider:'openai',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:DEFAULT_AI_TIMEOUT_MS,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2,accessCode:'',requireAccessCode:false};
 const errorText:Record<string,string>={AI_NOT_CONFIGURED:'Sprawdź konfigurację modelu live i dostęp konta do tego modelu.',AI_TIMEOUT:'Nie udało się otrzymać odpowiedzi w limicie czasu. Twoje wpisy są zachowane.',AI_PROVIDER_UNAVAILABLE:'Usługa AI jest chwilowo niedostępna.',AI_REFUSED:'Piko nie otrzymał odpowiedzi od usługi AI.',AI_INCOMPLETE:'Odpowiedź modelu była niekompletna.',AI_INVALID_OUTPUT:'Model nie zwrócił poprawnej odpowiedzi.',DAILY_BUDGET_EXHAUSTED:'Dzienny limit wywołań AI został wyczerpany.',TURN_INTERRUPTED:'Poprzednia tura została przerwana. Możesz wysłać nową.'};
 export function createApp(options:{store:Store;provider?:Provider;config?:Partial<ServerConfig>}){
  const app=express(),config={...defaultConfig,...options.config},store=options.store;
@@ -32,7 +32,7 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
  app.use(express.json({limit:config.bodyBytes,strict:true}));app.use(cookieParser());
  const transportToken=(req:express.Request)=>req.get('authorization')?.replace(/^Bearer /,'')??req.cookies.piko_session;
  const turnInProgress=(id:string)=>[...pending.keys()].some(key=>key.startsWith(id+'/'));
- app.get('/api/health',(_req,res)=>res.json({ok:true,mode:config.mode,available:config.mode==='live'&&Boolean(options.provider&&config.model),provider:config.mode==='live'?'openai':null,model:config.mode==='live'?config.model:null}));
+ app.get('/api/health',(_req,res)=>res.json({ok:true,mode:config.mode,available:config.mode==='live'&&Boolean(options.provider&&config.model),provider:config.mode==='live'?config.provider:null,model:config.mode==='live'?config.model:null}));
  app.post('/api/session',(req,res)=>{
   store.clean();const existing=store.authenticate(transportToken(req));
   if(existing){res.json({sessionId:existing.id,sessionRevision:existing.revision});return;}
@@ -77,7 +77,7 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
   session.sceneId=built.context.scene.id;store.updateSession(session);
   const work=async()=>{
    const started=performance.now();let count=0,inputTokens=0,outputTokens=0,envelope=makeEnvelope(request,built.memory,null,'unavailable'),status=200;
-   if(request.requestedMode==='live'){envelope.model.provider='openai';envelope.model.configuredModel=config.model||null;}
+   if(request.requestedMode==='live'){envelope.model.provider=config.provider;envelope.model.configuredModel=config.model||null;}
    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),config.timeoutMs);
    try{
     if(request.requestedMode==='demo')envelope=demoTurn(request);
@@ -92,7 +92,7 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
       const timeout=new Promise<never>((_,reject)=>{if(controller.signal.aborted)reject(new ProviderError('AI_TIMEOUT',504));else controller.signal.addEventListener('abort',()=>reject(new ProviderError('AI_TIMEOUT',504)),{once:true});});
       const response=await Promise.race([options.provider(built.context,request.userMessage,controller.signal,repair),timeout]);
       inputTokens+=response.inputTokens??0;outputTokens+=response.outputTokens??0;
-      envelope.model={provider:'openai',configuredModel:config.model,actualModel:response.actualModel,providerResponseId:response.responseId,requestCount:count,inputTokens,outputTokens,latencyMs:performance.now()-started};
+      envelope.model={provider:config.provider,configuredModel:config.model,actualModel:response.actualModel,providerResponseId:response.responseId,requestCount:count,inputTokens,outputTokens,latencyMs:performance.now()-started};
       let payload:unknown;try{payload=JSON.parse(response.text);}catch{payload=null;}
       if(checkModel(payload,built.context)){
        const metadata=envelope.model;envelope=makeEnvelope(request,built.memory,payload,'live');envelope.model=metadata;accepted=true;break;

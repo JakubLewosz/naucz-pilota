@@ -55,7 +55,7 @@ function envelope(v:unknown,missionId:string){
    learnedRuleIds:list(string),qualifiedRuleIds:list(string),newlyQualifiedRuleIds:list(string),rejectedEvidenceMissionIds:list(isMission)
   }),
   model:m=>fields(m,{
-   provider:nullable(oneOf(['openai'])),configuredModel:nullable(string),actualModel:nullable(string),
+   provider:nullable(oneOf(['openai','anthropic'])),configuredModel:nullable(string),actualModel:nullable(string),
    providerResponseId:nullable(string),requestCount:count(),inputTokens:nullable(count()),
    outputTokens:nullable(count()),latencyMs:finite
   }),
