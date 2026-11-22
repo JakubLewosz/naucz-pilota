@@ -10,7 +10,9 @@ Projekt na konkurs „Sztuczna inteligencja wśród nas” Wydziału Informatyki
 
 ## Pomysł
 
-Najlepiej uczymy się, tłumacząc coś komuś innemu (tzw. efekt protegowanego, *learning by teaching*). W większości aplikacji to AI tłumaczy uczniowi. W Piko jest odwrotnie: **uczeń tłumaczy AI**, a gra uczciwie sprawdza, czy to wyjaśnienie wystarczyło.
+Najlepiej uczymy się, tłumacząc coś komuś innemu (tzw. efekt protegowanego, *learning by teaching*, por. „teachable agents”, np. Betty's Brain). W większości aplikacji to AI tłumaczy uczniowi. W Piko jest odwrotnie: **uczeń tłumaczy AI**.
+
+Piko naprawdę uczy się tylko od gracza. Po lekcji zapisuje w pamięci jedno zdanie: co zrozumiał, nawet jeśli to błąd. Na nowej trasie nie dostaje gotowej zasady z gry, tylko tę pamięć. Dobra lekcja pozwala mu przelecieć, a błędna kończy się rozbiciem dokładnie tam, gdzie prowadzi błąd. Gracz czyta uzasadnienie Piko, znajduje swój błąd i poprawia lekcję.
 
 - Sześć misji i 24 plansze: wyraz wolny, nachylenie prostej, przesunięcia paraboli w pionie i poziomie, szerokość paraboli i łączenie przekształceń.
 - Każda misja ma cztery kroki: **Twój lot → Naucz Piko → Lot Piko → Sprawdź siebie**.
@@ -21,11 +23,11 @@ Najlepiej uczymy się, tłumacząc coś komuś innemu (tzw. efekt protegowanego,
 
 | Moment | Co robi AI (Claude Sonnet 5.5) | Co robi gra |
 |---|---|---|
-| Naucz Piko | Piko parafrazuje wyjaśnienie gracza, ocenia je (poprawne / częściowe / błędne / niejasne) i zadaje jedno pytanie, jak uczeń. | Sprawdza wzór i dwie prognozy gracza. |
-| Lot Piko | Piko czyta notatkę z lekcji, sam dobiera wzór dla **nowej** trasy i uzasadnia wybór. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Gracz najpierw przewiduje, czy Piko przeleci. |
+| Naucz Piko | Piko parafrazuje wyjaśnienie gracza, ocenia je (poprawne / częściowe / błędne / niejasne), zadaje jedno pytanie i zapisuje swoje przekonanie („Myślę, że…”), wiernie według słów gracza. | Sprawdza wzór i dwie prognozy gracza. |
+| Lot Piko | Piko zna **tylko** swoje przekonania z lekcji (bez kanonicznej zasady), sam dobiera wzór dla **nowej** trasy i mówi, które zdanie lekcji stosuje. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Po porażce gracz poprawia lekcję i Piko leci jeszcze raz. |
 | Bezpieczeństwo | Odpowiedź ma wymuszony schemat JSON. Tekst gracza trafia do modelu wyłącznie jako dane, nie jako polecenie. | Odrzuca odpowiedzi niezgodne z fazą gry, a błędnych wzorów Piko nie poprawia po cichu. |
 
-Wynik testu na prawdziwym modelu (22 listopada 2026): **22/22 tur poprawnych, 6/6 lotów Piko zaliczonych przez silnik**, mediana odpowiedzi 3,6 s. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](checks/ai-live-claude-sonnet-5-5.md).
+Wynik testu na prawdziwym modelu (prompt 2.0.0): 22/22 tur poprawnych. Przekonania Piko wiernie oddają słowa gracza, także błędne. Lot Piko zależy od lekcji: w misji 4 dobra lekcja daje udany lot, a błędna („plus przesuwa w prawo”) i pusta kończą się rozbiciem. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](checks/ai-live-claude-sonnet-5-5.md).
 
 ## Szybki start (kod źródłowy)
 
@@ -64,7 +66,7 @@ Do paczki z wbudowanym AI używaj osobnego klucza z limitem wydatków ustawionym
 
 ```sh
 npm run typecheck && npm run lint
-npm test                     # 219 testów jednostkowych (silnik, kontrakt AI, serwer, zapis)
+npm test                     # 222 testy jednostkowe (silnik, kontrakt AI, serwer, zapis)
 npm run test:content         # 62 testy treści misji
 npx playwright install chromium
 npm run test:e2e             # 17 testów całej gry w przeglądarce

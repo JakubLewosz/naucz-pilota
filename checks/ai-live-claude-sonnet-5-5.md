@@ -1,19 +1,27 @@
-# Test live: Claude Sonnet 5.5 (prompt 1.3.1)
+# Test live: Claude Sonnet 5.5, prompt 2.0.0 („Piko uczy się od gracza”)
 
-Data: 22 listopada 2026. Model `claude-sonnet-5-5`, wysiłek rozumowania `medium`, limit 8192 tokenów.
-Polecenie: `npm run test:ai:live -- --allow-paid --max-calls 44`. Surowy zapis: [ai-live-results.json](ai-live-results.json).
+Data: 22 listopada 2026. Model `claude-sonnet-5-5`, wysiłek `medium`. Od promptu 2.0.0 Piko w locie nie dostaje kanonicznej zasady, tylko notatki z lekcji gracza i własne przekonanie zapisane w lekcji (`pikoBeliefPL`).
+
+## Zestaw standardowy (22 tury)
+
+`npm run test:ai:live -- --allow-paid --max-calls 44`, surowy zapis: [ai-live-results.json](ai-live-results.json).
 
 | Wynik | Wartość |
 |---|---|
-| Tury (10 semantycznych + 6 lekcji + 6 transferów) | 22/22 PASS strukturalnie, 1 żądanie na turę, bez ponowień |
-| Loty transferowe Piko zaliczone przez silnik gry | **6/6** (M01–M06) |
-| Mediana czasu odpowiedzi | 3,6 s |
-| Zużycie | 112 467 tokenów wejścia, 8 527 wyjścia, ok. 0,31 USD za cały zestaw |
-| Żargon techniczny i formy zależne od płci gracza | brak (sprawdzono automatycznie wszystkie 22 wypowiedzi) |
+| Tury zgodne ze schematem i fazą gry | 22/22, jedno żądanie na turę |
+| Przekonania Piko wiernie oddają słowa gracza | tak, także błędne: SEM04 „nawias (x+1) przesuwa w prawo” zapisane jako błędne przekonanie; puste wyjaśnienia dają „Jeszcze nie wiem…” |
+| Loty Piko z poprawnymi lekcjami wzorcowymi | 5/6 udanych; w M06 lekcja nie mówiła, jak dobrać współczynnik a, i Piko go zgadł |
+| Mediana czasu odpowiedzi | ok. 4,2 s |
 
-Porównanie z wcześniejszymi próbami (te same 22 tury): GPT-5.4 mini z promptem 1.0.2 zaliczał 2/6 transferów;
-GPT-6 Luna Extra High miał medianę odpowiedzi ok. 16,5 s.
+## Czy lot zależy od lekcji? (M04, ta sama trasa)
 
-Przykład transferu M06: „Biorę z notatki to, że w y=a(x-p)^2+q wierzchołek to (p,q) … ustawiam tam wierzchołek: p=-2, q=1 … Proponuję ten wzór, a grę poproszę o sprawdzenie.” Wzór `0.25*(x+2)^2+1`, silnik: bezpieczny lot.
+| Lekcja gracza | Wzór Piko | Wynik gry |
+|---|---|---|
+| „Nawias (x+1) zeruje się dla x=-1, więc wierzchołek w lewo…” | `0.25*(x-2)^2` | udany lot |
+| „Plus w nawiasie przesuwa w prawo, minus w lewo” | `0.25(x+2)^2` | rozbicie (START_MISS) |
+| „Trzeba zmienić minus na plus” | `0.25*(x+2)^2`, „w lekcji zabrakło mi, skąd wziąć liczbę” | rozbicie |
+| Błędna lekcja bez rozmowy z Piko | `0.25(x+2)^2` | rozbicie |
 
-Ocena jakości dialogu przez człowieka (rubryka w raporcie JSON) pozostaje do wykonania.
+W interfejsie (M01) błędna lekcja „liczba bez x mówi, o ile tor jest niżej od 4” dała wzór `1` i rozbicie. Po „Popraw lekcję” i poprawnym wyjaśnieniu Piko zaproponował `3` i przeleciał.
+
+Wcześniejsze wyniki (prompt 1.3.1, gdy Piko w locie znał kanoniczną zasadę): 22/22 i 6/6 lotów niezależnie od jakości lekcji. Ta niezależność była powodem zmiany.

@@ -104,7 +104,9 @@ it('M04 demo labels scripted comments and keeps the same mechanical result for a
   expect(turn.learner?.explanationAssessment).toBe('not_applicable');
  }
  for(const turn of teach){
-  expect(turn.learner).toEqual(teach[0].learner);
+  // Ten sam komentarz demo; różni się tylko dosłownie zapamiętana notatka gracza.
+  expect({...turn.learner,pikoBeliefPL:null}).toEqual({...teach[0].learner,pikoBeliefPL:null});
+  expect(turn.learner?.pikoBeliefPL).toMatch(/^Zapamiętam Twoje słowa/);
   expect(turn.learner?.utterancePL).toContain('przygotowany komentarz demonstracyjny');
  }
  for(const turn of transfer){

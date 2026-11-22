@@ -44,7 +44,7 @@ Dockerfile buduje obraz na Node 24. `deploy/jury/compose.yaml` dodaje Caddy (HTT
 ## Testy
 
 - `npm run typecheck`, `npm run lint`: kontrola typów i stylu.
-- `npm test`: 219 testów jednostkowych (silnik, kontrakt AI, serwer, zapis gry, oba adaptery AI na atrapie HTTP).
+- `npm test`: 222 testy jednostkowe (silnik, kontrakt AI, serwer, zapis gry, oba adaptery AI na atrapie HTTP).
 - `npm run test:content`, `python3 tools/validate_missions.py`: poprawność 24 plansz.
 - `npx playwright install chromium`, potem `npm run test:e2e`: 17 testów całej gry w przeglądarce.
 - `npm run test:ai:live -- --dry-run`: przygotowanie zestawu live bez wywołań API.

@@ -91,7 +91,9 @@ export function demoTurn(request:LearnerRequest):Envelope {
   : request.phase==='teach_repair' && context.eligibleRuleIds.includes(mission.canonicalRuleId)
    ? `To przygotowany komentarz demonstracyjny. Sprawdzona zasada brzmi: ${mission.ruleText}`
    : 'To przygotowany komentarz demonstracyjny. Najpierw sprawdź swój wzór i prognozy.';
- const pikoBeliefPL=robot?null:context.eligibleRuleIds.includes(mission.canonicalRuleId)?`Myślę, że: ${mission.ruleText}`:'Jeszcze nie wiem, co mam zmienić.';
+ // Tryb pokazowy nie rozumie tekstu: zapamiętuje dosłownie słowa gracza.
+ const words=request.userMessage.trim().replace(/\s+/g,' ');
+ const pikoBeliefPL=robot?null:words?`Zapamiętam Twoje słowa: „${words.length>180?words.slice(0,177)+'…':words}”`:'Jeszcze nie wiem, co mam zmienić.';
  const learner:ModelPayload={utterancePL,followUpPL:null,pikoBeliefPL,explanationAssessment:'not_applicable',proposedExpression:robot?demoProposals[request.missionId]:null,suggestedRuleId:null,usedFactIds:[],action:robot?'propose_attempt':'explain_back'};
  if(!checkModel(learner,context)) throw new Error('Invalid demo fixture');
  return makeEnvelope(request,memory,learner,'demo');
