@@ -16,7 +16,7 @@ async function teach(page:Page,mission:typeof data.missions[number]){
  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
  await expect(page.getByText('Zasada sprawdzona przez grę',{exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
- await expect(page.getByLabel('Komentarz Piko')).toContainText('TRYB POKAZOWY');
+ await expect(page.getByLabel('Komentarz Piko')).toContainText('Piko (tryb pokazowy)');
  await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
 }
 async function transfer(page:Page,checkStartMiss=false){
@@ -219,7 +219,7 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała ustawia wysokość toru.');
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
  const chat=page.getByLabel('Komentarz Piko');
- await expect(chat).toContainText('TRYB POKAZOWY');
+ await expect(chat).toContainText('Piko (tryb pokazowy)');
  await expect(chat).toContainText('Stała ustawia wysokość toru.');
  await selectMode(page,'live');
  await stubSession(page);
@@ -234,8 +234,8 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  await page.getByRole('button',{name:'Spróbuj ponownie'}).click();
  await expect(page.getByTestId('ai-mode')).toContainText('Prawdziwe AI');
  await expect(page.getByText('Brak odpowiedzi AI. Twoje wpisy są zachowane.')).toHaveCount(0);
- await expect(chat).toContainText('TRYB POKAZOWY');
- await expect(chat).toContainText('PRAWDZIWE AI');
+ await expect(chat).toContainText('Piko (tryb pokazowy)');
+ await expect(chat).toContainText('Piko (prawdziwe AI)');
  await selectMode(page,'demo');
  let resets=0;
  await page.route('**/api/conversation/reset',route=>{
@@ -245,9 +245,9 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  });
  await page.getByRole('button',{name:'Wyczyść rozmowę'}).click();
  await expect(page.getByText('Piko kończy poprzednią turę.')).toBeVisible();
- await expect(chat).toContainText('PRAWDZIWE AI');
+ await expect(chat).toContainText('Piko (prawdziwe AI)');
  await page.getByRole('button',{name:'Wyczyść rozmowę'}).click();
- await expect(chat).not.toContainText('PRAWDZIWE AI');
+ await expect(chat).not.toContainText('Piko (prawdziwe AI)');
  await expect(page.getByLabel('Co Piko powinien zmienić i dlaczego?')).toHaveValue('Stała ustawia wysokość toru.');
  expect(resets).toBe(2);
 });
