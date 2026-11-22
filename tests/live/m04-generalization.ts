@@ -8,7 +8,6 @@ import {buildM04LessonCases} from './cases';
 export const seed=20261110;
 const original=missionById('M04').scenes.robot_transfer;
 const shiftedExpression=(vertex:number)=>`0.25(x-(${vertex}))^2`;
-const rulePL='W y=a(x-p)^2+q współrzędna x wierzchołka to p. W nawiasie (x+b) punkt zerowania to x=-b, więc znak stałej dodanej do x wyznacza kierunek przesunięcia.';
 export const historicalProposal='0.25*(x-2)^2';
 
 function translated(delta:number){

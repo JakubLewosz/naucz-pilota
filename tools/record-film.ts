@@ -24,7 +24,6 @@ async function quickMission(p:Page,m:typeof data.missions[number]){
  await p.getByRole('button',{name:'Teraz naucz Piko'}).click();
  const t=m.scenes.teach,w=t.witness;
  await p.getByLabel('Twój poprawiony wzór').fill(w.expression);
- for(const [i,g] of t.gates.entries())await p.locator(`#prediction${i}`).fill(String((w.c2*g.x+w.c1)*g.x+w.c0));
  await p.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(m.ruleText);
  await p.getByRole('button',{name:'Sprawdź naprawę'}).click();
  await p.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
@@ -88,12 +87,11 @@ await p.getByRole('button',{name:'Teraz naucz Piko'}).click();await pause(800);
 
 // Krok 2: nauczanie.
 mark('teach-idea');
-const idea=p.getByRole('button',{name:'Sprawdź pomysł Piko'});await show(idea);await idea.click();await pause(1200);
+await pause(1200);
 await show(p.getByTestId('engine-result'));await pause(2500);
 mark('teach-fix');
 const t=m.scenes.teach,w=t.witness;
 await typeInto(p.getByLabel('Twój poprawiony wzór'),w.expression);
-for(const [i,g] of t.gates.entries())await typeInto(p.locator(`#prediction${i}`),String((w.c2*g.x+w.c1)*g.x+w.c0).replace('.',','));
 await p.getByRole('button',{name:'Sprawdź naprawę'}).click();await pause(1500);
 await show(p.getByTestId('engine-result'));await pause(2000);
 

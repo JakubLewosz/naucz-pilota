@@ -16,15 +16,16 @@ describe('nextStep prowadzi gracza przez misję 1',()=>{
   s=edit(s,'expression',m.scenes.practice.witness.expression);s=reducer(s,{type:'CHECK'});
   expect(nextStep(s,run(s))).toMatch(/Teraz naucz Piko/);
   s=reducer(s,{type:'NEXT'});
-  expect(nextStep(s,run(s))).toMatch(/Sprawdź pomysł Piko/);
-  s=reducer(s,{type:'CHECK_SCRIPT'});
+  // Błędny lot Piko pokazuje się od razu po wejściu w lekcję.
+  expect(run(s).attempts.teach?.[0]?.source).toBe('demo');
   expect(nextStep(s,run(s))).toMatch(/Sprawdź naprawę/);
-  const w=m.scenes.teach.witness,[g1,g2]=m.scenes.teach.gates;
-  s=edit(s,'expression',w.expression);s=edit(s,'prediction0',String(w.c0+w.c1*g1.x));s=edit(s,'prediction1','99');s=reducer(s,{type:'CHECK'});
-  expect(nextStep(s,run(s))).toMatch(/prognoza się nie zgadza/);
-  s=edit(s,'prediction1',String(w.c0+w.c1*g2.x));s=reducer(s,{type:'CHECK'});
+  s=edit(s,'expression','2*x');s=reducer(s,{type:'CHECK'});
+  expect(nextStep(s,run(s))).toMatch(/jeszcze nie prowadzi|nie pokazuje zasady/);
+  s=edit(s,'expression',m.scenes.teach.witness.expression);s=reducer(s,{type:'CHECK'});
+  // Prognozy w bramkach liczy gra.
+  expect(run(s).predictions.every(p=>p!=='')).toBe(true);
   expect(nextStep(s,run(s))).toMatch(/Wyjaśnij Piko/);
-  expect(teachChecklist(s,run(s)).map(i=>i.done)).toEqual([true,true,false,false]);
+  expect(teachChecklist(s,run(s)).map(i=>i.done)).toEqual([true,false,false]);
  });
  it('samodzielna próba i ukończenie',()=>{
   const s=initialState();const r=run(s);r.role='human_check';

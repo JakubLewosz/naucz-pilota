@@ -11,7 +11,6 @@ async function practice(page:Page,mission:typeof data.missions[number]){
 async function teach(page:Page,mission:typeof data.missions[number]){
  const scene=mission.scenes.teach,w=scene.witness;
  await page.getByLabel('Twój poprawiony wzór').fill(w.expression);
- for(const [i,g] of scene.gates.entries())await page.locator(`#prediction${i}`).fill(String((w.c2*g.x+w.c1)*g.x+w.c0));
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(mission.ruleText);
  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
  await expect(page.getByRole('heading',{name:'3. Zapisz notatkę dla Piko'})).toBeVisible();
@@ -86,9 +85,10 @@ test('keyboard path, offline demo and 200% text keep primary actions available',
  await context.setOffline(true);
  await page.getByLabel('Wzór funkcji',{exact:true}).focus();await page.keyboard.press('ControlOrMeta+A');await page.keyboard.type('1');await page.keyboard.press('Enter');
  await page.getByRole('button',{name:'Teraz naucz Piko'}).focus();await page.keyboard.press('Enter');
- await page.getByLabel('Twój poprawiony wzór').fill('2');await page.locator('#prediction0').fill('2');await page.locator('#prediction1').fill('2');
+ await page.getByLabel('Twój poprawiony wzór').fill('2');
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała daje wysokość każdego punktu.');await page.keyboard.press('Enter');
- await expect(page.getByTestId('engine-result')).toHaveCount(0);
+ // Enter w wyjaśnieniu nie wysyła formularza: widać nadal tylko lot według pomysłu Piko.
+ await expect(page.getByTestId('engine-result')).not.toContainText('f(x) = 2');
  for(const name of ['Sprawdź naprawę','Powiedz Piko','Zapisz notatkę dla Piko','Piko, spróbuj sam']){await page.getByRole('button',{name}).focus();await page.keyboard.press('Enter');}
  await page.getByLabel('Przeleci',{exact:true}).focus();await page.keyboard.press('Space');
  for(const name of ['Sprawdź lot Piko','Teraz mój samodzielny lot']){await page.getByRole('button',{name}).focus();await page.keyboard.press('Enter');}

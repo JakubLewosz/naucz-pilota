@@ -81,7 +81,6 @@ for(const scenario of [
   await page.getByRole('button',{name:'Wróć do gry'}).click();
   const teach=mission.scenes.teach,w=teach.witness;
   await page.getByLabel('Twój poprawiony wzór').fill(w.expression);
-  for(const [i,g] of teach.gates.entries())await page.locator(`#prediction${i}`).fill(String((w.c2*g.x+w.c1)*g.x+w.c0));
   await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(explanation);
   await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
   await page.getByRole('button',{name:'Powiedz Piko'}).click();

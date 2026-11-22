@@ -348,3 +348,4 @@ footer { display: flex; justify-content: space-between; align-items: center; gap
 .notice p { margin: 0 0 10px; }
 .notice p:last-child { margin-bottom: 0; }
 .notice button { margin: 0; }
+.bubble-note { margin-top: 6px !important; font-family: var(--text); font-size: .82em; color: var(--ink-soft); }

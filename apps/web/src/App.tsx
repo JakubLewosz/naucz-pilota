@@ -12,7 +12,7 @@ import {backupSave,canAskRobot,hasCompleted,loadState,numericEvidence,persistSta
 const formulaKeys:[string,string][]=[['x','x'],['x²','x^2'],['(','('],[')',')'],['+','+'],['−','-'],['·','*'],['/','/'],[',',',']];
 const modeText={demo:'Tryb pokazowy — gotowe odpowiedzi',live:'Prawdziwe AI — Claude',unavailable:'AI niedostępne — brak odpowiedzi'};
 const familyName={constant:'funkcja stała',linear:'funkcja liniowa',quadratic:'funkcja kwadratowa'};
-const coefficientName={c2:'a',c1:'b',c0:'c'};
+const coefficientWords={c2:'liczba przy x²',c1:'liczba przy x',c0:'liczba bez x'};
 const pointName=(id:string)=>id==='start'?'Start':id==='goal'?'Meta':id;
 function eventLabel(event:Event){
  if(event.code==='OUT_OF_BOUNDS')return 'wyjście poza granice planszy';
@@ -25,7 +25,7 @@ function FlightResult({attempt,robotStart}:{attempt:Attempt;robotStart?:{yMin:nu
  const {expression,result}=attempt;
  const missedStart=result.primaryCode==='START_MISS'?result.checkpoints.find(point=>point.id==='start'):undefined;
  return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Wynik lotu">
-  <h3>Wynik lotu</h3>
+  <h3>{attempt.source==='demo'&&attempt.sceneId.endsWith('-teach')?'Lot według pomysłu Piko':'Wynik lotu'}</h3>
   <p>Wzór <code>f(x) = {expression}</code></p>
   <strong>{result.ok?'✓':'×'} {result.messagePL}</strong>
   {result.firstPhysicalEvent&&<p>Co poszło nie tak: {eventLabel(result.firstPhysicalEvent)}, x ≈ {result.firstPhysicalEvent.x.toFixed(3)}.</p>}
@@ -195,19 +195,15 @@ export function App(){
  </>}
  {s.page==='game'&&<><div className="mission-heading"><div><p className="mission-number">Misja {m.order} z 6</p><h1 ref={heading} tabIndex={-1}>{m.title}</h1></div><button className="secondary" onClick={()=>go('missions')}>Wróć do misji</button></div><ol className="phase-list">{roles.map((step,i)=><li key={step} aria-current={role===step?'step':undefined} className={role===step?'active':roles.indexOf(role)>i?'done':''}><span>{roles.indexOf(role)>i?'✓':i+1}</span>{roleLabels[step]}</li>)}</ol>
  <div className="game-grid"><section className="flight sheet" aria-label={roleLabels[role]}>
- {role!=='robot_transfer'&&<form className="expression-form" onSubmit={e=>{e.preventDefault();dispatch({type:'CHECK'});}}>{role==='teach'&&<h3>1. Popraw wzór Piko i przewidź wysokość</h3>}<label htmlFor="expression">{role==='teach'?'Twój poprawiony wzór':'Wzór funkcji'}</label><div className="expression-row"><span>f(x) =</span><input ref={exprRef} id="expression" data-testid="expression" value={r.drafts[role]} maxLength={120} autoComplete="off" spellCheck={false} onChange={e=>dispatch({type:'EDIT',field:'expression',value:e.target.value})}/><button disabled={s.busy}>{role==='human_check'?'Sprawdź mój lot':role==='teach'?'Sprawdź naprawę':'Leć'}</button></div><div className="formula-keys" role="group" aria-label="Wstaw do wzoru">{formulaKeys.map(([label,text])=><button type="button" key={label} className="key" aria-label={`Wstaw ${label}`} onClick={()=>insertIntoFormula(text)}>{label}</button>)}</div>
+ {role!=='robot_transfer'&&<form className="expression-form" onSubmit={e=>{e.preventDefault();dispatch({type:'CHECK'});}}>{role==='teach'&&<h3>1. Popraw wzór Piko</h3>}<label htmlFor="expression">{role==='teach'?'Twój poprawiony wzór':'Wzór funkcji'}</label><div className="expression-row"><span>f(x) =</span><input ref={exprRef} id="expression" data-testid="expression" value={r.drafts[role]} maxLength={120} autoComplete="off" spellCheck={false} onChange={e=>dispatch({type:'EDIT',field:'expression',value:e.target.value})}/><button disabled={s.busy}>{role==='human_check'?'Sprawdź mój lot':role==='teach'?'Sprawdź naprawę':'Leć'}</button></div><div className="formula-keys" role="group" aria-label="Wstaw do wzoru">{formulaKeys.map(([label,text])=><button type="button" key={label} className="key" aria-label={`Wstaw ${label}`} onClick={()=>insertIntoFormula(text)}>{label}</button>)}</div>
  {r.drafts[role].trim()&&<p className="formula-preview">Gra czyta: <span>f(x) = {prettyFormula(r.drafts[role])}</span></p>}
- {role==='teach'&&<div className="predictions">{scene.gates.map((g,i)=><label key={g.id} htmlFor={`prediction${i}`}>{g.id} (x = {g.x}): przewiduję y =<input id={`prediction${i}`} inputMode="decimal" value={r.predictions[i]} onChange={e=>dispatch({type:'EDIT',field:i===0?'prediction0':'prediction1',value:e.target.value})}/></label>)}</div>}
  {role==='teach'&&r.repairChecked&&<p className={canRule||deriveRuleEvidence(m,r.drafts.teach,numericEvidence(s))?'notice ok':'notice'}>{r.numericFeedback}</p>}
  </form>}
  <Board scene={scene} expression={role==='robot_transfer'?(r.robotChecked?r.robot?.learner?.proposedExpression??'':''):r.drafts[role]} showPath={!blind&&(role!=='robot_transfer'||r.robotChecked)} result={role==='robot_transfer'?r.robotChecked?r.attempts.robot_transfer?.at(-1)?.result??null:null:currentResult} flightId={last?.id} reduced={reduced} hitbox={s.settings.hitbox}/>
  <div className="constraints">
   <strong>Dozwolone funkcje:</strong> {scene.allowedFamilies.map(f=>familyName[f]).join(', ')}.
-  {Object.keys(scene.coefficientLocks).length>0&&<p>
-   W postaci <strong>y = ax² + bx + c</strong> litery oznaczają liczbę przy x², liczbę przy x i wyraz stały.
-   Zachowaj {Object.entries(scene.coefficientLocks).map(([key,value])=>`${coefficientName[key as keyof typeof coefficientName]} = ${value}`).join(', ')}.
-  </p>}
-  {scene.vertexLock&&<p>Współrzędne wierzchołka: {Object.entries(scene.vertexLock).map(([k,v])=>`${k} = ${v}`).join(', ')}.</p>}
+  {Object.entries(scene.coefficientLocks).filter(([,value])=>value!==0).map(([key,value])=><p key={key}>Ustalone: {coefficientWords[key as keyof typeof coefficientWords]} = {String(value).replace('.',',')}.</p>)}
+  {scene.vertexLock&&<p>Ustalone: wierzchołek {Object.entries(scene.vertexLock).map(([k,v])=>`${k} = ${String(v).replace('.',',')}`).join(', ')}.</p>}
  </div>
  <div aria-live="polite" className="feedback">{s.error&&<p className="error" role="alert">! {s.error}</p>}{last&&!blind&&(role!=='robot_transfer'||r.robotChecked)&&<FlightResult attempt={last} robotStart={role==='robot_transfer'?scene.start:undefined}/>}{blind&&<p className="notice">Nowa plansza, teraz bez podpowiedzi. Tor zobaczysz po zatwierdzeniu wzoru. Błąd składni nie zużywa pierwszej próby.</p>}</div>
  <details className="board-data"><summary>Dane planszy</summary><p>Granice: x od {scene.domain.xMin} do {scene.domain.xMax}; y od {scene.domain.yMin} do {scene.domain.yMax}. Bok Piko: 0,24. Cały robot musi mieścić się w przejściu.</p><ul>{[{id:'Start',...scene.start},...scene.gates,{id:'Cel',...scene.goal}].map(g=><li key={g.id}>{g.id}: x={g.x}, dozwolone y od {g.yMin} do {g.yMax}</li>)}{scene.obstacles.map(o=><li key={o.id}>Przeszkoda {o.id}: x od {o.xMin} do {o.xMax}; y od {o.yMin} do {o.yMax}</li>)}</ul></details>
@@ -221,7 +217,7 @@ export function App(){
   <li><b className="lg-piko" aria-hidden="true"/>Piko ma swój rozmiar, więc cały musi zmieścić się w przejściu.</li>
  </ul></div>}
  {role==='practice'&&<><div className="hint-box"><h3>Potrzebujesz wskazówki?</h3><p>Odkrywaj po jednej. Gra zapamięta ich użycie.</p>{hints.missions.find(h=>h.missionId===m.id)?.hints.slice(0,r.hintCount).map(h=><div key={h.level}><strong>{h.level}. {h.titlePL}</strong><p>{h.textPL}</p></div>)}{r.hintCount<3&&<button className="secondary" onClick={()=>dispatch({type:'HINT'})}>Wskazówka {r.hintCount+1} / 3</button>}</div>{last?.result.ok&&<button onClick={()=>dispatch({type:'NEXT'})}>Teraz naucz Piko</button>}</>}
- {role==='teach'&&<><div className="piko-says"><Piko/><div className="bubble"><small>Pomysł Piko (przygotowany)</small><p>{m.scriptedRobotUtterance}</p><code>f(x) = {scene.initialExpression}</code><button className="secondary" onClick={()=>dispatch({type:'CHECK_SCRIPT'})}>Sprawdź pomysł Piko</button></div></div><h3>2. Wyjaśnij Piko zasadę</h3><label htmlFor="explanation">Co Piko powinien zmienić i dlaczego?</label><textarea id="explanation" value={r.explanation} maxLength={600} rows={3} onChange={e=>dispatch({type:'EDIT',field:'explanation',value:e.target.value})}/><p className="muted">Wystarczy jedno lub dwa zdania. {r.explanation.length}/600</p>{s.mode==='live'&&<p className="privacy">Twoje wyjaśnienie trafi do AI. Nie wpisuj danych osobowych.</p>}<button className="secondary" disabled={s.busy||!r.explanation.trim()} onClick={()=>void askPiko()}>Powiedz Piko</button>{conversation}{!s.busy&&r.lessonReply?.assessment&&r.lessonReply.assessment!=='sound'&&<p className="notice">Uzupełnij wyjaśnienie w polu powyżej, odpowiadając na pytanie Piko, i kliknij „Powiedz Piko” jeszcze raz.</p>}{!r.explanation.trim()&&<p className="muted">Najpierw wpisz własną próbę wyjaśnienia.</p>}{canRule&&<div className="rule-card note-card">
+ {role==='teach'&&<><div className="piko-says"><Piko/><div className="bubble"><small>Pomysł Piko (przygotowany)</small><p>{m.scriptedRobotUtterance}</p><code>f(x) = {scene.initialExpression}</code><p className="bubble-note">Na planszy widać, jak skończył się ten lot.</p></div></div><h3>2. Wyjaśnij Piko zasadę</h3><label htmlFor="explanation">Co Piko powinien zmienić i dlaczego?</label><textarea id="explanation" value={r.explanation} maxLength={600} rows={3} onChange={e=>dispatch({type:'EDIT',field:'explanation',value:e.target.value})}/><p className="muted">Wystarczy jedno lub dwa zdania. {r.explanation.length}/600</p>{s.mode==='live'&&<p className="privacy">Twoje wyjaśnienie trafi do AI. Nie wpisuj danych osobowych.</p>}<button className="secondary" disabled={s.busy||!r.explanation.trim()} onClick={()=>void askPiko()}>Powiedz Piko</button>{conversation}{!s.busy&&r.lessonReply?.assessment&&r.lessonReply.assessment!=='sound'&&<p className="notice">Uzupełnij wyjaśnienie w polu powyżej, odpowiadając na pytanie Piko, i kliknij „Powiedz Piko” jeszcze raz.</p>}{!r.explanation.trim()&&<p className="muted">Najpierw wpisz własną próbę wyjaśnienia.</p>}{canRule&&<div className="rule-card note-card">
   <h3>3. Zapisz notatkę dla Piko</h3>
   <dl className="lesson-text"><dt>Twoje wyjaśnienie</dt><dd>{r.explanation}</dd></dl>
   <PikoBelief belief={r.lessonReply?.belief??null}/>
@@ -248,9 +244,8 @@ export function App(){
   <h3>Propozycja Piko</h3>
   <code>f(x) = {r.robot.learner.proposedExpression}</code>
   {r.robot.learner.utterancePL&&<blockquote className="piko-reason"><small>{r.robot.mode==='live'?'Uzasadnienie Piko (prawdziwe AI)':'Uzasadnienie Piko (tryb pokazowy)'}</small><p>{r.robot.learner.utterancePL}</p></blockquote>}
-  <fieldset><legend>Jak przewidujesz?</legend>{['Przeleci','Nie przeleci','Jeszcze nie wiem'].map(p=><label key={p}><input type="radio" name="prediction" checked={r.prediction===p} onChange={()=>dispatch({type:'ROBOT_PREDICTION',value:p})}/>{p}</label>)}</fieldset>
-  {!r.robotChecked&&<button disabled={s.busy||!r.prediction} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
-  {!r.prediction&&<p className="muted">Wybierz przewidywanie, by zobaczyć wynik.</p>}
+  <fieldset><legend>Jak myślisz, przeleci? (możesz pominąć)</legend>{['Przeleci','Nie przeleci','Jeszcze nie wiem'].map(p=><label key={p}><input type="radio" name="prediction" checked={r.prediction===p} onChange={()=>dispatch({type:'ROBOT_PREDICTION',value:p})}/>{p}</label>)}</fieldset>
+  {!r.robotChecked&&<button disabled={s.busy} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
  </div>}
  {s.mode!=='unavailable'&&canAskRobot(s,r)&&(!r.robot||r.robotTurns===0)&&<button disabled={s.busy} onClick={()=>void askPiko()}>Piko, spróbuj sam</button>}
  {!s.busy&&r.robotChecked&&(r.attempts.robot_transfer?.at(-1)?.result.ok

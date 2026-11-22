@@ -71,13 +71,19 @@ export function reducer(state:GameState,action:Action):GameState {
   case 'CHECK':{
    if(r.role==='robot_transfer'||s.busy)return state;
    invalidate();const a=addAttempt(r.role,r.drafts[r.role],'human');
-   if(r.role==='teach'&&a){r.repairChecked=true;const e=deriveRuleEvidence(m,r.drafts.teach,numericEvidence(s));r.numericFeedback=e?'Tor i obie prognozy są poprawne.':numericEvidence(s).map(v=>{const p=a.result.checkpoints.find(p=>p.id===v.checkpointId);return p?`${v.checkpointId}: Twój wzór daje y=${p.y}.`:'';}).join(' ');}
+   // Wartości w bramkach liczy gra; nie wymagamy od gracza ręcznych prognoz.
+   if(r.role==='teach'&&a)r.predictions=(['G1','G2'] as const).map(id=>{const p=a.result.checkpoints.find(c=>c.id===id);return p?String(Number(p.y.toFixed(6))):'';});
+   if(r.role==='teach'&&a){r.repairChecked=true;const e=deriveRuleEvidence(m,r.drafts.teach,numericEvidence(s));r.numericFeedback=e?'Naprawa działa. Teraz wyjaśnij Piko, co miał zmienić i dlaczego.':a.result.ok?'Ten wzór przelatuje, ale nie pokazuje zasady tej misji. Zmień tylko to, co pomylił Piko.':'Ten wzór jeszcze nie prowadzi bezpiecznie. Popraw go i sprawdź ponownie.';}
    break;
   }
   case 'CHECK_SCRIPT':invalidate();addAttempt('teach',m.scenes.teach.initialExpression,'demo');break;
   case 'NEXT':{
    const last=r.attempts[r.role]?.at(-1);
-   if(r.role==='practice'&&last?.result.ok){invalidate();r.role='teach';}
+   if(r.role==='practice'&&last?.result.ok){
+    invalidate();r.role='teach';
+    // Piko od razu pokazuje swój błędny lot, żeby gracz wiedział, co poprawić.
+    if(!(r.attempts.teach??[]).some(a=>a.source==='demo'))addAttempt('teach',m.scenes.teach.initialExpression,'demo');
+   }
    else if(r.role==='robot_transfer'&&!s.busy&&(r.robotChecked||r.unavailable||r.robotFailures>0))enterHumanCheck(!r.robotChecked);
    else if(r.role==='human_check'&&r.completed){invalidate();s.page='summary';}
    break;
@@ -97,7 +103,7 @@ export function reducer(state:GameState,action:Action):GameState {
   case 'HINT':if(r.role==='practice')r.hintCount=Math.min(3,r.hintCount+1);break;
   case 'ROBOT_PREDICTION':r.prediction=action.value;break;
   case 'ROBOT_CHECK':
-   if(r.role!=='robot_transfer'||s.busy||r.robotChecked||!r.prediction||!r.robot?.learner?.proposedExpression)return state;
+   if(r.role!=='robot_transfer'||s.busy||r.robotChecked||!r.robot?.learner?.proposedExpression)return state;
    invalidate();addAttempt('robot_transfer',r.robot.learner.proposedExpression,r.robot.mode==='live'?'live':'demo');r.robotChecked=true;break;
   case 'SKIP_ROBOT':
    if(r.role!=='robot_transfer')return state;
