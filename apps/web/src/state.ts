@@ -23,7 +23,16 @@ export function newRun(id:string):Run {
 }
 export function initialState():GameState {return {saveVersion:2,contentVersion:'1.0.0',page:'home',missionId:'M01',runs:{M01:newRun('M01')},archive:{},rules:[],viewRevision:0,mode:'demo',liveAvailable:false,activeTurnId:null,busy:false,error:'',settings:{reducedMotion:false,hitbox:false,fontScale:1},recovery:null};}
 export const numericValue=(s:string)=>/^[-+]?(?:\d+(?:[.,]\d*)?|[.,]\d+)$/.test(s.trim())?Number(s.replace(',','.')):NaN;
-export function numericEvidence(s:GameState):(NumericEvidence & {checkpointId:'G1'|'G2'})[]{const r=s.runs[s.missionId];return (['G1','G2'] as const).map((checkpointId,i)=>({sceneId:`${s.missionId}-teach`,checkpointId,submittedY:numericValue(r.predictions[i])}));}
+export function numericEvidence(s:GameState):(NumericEvidence & {checkpointId:'G1'|'G2'})[]{
+ const r=s.runs[s.missionId];
+ // Wartości w bramkach liczy gra z ostatniej sprawdzonej naprawy (także dla starszych zapisów bez prognoz).
+ const repair=(r.attempts.teach??[]).filter(a=>a.source==='human'&&a.expression===r.drafts.teach).at(-1);
+ return (['G1','G2'] as const).map((checkpointId,i)=>{
+  const point=repair?.result.checkpoints.find(c=>c.id===checkpointId);
+  const value=point?Number(point.y.toFixed(6)):numericValue(r.predictions[i]);
+  return {sceneId:`${s.missionId}-teach`,checkpointId,submittedY:value};
+ });
+}
 export type Action={type:'OPEN';page:GameState['page']}|{type:'MISSION';id:string}|{type:'EDIT';field:'expression'|'explanation'|'prediction0'|'prediction1';value:string}|{type:'CHECK'}|{type:'CHECK_SCRIPT'}|{type:'NEXT'}|{type:'CONFIRM_RULE'}|{type:'HINT'}|{type:'ROBOT_PREDICTION';value:string}|{type:'ROBOT_CHECK'}|{type:'SKIP_ROBOT'}|{type:'AI_START';turnId:string}|{type:'AI_RESULT';turnId:string;revision:number;sceneId:string;envelope:Envelope}|{type:'AI_ERROR';turnId:string;revision:number;message:string}|{type:'MODE';mode:'demo'|'live'}|{type:'STATUS';live:boolean}|{type:'SETTINGS';settings:Partial<GameState['settings']>}|{type:'CLEAR_CHAT_START';turnId:string}|{type:'CLEAR_CHAT';turnId:string;revision:number;error?:string}|{type:'REPLAY';id:string}|{type:'RETEACH'}|{type:'RECOVER'}|{type:'RESET'};
 export const hasCompleted=(s:GameState,id:string)=>Boolean(s.runs[id]?.completed||s.archive[id]?.some(r=>r.completed));
 export const canAskRobot=(s:GameState,r:Run)=>r.robotTurns<2

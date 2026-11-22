@@ -210,6 +210,7 @@ export function App(){
  <div aria-live="polite" className="feedback">{s.error&&<p className="error" role="alert">! {s.error}</p>}{last&&!blind&&(role!=='robot_transfer'||r.robotChecked)&&<FlightResult attempt={last} robotStart={role==='robot_transfer'?scene.start:undefined}/>}{blind&&<p className="notice">Nowa plansza, teraz bez podpowiedzi. Tor zobaczysz po zatwierdzeniu wzoru. Błąd składni nie zużywa pierwszej próby.</p>}</div>
  <details className="board-data"><summary>Dane planszy</summary><p>Granice: x od {scene.domain.xMin} do {scene.domain.xMax}; y od {scene.domain.yMin} do {scene.domain.yMax}. Bok Piko: 0,24. Cały robot musi mieścić się w przejściu.</p><ul>{[{id:'Start',...scene.start},...scene.gates,{id:'Cel',...scene.goal}].map(g=><li key={g.id}>{g.id}: x={g.x}, dozwolone y od {g.yMin} do {g.yMax}</li>)}{scene.obstacles.map(o=><li key={o.id}>Przeszkoda {o.id}: x od {o.xMin} do {o.xMax}; y od {o.yMin} do {o.yMax}</li>)}</ul></details>
  </section><aside className="side sheet"><h2>{scene.title}</h2>
+ {s.mode==='demo'&&s.liveAvailable&&<div className="notice live-offer"><p>Grasz w trybie pokazowym: Piko odpowiada gotowymi tekstami. Prawdziwe AI jest dostępne.</p><button onClick={()=>dispatch({type:'MODE',mode:'live'})}>Włącz prawdziwe AI</button></div>}
  <p className="next-step" aria-live="polite"><strong>Co teraz? </strong>{nextStep(s,r)}</p>
  {role==='teach'&&<ol className="checklist" aria-label="Zadania w tym kroku">{teachChecklist(s,r).map(item=><li key={item.label} className={item.done?'done':''}><span aria-hidden="true">{item.done?'✓':''}</span>{item.label}{item.done&&<span className="sr-only"> (zrobione)</span>}</li>)}</ol>}
  {role==='practice'&&m.order===1&&!(r.attempts.practice??[]).some(a=>a.result.ok)&&<div className="legend-intro"><h3>Jak czytać planszę</h3><ul>
@@ -226,7 +227,7 @@ export function App(){
   <LessonAssessment reply={r.lessonReply}/>
   <p className="muted">Na nowej trasie Piko zastosuje dokładnie tę notatkę, także jeśli jest w niej błąd. {r.lessonReply?'Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i kliknij „Powiedz Piko” jeszcze raz.':'Możesz najpierw zapytać Piko, jak to zrozumiał.'}</p>
   <button disabled={s.busy} onClick={()=>dispatch({type:'CONFIRM_RULE'})}>Zapisz notatkę dla Piko</button>
- </div>}{!canRule&&<p className="muted">Sprawdź bezpieczny tor, obie prognozy i wpisz własne wyjaśnienie, aby przygotować notatkę.</p>}</>}
+ </div>}{!canRule&&<p className="muted">Notatka pojawi się, gdy poprawiony wzór przejdzie przez bramki („Sprawdź naprawę”) i wpiszesz wyjaśnienie.</p>}</>}
  {role==='robot_transfer'&&<> <div role="status" id="transfer-wait">{s.busy&&<div className="notice ai-wait">
   <Piko busy/>
   <div>

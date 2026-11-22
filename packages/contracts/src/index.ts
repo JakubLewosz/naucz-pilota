@@ -89,7 +89,7 @@ export function demoTurn(request:LearnerRequest):Envelope {
  const utterancePL=robot
   ? 'To przygotowany lot demonstracyjny. Przewidź wynik tego wzoru, a silnik sprawdzi tor.'
   : request.phase==='teach_repair' && context.eligibleRuleIds.includes(mission.canonicalRuleId)
-   ? `To przygotowany komentarz demonstracyjny. Sprawdzona zasada brzmi: ${mission.ruleText}`
+   ? 'To przygotowany komentarz demonstracyjny. Zapamiętam Twoje słowa i spróbuję je zastosować na nowej trasie.'
    : 'To przygotowany komentarz demonstracyjny. Najpierw sprawdź swój wzór i prognozy.';
  // Tryb pokazowy nie rozumie tekstu: zapamiętuje dosłownie słowa gracza.
  const words=request.userMessage.trim().replace(/\s+/g,' ');
