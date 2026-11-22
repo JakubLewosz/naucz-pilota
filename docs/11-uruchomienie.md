@@ -30,7 +30,12 @@ Jedna tura rozmowy kosztuje ok. 1–2 centów. Serwer ma limity: 6 tur na minut�
 
 `npm run desktop:dist` buduje aplikację Electron i tworzy `release/bin/Piko_Misja_Funkcja_1.0.0_Windows_x64.zip`. `npm run release:check` sprawdza zawartość paczki: plik EXE, archiwum aplikacji, brak sekretów i brak rozwiązań autora. Paczka nie ma podpisu cyfrowego, więc Windows może pokazać ostrzeżenie o nieznanym wydawcy.
 
-Domyślna paczka działa w trybie pokazowym, bez internetu. Żeby połączyć ją z serwerem z prawdziwym AI, przed budową ustaw `PIKO_DESKTOP_HTTPS_ORIGIN` na adres HTTPS tego serwera. Aplikacja zna wtedy tylko adres serwera, nigdy klucz.
+Są dwa warianty paczki:
+
+- `npm run desktop:dist:ai` buduje paczkę z wbudowanym Claude. Proces główny Electron uruchamia serwer gry na 127.0.0.1 (ten sam kod co `npm start`: walidacja, limity, SQLite w profilu użytkownika, 150 żądań dziennie). Klucz pochodzi z `.env` (`ANTHROPIC_API_KEY` albo `PIKO_EMBED_ANTHROPIC_KEY`) i jest zapisany w paczce w postaci zaciemnionej. Okno gry go nie widzi. Klucz nie jest szyfrowany, więc użyj osobnego klucza z limitem wydatków w konsoli Anthropic i unieważnij go po konkursie.
+- `npm run desktop:dist` buduje paczkę bez klucza, działającą w trybie pokazowym. Żeby połączyć ją z serwerem internetowym, przed budową ustaw `PIKO_DESKTOP_HTTPS_ORIGIN` na adres HTTPS serwera.
+
+`release:check` sprawdza też, że klucza nie da się odczytać z archiwum aplikacji jako zwykłego tekstu.
 
 ## Serwer w internecie (opcjonalnie)
 

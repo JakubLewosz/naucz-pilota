@@ -9,12 +9,25 @@ let windowRef,token=null,accessCode='';
 const root=app.isPackaged?path.join(__dirname,'web'):path.join(__dirname,'../web/dist');
 const configPath=path.join(__dirname,'distribution.json');
 const distribution=fs.existsSync(configPath)?JSON.parse(fs.readFileSync(configPath,'utf8')):{apiBaseUrl:''};
-const base=app.isPackaged?distribution.apiBaseUrl:(process.env.DESKTOP_API_BASE_URL||distribution.apiBaseUrl);
+let base=app.isPackaged?distribution.apiBaseUrl:(process.env.DESKTOP_API_BASE_URL||distribution.apiBaseUrl);
+// Wbudowane AI: lokalny serwer na 127.0.0.1 w procesie głównym; klucz nie trafia do okna gry.
+let embedded=null;
+async function startEmbeddedAi(){
+ const aiPath=path.join(__dirname,'ai.json');
+ if(!fs.existsSync(aiPath))return;
+ try{
+  const cfg=JSON.parse(fs.readFileSync(aiPath,'utf8')),salt=Buffer.from(cfg.s,'base64');
+  const key=Buffer.from(Buffer.from(cfg.k,'base64').map((b,i)=>b^salt[i%salt.length])).toString('utf8');
+  const server=require(path.join(__dirname,'embedded-server.cjs'));
+  embedded=await server.startEmbedded({key,dbPath:path.join(app.getPath('userData'),'piko-ai.sqlite'),model:cfg.model,effort:cfg.effort,dailyBudget:cfg.dailyBudget});
+  base=`http://127.0.0.1:${embedded.port}/`;
+ }catch(error){console.error('Embedded AI unavailable:',error instanceof Error?error.message:error);embedded=null;}
+}
 function endpoint(route){
  if(!base)throw new Error('Brak skonfigurowanego serwera live. Wybierz demo.');
  const url=new URL(base);
  if(url.username||url.password||url.search||url.hash||url.pathname!=='/')throw new Error('Nieprawidłowy adres backendu.');
- if(url.protocol!=='https:'&&!(url.protocol==='http:'&&url.hostname==='127.0.0.1'&&!app.isPackaged))throw new Error('Backend wymaga HTTPS.');
+ if(url.protocol!=='https:'&&!(url.protocol==='http:'&&url.hostname==='127.0.0.1'&&(!app.isPackaged||embedded)))throw new Error('Backend wymaga HTTPS.');
  return new URL(route,url).href;
 }
 async function relay(route,body){
@@ -35,7 +48,8 @@ async function relay(route,body){
  }
 }
 function assertSender(event){if(!windowRef||event.sender!==windowRef.webContents||!event.senderFrame||!/^app:\/\/piko\//.test(event.senderFrame.url))throw new Error('Niedozwolony nadawca IPC.');}
-app.whenReady().then(()=>{
+app.whenReady().then(async()=>{
+ await startEmbeddedAi();
  protocol.handle('app',request=>{
   const url=new URL(request.url);
   if(url.host!=='piko'||!['GET','HEAD'].includes(request.method))return new Response('Forbidden',{status:403});
@@ -58,10 +72,10 @@ app.whenReady().then(()=>{
   return token?relay('/api/conversation/reset',{sceneId}):{ok:true};
  });
  ipcMain.handle('piko:turn',(event,request)=>{assertSender(event);if(!validateRequest(request)||request.requestedMode!=='live')throw new Error('Nieprawidłowe żądanie.');return relay('/api/learner-turn',request);});
- windowRef=new BrowserWindow({width:1440,height:900,minWidth:390,minHeight:600,title:'Piko: Misja Funkcja',backgroundColor:'#0d171d',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
+ windowRef=new BrowserWindow({width:1440,height:900,minWidth:390,minHeight:600,title:'Piko: Misja Funkcja',backgroundColor:'#f5f8fa',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
  windowRef.webContents.setWindowOpenHandler(()=>({action:'deny'}));
  windowRef.webContents.on('will-navigate',(event,url)=>{if(url!=='app://piko/index.html')event.preventDefault();});
  windowRef.webContents.session.setPermissionRequestHandler((_wc,_permission,callback)=>callback(false));
  windowRef.loadURL('app://piko/index.html');
 });
-app.on('window-all-closed',()=>app.quit());
+app.on('window-all-closed',()=>{embedded?.close();app.quit();});

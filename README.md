@@ -53,7 +53,12 @@ Wersja produkcyjna: `npm run build`, a potem `npm start` (aplikacja i API na htt
 
 ## Wersja na Windows
 
-`npm run desktop:dist` buduje `release/bin/Piko_Misja_Funkcja_1.0.0_Windows_x64.zip`. Rozpakuj cały folder i uruchom `Piko Misja Funkcja.exe`. Node nie jest potrzebny. Paczka startuje w trybie pokazowym. Żeby połączyć ją z serwerem z prawdziwym AI, przy budowie podaj `PIKO_DESKTOP_HTTPS_ORIGIN` ([wdrożenie HTTPS](docs/17-odbior-live.md)).
+Rozpakuj `Piko_Misja_Funkcja_1.0.0_Windows_x64.zip` i uruchom `Piko Misja Funkcja.exe`. Node nie jest potrzebny.
+
+- `npm run desktop:dist:ai`: paczka z **wbudowanym Claude**. W aplikacji działa mały serwer AI na 127.0.0.1, z tym samym kontraktem, walidacją i limitami co serwer internetowy (150 żądań dziennie na komputer). Klucz z `.env` trafia tylko do paczki, w postaci zaciemnionej, nigdy do repozytorium ani do okna gry. Bez internetu gra proponuje tryb pokazowy.
+- `npm run desktop:dist`: paczka bez klucza, tylko tryb pokazowy (albo serwer HTTPS z `PIKO_DESKTOP_HTTPS_ORIGIN`, [wdrożenie](docs/17-odbior-live.md)).
+
+Do paczki z wbudowanym AI używaj osobnego klucza z limitem wydatków ustawionym w konsoli Anthropic i unieważnij go po konkursie: klucz da się wydobyć z pliku aplikacji.
 
 ## Testy
 

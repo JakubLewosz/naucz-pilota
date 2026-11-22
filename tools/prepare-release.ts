@@ -44,7 +44,7 @@ await writeSourceZip(zipPath,sourceFiles);
 const live=existsSync('checks/ai-live-results.json')?JSON.parse(await readFile('checks/ai-live-results.json','utf8')) as {status:string;promptVersion:string;results:{status:string}[]}:null;
 const verifiedLive=live?.promptVersion===PROMPT_VERSION&&live.status.startsWith('PASSED STRUCTURAL')&&live.results.length===22&&live.results.every(result=>result.status==='PASS');
 const summary={date:new Date().toISOString(),sourceFiles:sourceFiles.length,
- scope:'Piko: Misja Funkcja 1.0.0, Windows x64 build in offline showcase mode; live AI: Claude Sonnet 5.5 (server-side key).',
+ scope:'Piko: Misja Funkcja 1.0.0, Windows x64 build; live AI: Claude Sonnet 5.5 (embedded local server when built with desktop:dist:ai, otherwise showcase mode).',
  live:{fullSuiteCurrent:verifiedLive,promptVersion:PROMPT_VERSION},
  missing:['Signed author forms (scans)','Current Windows EXE run on GitHub Actions or a Windows PC','Cloud sharing and e-mail to the organizer']};
 await writeFile(`${root}/STAN_PACZKI.json`,JSON.stringify(summary,null,2)+'\n');

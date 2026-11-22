@@ -29,7 +29,8 @@
     "desktop:smoke": "tsx tools/smoke-desktop.ts",
     "docker:build": "docker build -t naucz-pilota:codex-readiness .",
     "docker:smoke": "tsx tools/smoke-docker.ts",
-    "jury:https:smoke": "tsx tools/smoke-jury-https.ts"
+    "jury:https:smoke": "tsx tools/smoke-jury-https.ts",
+    "desktop:dist:ai": "PIKO_EMBED_AI=1 npm run desktop:dist"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.12.0",

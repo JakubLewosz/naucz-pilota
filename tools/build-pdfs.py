@@ -58,9 +58,11 @@ Piko: Misja Funkcja 1.0.0 dla Windows 10/11 (64-bit). Node.js ani Python nie są
 3. Jeśli Windows pokaże okno „System Windows ochronił ten komputer”, kliknij Więcej informacji, a potem Uruchom mimo to. Paczka nie ma płatnego podpisu cyfrowego.
 4. Kliknij Rozpocznij. Opis gry jest w instrukcji użytkownika.
 
-## Tryb gry
+## Sztuczna inteligencja
 
-Paczka działa w trybie pokazowym: Piko odpowiada przygotowanymi tekstami, a cała kampania (6 misji) działa bez internetu. Tryb jest zawsze widoczny w prawym górnym rogu. Rozmowy z prawdziwym AI (Claude) pokazuje film. Prawdziwe AI można też uruchomić z kodu źródłowego z własnym kluczem API, według instrukcji kompilacji.
+Aplikacja ma wbudowane połączenie z modelem Claude. Wymaga tylko dostępu do internetu, bez konta, klucza i konfiguracji. W prawym górnym rogu widać napis Prawdziwe AI - Claude.
+
+Bez internetu gra pokaże komunikat AI niedostępne i zaproponuje tryb pokazowy, w którym Piko odpowiada przygotowanymi tekstami, a cała kampania (6 misji) działa offline. Tryb można też zmienić w Ustawieniach.
 
 ## Postęp
 

@@ -51,7 +51,12 @@ if(existsSync(archive)){
  assert('desktop package allowlist',[...packagedEntries].every(p=>!/(?:^|\/)node_modules(?:\/|$)|\.env(?:$|\.)|authoring-missions|\.map$|missions\.v1\.json/.test(p)),'Local frontend, main, preload, distribution and bundled DTO validator only.');
  const main=asar.extractFile(archive,'main.cjs').toString();
  assert('desktop sandbox',main.includes('nodeIntegration:false')&&main.includes('contextIsolation:true')&&main.includes('sandbox:true'),'Static configuration plus separate macOS runtime smoke.');
- checks.push({name:'jury live endpoint',status:config.apiBaseUrl?'CONFIGURED, NOT VERIFIED':'NOT READY',detail:config.apiBaseUrl||'No HTTPS endpoint supplied; offline demo only.'});
+ const embeddedAi=packagedEntries.has('ai.json');
+ if(embeddedAi){
+  const plaintextKey=[...packagedEntries].filter(name=>/\.(?:cjs|js|json|html)$/.test(name)).some(name=>/sk-ant-[A-Za-z0-9_-]{20,}/.test(asar.extractFile(archive,name).toString()));
+  assert('embedded AI key not in plain text',packagedEntries.has('embedded-server.cjs')&&!plaintextKey,'Embedded Claude server present; no sk-ant key readable as plain text in the archive.');
+ }
+ checks.push({name:'jury live endpoint',status:embeddedAi?'EMBEDDED CLAUDE':config.apiBaseUrl?'CONFIGURED, NOT VERIFIED':'NOT READY',detail:embeddedAi?'Local AI server inside the app (127.0.0.1); key packaged, obfuscated.':config.apiBaseUrl||'No HTTPS endpoint supplied; offline demo only.'});
  const currentExecutable=path.join(windowsDir,'win-unpacked','Piko Misja Funkcja.exe');
  const executable=existsSync(currentExecutable)?currentExecutable:path.join(windowsDir,'win-unpacked','Naucz Pilota.exe');
  const exe=await readFile(executable);assert('Windows PE executable',exe.subarray(0,2).toString()==='MZ','PE inspection. Runtime evidence is reported separately.');

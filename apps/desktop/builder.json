@@ -10,6 +10,8 @@
     "preload.cjs",
     "distribution.json",
     "relay-validator.cjs",
+    "ai.json",
+    "embedded-server.cjs",
     "web/**/*",
     "package.json",
     "!node_modules{,/**/*}"

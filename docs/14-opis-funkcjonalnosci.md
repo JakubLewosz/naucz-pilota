@@ -21,7 +21,7 @@ Piko korzysta z Claude Sonnet 5.5. Model dostaje opis planszy, sprawdzone fakty 
 
 ## Dla kogo i jak
 
-Gra jest po polsku, jednoosobowa, bez kont i rankingów. Postęp zostaje na urządzeniu. Działa w przeglądarce oraz jako aplikacja Windows. Bez internetu włącza się tryb pokazowy z przygotowanymi odpowiedziami Piko, a tryb jest zawsze widoczny na ekranie. Ustawienia pozwalają ograniczyć animacje, powiększyć tekst do 200% i grać samą klawiaturą.
+Gra jest po polsku, jednoosobowa, bez kont i rankingów. Postęp zostaje na urządzeniu. Działa w przeglądarce oraz jako aplikacja Windows z wbudowanym połączeniem z Claude, bez zakładania kont i wpisywania kluczy. Bez internetu włącza się tryb pokazowy z przygotowanymi odpowiedziami Piko, a tryb jest zawsze widoczny na ekranie. Ustawienia pozwalają ograniczyć animacje, powiększyć tekst do 200% i grać samą klawiaturą.
 
 ## Technologia
 
