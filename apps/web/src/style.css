@@ -266,3 +266,7 @@ footer { display: flex; justify-content: space-between; align-items: center; gap
 .summary-mark { display: flex; align-items: center; gap: 10px; margin: 4px 0 22px; animation: note-saved .3s ease-out; }
 .summary-mark .piko { width: 60px; height: 60px; }
 .summary-mark span { color: var(--accent); font-size: 1.4em; }
+.piko-reason { margin: 14px 0 0; padding: 12px 14px; border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; background: #1d2a22; overflow-wrap: anywhere; }
+.piko-reason small { color: var(--amber); font-size: .7em; letter-spacing: .08em; font-weight: 700; }
+.piko-reason p { margin: 6px 0 0; }
+.privacy { font-size: .8em; }

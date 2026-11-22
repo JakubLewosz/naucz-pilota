@@ -91,14 +91,14 @@ for(const scenario of [
   await page.reload();
   await page.getByRole('button',{name:'Piko, spróbuj sam'}).click();
   await expect(page.getByRole('heading',{name:'Propozycja Piko'})).toBeVisible();
-  await expect(page.getByLabel('Komentarz Piko')).toContainText(transferComment);
+  await expect(page.locator('.piko-reason')).toContainText(transferComment);
   await expect(page.getByTestId('engine-result')).toHaveCount(0);
   await page.getByLabel('Jeszcze nie wiem',{exact:true}).check();
   await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
-  const verified=page.getByRole('region',{name:'Sprawdzone obliczenia'});
+  const verified=page.getByRole('region',{name:'Wynik lotu'});
   await expect(verified).toContainText('Bezpieczny lot');
   await expect(verified).toContainText('f(x) = 3');
-  await verified.getByText('Dlaczego? Wartości obliczone przez silnik').click();
+  await verified.getByText('Dlaczego? Wysokość toru w każdym punkcie').click();
   await expect(verified.getByText(/Start: x=.+, y=3$/)).toBeVisible();
   await expect(verified).not.toContainText(/999|888|START_MISS/);
   await expect(page.getByText(scenario.feedback,{exact:true})).toBeVisible();

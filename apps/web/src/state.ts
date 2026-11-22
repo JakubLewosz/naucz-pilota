@@ -134,7 +134,10 @@ export function reducer(state:GameState,action:Action):GameState {
    if(s.activeTurnId!==action.turnId||s.viewRevision!==action.revision)return state;
    s.busy=false;s.activeTurnId=null;s.mode='unavailable';s.error=action.message;r.unavailable=true;break;
   case 'MODE':invalidate();s.mode=action.mode;break;
-  case 'STATUS':s.liveAvailable=action.live;break;
+  case 'STATUS':s.liveAvailable=action.live;
+   // Nowy gracz dostaje prawdziwe AI od razu, gdy serwer je udostępnia.
+   if(action.live&&s.mode==='demo'&&Object.values(s.runs).every(run=>!run.messages.length&&!Object.keys(run.counts).length))s.mode='live';
+   break;
   case 'SETTINGS':s.settings={...s.settings,...action.settings};break;
   case 'CLEAR_CHAT_START':
    if(s.busy||r.role!=='teach')return state;

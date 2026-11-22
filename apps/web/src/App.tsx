@@ -7,7 +7,7 @@ import {Piko} from './Piko';
 import {canOpenPage,hasIndependentAttempt,rulesForAiTurn,visibleJournalRules} from './review';
 import {clearConversation,getStatus,sendTurn,setAccessCode,startSession} from './transport';
 import {backupSave,canAskRobot,hasCompleted,loadState,numericEvidence,persistState,reducer,removeSave,roles,roleLabels,type Attempt,type GameState,type LessonReply,type Run} from './state';
-const modeText={demo:'Demo — odpowiedzi scenariuszowe',live:'Live — prawdziwy model',unavailable:'AI niedostępne — brak odpowiedzi'};
+const modeText={demo:'Tryb pokazowy — gotowe odpowiedzi',live:'Prawdziwe AI — Claude',unavailable:'AI niedostępne — brak odpowiedzi'};
 const familyName={constant:'funkcja stała',linear:'funkcja liniowa',quadratic:'funkcja kwadratowa'};
 const coefficientName={c2:'a',c1:'b',c0:'c'};
 const pointName=(id:string)=>id==='start'?'Start':id==='goal'?'Meta':id;
@@ -21,24 +21,24 @@ function eventLabel(event:Event){
 function FlightResult({attempt,robotStart}:{attempt:Attempt;robotStart?:{yMin:number;yMax:number}}){
  const {expression,result}=attempt;
  const missedStart=result.primaryCode==='START_MISS'?result.checkpoints.find(point=>point.id==='start'):undefined;
- return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Sprawdzone obliczenia">
-  <h3>Sprawdzone obliczenia</h3>
-  <p>Sprawdzony wzór <code>f(x) = {expression}</code></p>
+ return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Wynik lotu">
+  <h3>Wynik lotu</h3>
+  <p>Wzór <code>f(x) = {expression}</code></p>
   <strong>{result.ok?'✓':'×'} {result.messagePL}</strong>
-  {result.firstPhysicalEvent&&<p>Pierwsze zdarzenie: {eventLabel(result.firstPhysicalEvent)}, x ≈ {result.firstPhysicalEvent.x.toFixed(3)}.</p>}
+  {result.firstPhysicalEvent&&<p>Co poszło nie tak: {eventLabel(result.firstPhysicalEvent)}, x ≈ {result.firstPhysicalEvent.x.toFixed(3)}.</p>}
   {robotStart&&missedStart&&<p>Przy x = {missedStart.x} tor osiągnął y = {Number(missedStart.y.toFixed(6))}. Otwór startowy sięga od y = {robotStart.yMin} do y = {robotStart.yMax}.</p>}
   <details>
-   <summary>Dlaczego? Wartości obliczone przez silnik</summary>
+   <summary>Dlaczego? Wysokość toru w każdym punkcie</summary>
    <ul>{result.checkpoints.map(c=><li key={c.id}>{c.passed?'✓':'×'} {pointName(c.id)}: x={c.x}, y={Number(c.y.toFixed(6))}</li>)}</ul>
-   <p>Kod silnika: {result.primaryCode}{result.firstPhysicalEvent&&` · ${result.firstPhysicalEvent.subject}`}</p>
+   <p className="muted">Kod techniczny: {result.primaryCode}{result.firstPhysicalEvent&&` · ${result.firstPhysicalEvent.subject}`}</p>
   </details>
  </section>;
 }
 function LessonText({explanation,paraphrase,source}:{explanation:string;paraphrase:string|null;source?:string}){
  return <dl className="lesson-text">
   <dt>Twoje wyjaśnienie</dt><dd>{explanation}</dd>
-  <dt>{source==='demo'?'Przygotowany komentarz Piko (demo)':source==='live'?'Tak zrozumiałem — Piko (live)':'Odpowiedź Piko'}</dt>
-  <dd>{paraphrase??'Pominięto odpowiedź Piko. Zapis obejmuje Twoje słowa.'}</dd>
+  <dt>{source==='demo'?'Przygotowany komentarz Piko (tryb pokazowy)':source==='live'?'Jak zrozumiał to Piko':'Odpowiedź Piko'}</dt>
+  <dd>{paraphrase??'Bez odpowiedzi Piko — zapisujemy Twoje słowa.'}</dd>
  </dl>;
 }
 const assessmentText={
@@ -50,13 +50,13 @@ const assessmentText={
 };
 function LessonAssessment({reply}:{reply:LessonReply|null}){
  if(reply?.source==='live'&&reply.assessment){
-  return <p><strong>Opinia Piko o wyjaśnieniu (live)</strong><br/><span>{assessmentText[reply.assessment]}</span></p>;
+  return <p><strong>Ocena Twojego wyjaśnienia (AI)</strong><br/><span>{assessmentText[reply.assessment]}</span></p>;
  }
- return <p className="muted">{reply?.source==='demo'?'W demo Piko pokazuje przygotowany komentarz.':'Notatka bez oceny wyjaśnienia.'}</p>;
+ return <p className="muted">{reply?.source==='demo'?'W trybie pokazowym Piko ma gotowy komentarz.':'Notatka bez oceny wyjaśnienia.'}</p>;
 }
 function robotOutcome(r?:Run){
  const attempt=r?.attempts.robot_transfer?.at(-1);
- if(attempt)return `${attempt.result.ok?'Bezpieczny lot':'Lot nieudany'} · ${attempt.source==='live'?'model live':'demonstracja'}`;
+ if(attempt)return `${attempt.result.ok?'Bezpieczny lot':'Lot nieudany'} · ${attempt.source==='live'?'prawdziwe AI':'tryb pokazowy'}`;
  return r?.robotDisposition==='skipped'?'Pominięto lot Piko.':'Brak sprawdzonego lotu Piko.';
 }
 function Summary({r}:{r:Run}){
@@ -136,6 +136,16 @@ export function App(){
  const journalAvailable=canOpenPage(s,'journal');
  const journalRules=visibleJournalRules(s);
  const go=(page:GameState['page'])=>dispatch({type:'OPEN',page});
+ const conversation=<section aria-label="Komentarz Piko">
+  <div className="conversation">
+   <div role="status">{role==='teach'&&s.busy&&<div className="notice ai-wait"><Piko busy/><p>Piko myśli nad Twoim wyjaśnieniem…</p></div>}</div>
+   {r.messages.map((msg,i)=><div className="message" key={i}>
+    <small>{msg.speaker==='player'?'TY':`PIKO · ${msg.source==='live'?'PRAWDZIWE AI':'TRYB POKAZOWY'}`}</small><p>{msg.text}</p>
+   </div>)}
+  </div>
+  {role==='teach'&&r.messages.length>0&&<button className="quiet" disabled={s.busy} onClick={()=>void resetChat()}>Wyczyść rozmowę</button>}
+ </section>;
+
  if(s.recovery)return <main className="recovery panel">
   <h1>Odzyskaj zapis</h1><p>{s.recovery}. Oryginalne dane pozostają zachowane.</p>
   {saveError&&<p role="alert">{saveError}</p>}
@@ -173,7 +183,7 @@ export function App(){
   <section className="steps-overview" aria-label="Jak przebiega misja">
    {roles.map((step,i)=><div key={step}><b>0{i+1}</b><strong>{roleLabels[step]}</strong><p>{['Przetestuj własny wzór.','Wyjaśnij, dlaczego działa.','Przewidź i sprawdź jego pomysł.','Nowa plansza. Twój samodzielny lot.'][i]}</p></div>)}
   </section>
-  <p className="availability">{s.liveAvailable?'Połączenie live jest skonfigurowane. Wybierzesz je w ustawieniach.':'Możesz przejść całą kampanię w demo. Odpowiedzi Piko są wtedy przygotowane.'}</p>
+  <p className="availability">{s.liveAvailable?'Piko odpowiada przez prawdziwe AI (Claude). Tryb możesz zmienić w ustawieniach.':'Grasz w trybie pokazowym: odpowiedzi Piko są przygotowane wcześniej. Cała gra działa też bez internetu.'}</p>
  </>}
  {s.page==='missions'&&<>
   <span className="eyebrow">PRACOWNIA LOTÓW / TWOJA KAMPANIA</span>
@@ -208,24 +218,23 @@ export function App(){
  <details className="board-data"><summary>Dane planszy</summary><p>Granice: x od {scene.domain.xMin} do {scene.domain.xMax}; y od {scene.domain.yMin} do {scene.domain.yMax}. Bok Piko: 0,24. Cały robot musi mieścić się w przejściu.</p><ul>{[{id:'Start',...scene.start},...scene.gates,{id:'Cel',...scene.goal}].map(g=><li key={g.id}>{g.id}: x={g.x}, dozwolone y od {g.yMin} do {g.yMax}</li>)}{scene.obstacles.map(o=><li key={o.id}>Przeszkoda {o.id}: x od {o.xMin} do {o.xMax}; y od {o.yMin} do {o.yMax}</li>)}</ul></details>
  </section><aside className="side panel"><span className="eyebrow">{role==='human_check'?'TERAZ TWOJA KOLEJ':'CENTRUM LOTU'}</span><h2>{scene.title}</h2><p>{scene.instruction}</p>
  {role==='practice'&&<><div className="hint-box"><h3>Potrzebujesz wskazówki?</h3><p>Odkrywaj po jednej. Gra zapamięta ich użycie.</p>{hints.missions.find(h=>h.missionId===m.id)?.hints.slice(0,r.hintCount).map(h=><div key={h.level}><strong>{h.level}. {h.titlePL}</strong><p>{h.textPL}</p></div>)}{r.hintCount<3&&<button className="secondary" onClick={()=>dispatch({type:'HINT'})}>Wskazówka {r.hintCount+1} / 3</button>}</div>{last?.result.ok&&<button onClick={()=>dispatch({type:'NEXT'})}>Teraz naucz Piko →</button>}</>}
- {role==='teach'&&<><div className="scripted"><div className="piko-title"><Piko/><strong>Pomysł Piko · scenariusz</strong></div><p>{m.scriptedRobotUtterance}</p><code>f(x) = {scene.initialExpression}</code><button className="secondary" onClick={()=>dispatch({type:'CHECK_SCRIPT'})}>Sprawdź pomysł Piko</button></div><h3>2. Przewidź wartości w bramkach</h3><p className="muted">Po wpisaniu obu wartości wybierz „Sprawdź naprawę” pod planszą.</p><div className="predictions">{scene.gates.map((g,i)=><label key={g.id} htmlFor={`prediction${i}`}>{g.id} · dla x = {g.x}, przewiduję y =<input id={`prediction${i}`} inputMode="decimal" value={r.predictions[i]} onChange={e=>dispatch({type:'EDIT',field:i===0?'prediction0':'prediction1',value:e.target.value})}/></label>)}</div><h3>3. Wyjaśnij zmianę Piko</h3><label htmlFor="explanation">Co Piko powinien zmienić i dlaczego?</label><textarea id="explanation" value={r.explanation} maxLength={600} rows={3} onChange={e=>dispatch({type:'EDIT',field:'explanation',value:e.target.value})}/><p className="muted">Wystarczy jedno lub dwa zdania. {r.explanation.length}/600</p><p className="privacy">W live wyjaśnienie i opis bieżącej planszy trafiają do usługi AI. Serwer gry zachowuje rozmowę w sesji SQLite. Wpisuj tylko treść zadania.</p><button className="secondary" disabled={s.busy||!r.explanation.trim()} onClick={()=>void askPiko()}>Powiedz Piko</button>{!r.explanation.trim()&&<p className="muted">Najpierw wpisz własną próbę wyjaśnienia.</p>}{r.repairChecked&&<p className="notice">{r.numericFeedback}</p>}{canRule&&<div className="rule-card">
-  <h3>4. Przeczytaj i zapisz notatkę z lekcji</h3>
-  <strong>Tor i prognozy sprawdzone przez silnik</strong><p>{m.ruleText}</p>
+ {role==='teach'&&<><div className="scripted"><div className="piko-title"><Piko/><strong>Pomysł Piko · scenariusz</strong></div><p>{m.scriptedRobotUtterance}</p><code>f(x) = {scene.initialExpression}</code><button className="secondary" onClick={()=>dispatch({type:'CHECK_SCRIPT'})}>Sprawdź pomysł Piko</button></div><h3>2. Przewidź wartości w bramkach</h3><p className="muted">Po wpisaniu obu wartości wybierz „Sprawdź naprawę” pod planszą.</p><div className="predictions">{scene.gates.map((g,i)=><label key={g.id} htmlFor={`prediction${i}`}>{g.id} · dla x = {g.x}, przewiduję y =<input id={`prediction${i}`} inputMode="decimal" value={r.predictions[i]} onChange={e=>dispatch({type:'EDIT',field:i===0?'prediction0':'prediction1',value:e.target.value})}/></label>)}</div><h3>3. Wyjaśnij zmianę Piko</h3><label htmlFor="explanation">Co Piko powinien zmienić i dlaczego?</label><textarea id="explanation" value={r.explanation} maxLength={600} rows={3} onChange={e=>dispatch({type:'EDIT',field:'explanation',value:e.target.value})}/><p className="muted">Wystarczy jedno lub dwa zdania. {r.explanation.length}/600</p>{s.mode==='live'&&<p className="privacy">Twoje wyjaśnienie trafi do AI. Nie wpisuj danych osobowych.</p>}<button className="secondary" disabled={s.busy||!r.explanation.trim()} onClick={()=>void askPiko()}>Powiedz Piko</button>{conversation}{!r.explanation.trim()&&<p className="muted">Najpierw wpisz własną próbę wyjaśnienia.</p>}{r.repairChecked&&<p className="notice">{r.numericFeedback}</p>}{canRule&&<div className="rule-card">
+  <h3>4. Zapisz notatkę dla Piko</h3>
+  <strong>Zasada sprawdzona przez grę</strong><p>{m.ruleText}</p>
   <LessonText explanation={r.explanation} paraphrase={r.lessonReply?.text??null} source={r.lessonReply?.source}/>
   <LessonAssessment reply={r.lessonReply}/>
   {r.lessonReply?.source==='live'
-   ? <p className="muted">Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i wybierz ponownie „Powiedz Piko”.</p>
+   ? <p className="muted">Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i kliknij ponownie „Powiedz Piko”.</p>
    : <p className="muted">{r.lessonReply?.source==='demo'
-     ? 'W demo zapisujesz własne słowa obok przygotowanego komentarza.'
-     : 'Możesz poprosić Piko o odpowiedź albo zapisać notatkę bez parafrazy.'}</p>}
-  <p className="muted">Potwierdzasz treść notatki do kolejnego lotu. Silnik sprawdził wzór i prognozy. Wyjaśnienie i parafraza pozostają wypowiedziami z lekcji.</p>
+     ? 'Piko zabierze tę notatkę na nową trasę.'
+     : 'Możesz najpierw zapytać Piko albo od razu zapisać notatkę.'}</p>}
   <button disabled={s.busy} onClick={()=>dispatch({type:'CONFIRM_RULE'})}>Zapisz notatkę dla Piko →</button>
  </div>}{!canRule&&<p className="muted">Sprawdź bezpieczny tor, obie prognozy i wpisz własne wyjaśnienie, aby przygotować notatkę.</p>}</>}
  {role==='robot_transfer'&&<> <div role="status" id="transfer-wait">{s.busy&&<div className="notice ai-wait">
   <Piko busy/>
   <div>
-  <strong>{s.mode==='demo'?'Ładowanie propozycji demonstracyjnej':'Piko analizuje nową trasę'}</strong>
-  <p>Po odpowiedzi możesz przewidzieć wynik i sprawdzić go silnikiem. Jeśli wolisz przejść dalej, Twoja notatka pozostanie zapisana. Pominięcie zapisze się oddzielnie od wyniku Twojego lotu.</p>
+  <strong>{s.mode==='demo'?'Wczytuję przygotowany lot Piko':'Piko analizuje nową trasę…'}</strong>
+  <p>Za chwilę zobaczysz jego wzór i przewidzisz, czy przeleci. Możesz też pominąć jego lot — Twoja notatka zostaje zapisana.</p>
   </div>
  </div>}</div>
  {s.busy&&<button className="secondary" aria-describedby="transfer-wait" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>}
@@ -234,11 +243,11 @@ export function App(){
   <LessonText explanation={r.rule.lessonNote.explanationPL} paraphrase={r.rule.lessonNote.pikoParaphrasePL} source={r.rule.lessonNote.source}/>
   <p><strong>Sprawdzona zasada</strong><br/>{m.ruleText}</p>
  </details>}{r.rule?.lessonNote&&<LessonAssessment reply={r.lessonReply}/>}
- {!r.robot&&<div className="scripted"><Piko/><p>Na tej planszy Piko może skorzystać z notatki i sprawdzonej zasady. Wynik lotu oceni silnik.</p></div>}
+ {!r.robot&&<div className="scripted"><Piko/><p>Piko weźmie Twoją notatkę i spróbuje sam dobrać wzór na tej trasie. Czy dobrze go nauczyłeś?</p></div>}
  {r.robot?.learner?.proposedExpression&&<div className="proposal">
   <h3>Propozycja Piko</h3>
   <code>f(x) = {r.robot.learner.proposedExpression}</code>
-  <p className="muted">{r.robot.mode==='live'?'Komentarz Piko opisuje, jak wykorzystał notatkę lub sprawdzoną zasadę. Wynik oblicza silnik.':'To przygotowany lot demonstracyjny. Wynik oblicza silnik.'}</p>
+  {r.robot.learner.utterancePL&&<blockquote className="piko-reason"><small>{r.robot.mode==='live'?'UZASADNIENIE PIKO · PRAWDZIWE AI':'UZASADNIENIE PIKO · TRYB POKAZOWY'}</small><p>{r.robot.learner.utterancePL}</p></blockquote>}
   <fieldset><legend>Jak przewidujesz?</legend>{['Przeleci','Nie przeleci','Jeszcze nie wiem'].map(p=><label key={p}><input type="radio" name="prediction" checked={r.prediction===p} onChange={()=>dispatch({type:'ROBOT_PREDICTION',value:p})}/>{p}</label>)}</fieldset>
   {!r.robotChecked&&<button disabled={s.busy||!r.prediction} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
   {!r.prediction&&<p className="muted">Wybierz przewidywanie, by zobaczyć wynik.</p>}
@@ -247,30 +256,22 @@ export function App(){
  {!s.busy&&(r.robotChecked
   ? <button onClick={()=>dispatch({type:'NEXT'})}>Teraz mój samodzielny lot →</button>
   : <button className="secondary" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby →</button>)}</>}
- {role==='human_check'&&<><p className="notice">Pierwszy parsowalny wzór zostaje zapisany na stałe, również po odświeżeniu.</p>{r.firstHuman&&<p>Pierwsza próba: <strong>{r.firstHuman.result.ok?'poprawna':'do poprawy'}</strong>. Liczba prób: {r.counts.human_check}.</p>}{r.completed&&<><p className="success">✓ Misja ukończona{(r.counts.human_check??0)>1?` w ${r.counts.human_check}. próbie. Pierwsza próba pozostaje w podsumowaniu.`:'.'}</p><button onClick={()=>dispatch({type:'NEXT'})}>Zobacz podsumowanie →</button></>}</>}
- {['teach','robot_transfer'].includes(role)&&<section aria-label="Komentarz Piko">
-  <div className="conversation">
-   <div role="status">{role==='teach'&&s.busy&&<div className="notice ai-wait"><Piko busy/><p>Oczekiwanie na odpowiedź Piko. W tym czasie możesz przejść do innego ekranu.</p></div>}</div>
-   {r.messages.map((msg,i)=><div className="message" key={i}>
-    <small>{msg.speaker==='player'?'TY':`KOMENTARZ PIKO · ${msg.source==='live'?'MODEL LIVE':'DEMONSTRACJA'}`}</small><p>{msg.text}</p>
-   </div>)}
-  </div>
-  {role==='teach'&&r.messages.length>0&&<button className="quiet" disabled={s.busy} onClick={()=>void resetChat()}>Wyczyść rozmowę</button>}
- </section>}
+ {role==='robot_transfer'&&!r.robot?.learner?.proposedExpression&&r.messages.length>0&&conversation}
+ {role==='human_check'&&<><p className="notice">Liczy się pierwsza próba — zapiszemy ją, nawet jeśli potem poprawisz wzór.</p>{r.firstHuman&&<p>Pierwsza próba: <strong>{r.firstHuman.result.ok?'poprawna':'do poprawy'}</strong>. Liczba prób: {r.counts.human_check}.</p>}{r.completed&&<><p className="success">✓ Misja ukończona{(r.counts.human_check??0)>1?` w ${r.counts.human_check}. próbie. Pierwsza próba pozostaje w podsumowaniu.`:'.'}</p><button onClick={()=>dispatch({type:'NEXT'})}>Zobacz podsumowanie →</button></>}</>}
  {s.mode==='unavailable'&&['teach','robot_transfer'].includes(role)&&<div className="notice">
-  <p>Brak odpowiedzi modelu. Twoje wpisy są zachowane.</p>
+  <p>Brak odpowiedzi AI. Twoje wpisy są zachowane.</p>
   {(role==='teach'||canAskRobot(s,r))&&<button className="secondary" disabled={s.busy||role==='teach'&&!r.explanation.trim()} onClick={()=>void askPiko()}>Spróbuj ponownie</button>}
   <button disabled={s.busy} onClick={()=>dispatch({type:'MODE',mode:'demo'})}>Wybierz tryb demonstracyjny</button>
  </div>}
  {s.mode==='live'&&role==='robot_transfer'&&r.robotFailures>=2&&!s.busy&&<div className="notice">
-  <p>Wykorzystano dwie nieudane tury live. Możesz wybrać demonstrację lub pominąć lot Piko.</p>
+  <p>AI dwa razy nie odpowiedziało. Możesz przejść na tryb pokazowy albo pominąć lot Piko.</p>
   <button onClick={()=>dispatch({type:'MODE',mode:'demo'})}>Wybierz tryb demonstracyjny</button>
  </div>}
  </aside></div></>}
- {s.page==='journal'&&journalAvailable&&<><span className="eyebrow">PAMIĘĆ PIKO</span><h1 ref={heading} tabIndex={-1}>Dziennik sprawdzonych zasad</h1><p>To pamięć aplikacji i kontekst rozmowy. Nie zmieniamy wag modelu.</p>{journalRules.length===0&&<p className="panel">Zasada pojawi się po pierwszej samodzielnej próbie w danej misji.</p>}{journalRules.map(e=>{const mission=missionById(e.missionId),run=s.runs[e.missionId];return <article className="panel journal-entry" key={e.missionId}><span className="eyebrow">{mission.id} · PRZEĆWICZONA</span><h2>{mission.title}</h2><p>{mission.ruleText}</p><p>Wynik Piko · {robotOutcome(run)} · Twoja pierwsza próba: {run?.firstHuman?(run.firstHuman.result.ok?'poprawna':'do poprawy'):'przed Tobą'}</p></article>;})}<button onClick={()=>go('game')}>Wróć do lotu</button></>}
+ {s.page==='journal'&&journalAvailable&&<><span className="eyebrow">PAMIĘĆ PIKO</span><h1 ref={heading} tabIndex={-1}>Dziennik sprawdzonych zasad</h1><p>Zasady, których nauczyłeś Piko. Piko pamięta je dzięki notatkom zapisanym w grze.</p>{journalRules.length===0&&<p className="panel">Zasada pojawi się po pierwszej samodzielnej próbie w danej misji.</p>}{journalRules.map(e=>{const mission=missionById(e.missionId),run=s.runs[e.missionId];return <article className="panel journal-entry" key={e.missionId}><span className="eyebrow">{mission.id} · PRZEĆWICZONA</span><h2>{mission.title}</h2><p>{mission.ruleText}</p><p>Wynik Piko · {robotOutcome(run)} · Twoja pierwsza próba: {run?.firstHuman?(run.firstHuman.result.ok?'poprawna':'do poprawy'):'przed Tobą'}</p></article>;})}<button onClick={()=>go('game')}>Wróć do lotu</button></>}
  {s.page==='summary'&&canOpenPage(s,'summary')&&<><div className="summary-mark" aria-hidden="true"><Piko/><span>✓</span></div><span className="eyebrow">MISJA {m.order} / 6</span><h1 ref={heading} tabIndex={-1}>{m.order===6?'Dobra robota — ukończyłeś sześć misji':'Misja ukończona'}</h1><Summary r={r}/>{s.archive[m.id]?.length>0&&<details><summary>Poprzednie podejścia ({s.archive[m.id].length})</summary>{s.archive[m.id].map(old=><Summary key={old.id} r={old}/>)}</details>}<div className="actions">{m.order<6?<button onClick={()=>dispatch({type:'MISSION',id:`M0${m.order+1}`})}>Następna misja →</button>:<button onClick={()=>go('missions')}>Zobacz wszystkie misje</button>}<button className="secondary" onClick={()=>dispatch({type:'REPLAY',id:m.id})}>Powtórz misję</button></div><p className="muted">Powtórka zachowuje pełny zapis poprzedniego podejścia. Wynik opisuje to zadanie; nie jest diagnozą trwałej wiedzy.</p>{m.order===6&&missions.filter(mission=>hasIndependentAttempt(s,mission.id)).map(mission=><section key={mission.id}><h2>{mission.title}</h2>{s.runs[mission.id]&&<Summary r={s.runs[mission.id]}/>}</section>)}</>}
- {s.page==='about'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Jak działa Piko?</h1><Piko/><p>Piko jest symulowanym uczniem. Model językowy odgrywa jego rolę, a aplikacja zapisuje sprawdzone zasady w pamięci sesji. Nie trenujemy modelu na rozmowie. Trafienia, przeszkody i zaliczenia oblicza silnik matematyczny.</p><p>W demo oglądasz przygotowane odpowiedzi. W live model odnosi się do Twojego wyjaśnienia i proponuje własny wzór. Może się pomylić — sprawdzamy każdą propozycję.</p><p>Postęp zapisujemy na tym urządzeniu. W live backend gry zapisuje bieżącą rozmowę w sesji SQLite i przekazuje potrzebne fragmenty wraz z opisem planszy do usługi AI. Sesja wygasa po 24 godzinach. Przycisk „Wyczyść rozmowę” usuwa wiadomości tej lekcji z widoku i aktywnego kontekstu serwera, zachowując zapisaną notatkę i wyniki.</p><button onClick={()=>go('game')}>Przejdź do lotu</button></section>}
- {s.page==='settings'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Ustawienia</h1><h2>Połączenie</h2><p>{modeText[s.mode]}</p><div className="actions"><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'demo'})}>Wybierz demo</button><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'live'})}>Wybierz live</button></div><p className="muted">{s.liveAvailable?'Backend zgłasza dostępny model.':'Backend nie zgłasza dostępnego modelu. Próba live może zakończyć się jawnym błędem.'} Klucz konfiguruje autor na backendzie.</p><details className="access-panel"><summary>Masz kod dostępu do live?</summary>
+ {s.page==='about'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Jak działa Piko?</h1><Piko/><p><strong>Piko to robot-uczeń.</strong> Uczy się od Ciebie: gdy wyjaśnisz mu zasadę, sam spróbuje ją zastosować na nowej trasie. Najlepiej uczymy się, tłumacząc coś komuś innemu — i właśnie to robisz w grze.</p><p><strong>Kto tu myśli?</strong> Rozmowę z Piko prowadzi model językowy Claude. Piko może się pomylić, tak jak prawdziwy uczeń. Dlatego każdy lot — Twój i jego — dokładnie przelicza sama gra. To ona decyduje, czy tor przeszedł przez bramki, a nie AI.</p><p><strong>Tryb pokazowy.</strong> Bez połączenia z AI gra działa dalej, a Piko odpowiada gotowymi, wcześniej przygotowanymi tekstami. Zawsze widzisz, który tryb jest włączony.</p><p><strong>Twoje dane.</strong> Postęp zostaje na tym urządzeniu. Nie ma kont ani rankingów. W trybie z AI do serwera trafia tylko treść zadania i Twoje wyjaśnienie; rozmowa wygasa po 24 godzinach, a „Wyczyść rozmowę” usuwa ją od razu.</p><button onClick={()=>go('game')}>Przejdź do lotu</button></section>}
+ {s.page==='settings'&&<section className="panel prose"><h1 ref={heading} tabIndex={-1}>Ustawienia</h1><h2>Połączenie</h2><p>{modeText[s.mode]}</p><div className="actions"><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'demo'})}>Wybierz demo</button><button className="secondary" onClick={()=>dispatch({type:'MODE',mode:'live'})}>Wybierz live</button></div><p className="muted">„Demo” to tryb pokazowy z gotowymi odpowiedziami — działa bez internetu. „Live” to prawdziwe AI. {s.liveAvailable?'Prawdziwe AI jest teraz dostępne.':'Prawdziwe AI nie jest teraz dostępne.'}</p><details className="access-panel"><summary>Masz kod dostępu do live?</summary>
  <form onSubmit={event=>{event.preventDefault();void connectWithCode();}}>
   <p className="muted">Jeśli prowadzący udostępnił Ci kod, wpisz go tutaj. Dostęp będzie pamiętany do zamknięcia aplikacji lub odświeżenia strony.</p>
   <label htmlFor="access-code">Kod dostępu do live</label>

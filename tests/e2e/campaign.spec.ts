@@ -14,9 +14,9 @@ async function teach(page:Page,mission:typeof data.missions[number]){
  for(const [i,g] of scene.gates.entries())await page.locator(`#prediction${i}`).fill(String((w.c2*g.x+w.c1)*g.x+w.c0));
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(mission.ruleText);
  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
- await expect(page.getByText('Tor i prognozy sprawdzone przez silnik',{exact:true})).toBeVisible();
+ await expect(page.getByText('Zasada sprawdzona przez grę',{exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
- await expect(page.getByLabel('Komentarz Piko')).toContainText('DEMONSTRACJA');
+ await expect(page.getByLabel('Komentarz Piko')).toContainText('TRYB POKAZOWY');
  await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
 }
 async function transfer(page:Page,checkStartMiss=false){
@@ -76,7 +76,7 @@ test('live connection error preserves input and requires explicit demo selection
  await page.route('**/api/session',r=>r.abort('failed'));
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Podnoszę cały wykres.');await page.getByRole('button',{name:'Powiedz Piko'}).click();
  await expect(page.getByTestId('ai-mode')).toContainText('AI niedostępne');await expect(page.getByLabel('Co Piko powinien zmienić i dlaczego?')).toHaveValue('Podnoszę cały wykres.');
- await page.getByRole('button',{name:'Wybierz tryb demonstracyjny'}).click();await expect(page.getByTestId('ai-mode')).toContainText('Demo');
+ await page.getByRole('button',{name:'Wybierz tryb demonstracyjny'}).click();await expect(page.getByTestId('ai-mode')).toContainText('Tryb pokazowy');
 });
 test('keyboard path, offline demo and 200% text keep primary actions available',async({page,context})=>{
  await page.setViewportSize({width:390,height:844});await page.goto('/');
@@ -124,6 +124,8 @@ test('MOCK: skip during a 21 s desktop reply preserves the independent attempt a
  await page.setViewportSize({width:1366,height:768});
  await page.goto('/');
  await page.getByRole('button',{name:'Rozpocznij'}).click();
+ // Nowy gracz dostaje live automatycznie; ta próba zaczyna lekcję w demo.
+ await selectMode(page,'demo');
  await practice(page,data.missions[0]);
  await teach(page,data.missions[0]);
  await page.getByRole('button',{name:'Ustawienia',exact:true}).click();
@@ -138,7 +140,7 @@ test('MOCK: skip during a 21 s desktop reply preserves the independent attempt a
  await expect.poll(()=>requests.length).toBe(1);
  const skip=page.getByRole('button',{name:'Pomiń lot Piko i przejdź do własnej próby'});
  await expect(skip).toBeVisible();
- await expect(skip).toHaveAccessibleDescription(/Twoja notatka pozostanie zapisana/);
+ await expect(skip).toHaveAccessibleDescription(/Twoja notatka zostaje zapisana/);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.setViewportSize({width:390,height:844});
  await expect(skip).toBeVisible();
@@ -203,7 +205,7 @@ for(const path of ['demo','skip'] as const)test(`two failed live turns, reload, 
  expect(requests[1].ruleEvidence[0].lessonNote).toMatchObject({explanationPL:mission.ruleText,source:'demo'});
  if(path==='demo'){
   await page.getByRole('button',{name:'Wybierz tryb demonstracyjny'}).click();
-  await expect(page.getByTestId('ai-mode')).toContainText('Demo');
+  await expect(page.getByTestId('ai-mode')).toContainText('Tryb pokazowy');
   await transfer(page);
  }else await page.getByRole('button',{name:'Pomiń lot Piko'}).click();
  await blind(page);
@@ -217,7 +219,7 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill('Stała ustawia wysokość toru.');
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
  const chat=page.getByLabel('Komentarz Piko');
- await expect(chat).toContainText('DEMONSTRACJA');
+ await expect(chat).toContainText('TRYB POKAZOWY');
  await expect(chat).toContainText('Stała ustawia wysokość toru.');
  await selectMode(page,'live');
  await stubSession(page);
@@ -230,10 +232,10 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
  await expect(page.getByTestId('ai-mode')).toContainText('AI niedostępne');
  await page.getByRole('button',{name:'Spróbuj ponownie'}).click();
- await expect(page.getByTestId('ai-mode')).toContainText('Live');
- await expect(page.getByText('Brak odpowiedzi modelu. Twoje wpisy są zachowane.')).toHaveCount(0);
- await expect(chat).toContainText('DEMONSTRACJA');
- await expect(chat).toContainText('MODEL LIVE');
+ await expect(page.getByTestId('ai-mode')).toContainText('Prawdziwe AI');
+ await expect(page.getByText('Brak odpowiedzi AI. Twoje wpisy są zachowane.')).toHaveCount(0);
+ await expect(chat).toContainText('TRYB POKAZOWY');
+ await expect(chat).toContainText('PRAWDZIWE AI');
  await selectMode(page,'demo');
  let resets=0;
  await page.route('**/api/conversation/reset',route=>{
@@ -243,9 +245,9 @@ test('live retry restores the badge and a later demo chat reset reaches the live
  });
  await page.getByRole('button',{name:'Wyczyść rozmowę'}).click();
  await expect(page.getByText('Piko kończy poprzednią turę.')).toBeVisible();
- await expect(chat).toContainText('MODEL LIVE');
+ await expect(chat).toContainText('PRAWDZIWE AI');
  await page.getByRole('button',{name:'Wyczyść rozmowę'}).click();
- await expect(chat).not.toContainText('MODEL LIVE');
+ await expect(chat).not.toContainText('PRAWDZIWE AI');
  await expect(page.getByLabel('Co Piko powinien zmienić i dlaczego?')).toHaveValue('Stała ustawia wysokość toru.');
  expect(resets).toBe(2);
 });

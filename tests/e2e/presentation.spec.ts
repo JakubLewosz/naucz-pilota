@@ -23,7 +23,7 @@ test('jury code authorizes the browser connection and is cleared by a page reloa
  expect(observed).toContain(code);
  await page.reload();
  await expect.poll(()=>observed.at(-1)).toBe('');
- await expect(page.getByText('Backend nie zgłasza dostępnego modelu.',{exact:false})).toBeVisible();
+ await expect(page.getByText('Prawdziwe AI nie jest teraz dostępne.',{exact:false})).toBeVisible();
 });
 
 test('flight markers follow engine events, skipping is cosmetic and reduced motion ends immediately',async({page})=>{
