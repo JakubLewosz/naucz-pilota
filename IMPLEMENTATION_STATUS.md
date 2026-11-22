@@ -1,4 +1,13 @@
 # Stan implementacji — Piko: Misja Funkcja
+
+## 22 listopada 2026: Claude, nowe teksty, film i paczka zgłoszenia
+
+- Live AI działa na Claude Sonnet 5.5 (`AI_PROVIDER=anthropic`, wysiłek `medium`, strukturalny JSON, serwerowy fallback przy odmowie). OpenAI pozostaje do wyboru. Prompt 1.3.1: nowa nazwa gry, prosty język bez żargonu i formy neutralne płciowo.
+- Pełny zestaw live 22/22, 6/6 lotów Piko zaliczonych, mediana 3,6 s, ok. 0,31 USD. [Raport](checks/ai-live-claude-sonnet-5-5.md)
+- Interfejs: teksty bez żargonu („Wynik lotu”, „Tryb pokazowy”, „Prawdziwe AI — Claude”), rozmowa pod przyciskiem „Powiedz Piko”, uzasadnienie Piko w karcie propozycji, nowy gracz startuje w live, jeśli serwer je udostępnia.
+- Dokumentacja dla jury przepisana: README, opis (1 strona), instrukcje, raport. Film 3:41 z prawdziwą rozgrywką, lektorem i napisami: `release/media/Piko_Misja_Funkcja_film.mp4`, odtwarzalny przez `tools/record-film.ts` i `tools/build-film.ts`.
+- Testy: typecheck, lint, 216 jednostkowych, 62 treści, 17 e2e: PASS. Windows ZIP zbudowany, `release:check` PASS, Electron macOS smoke PASS. Archiwum kodu ze zgłoszenia zbudowane i przetestowane od zera.
+- Pozostaje dla autora: podpisane formularze, uruchomienie workflow Windows (Actions), udostępnienie folderu i wysłanie maila. [Lista](release/CHECKLISTA.md)
 Aktualizacja: 2026-11-18. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
 Bieżąca praca jest na lokalnej gałęzi `codex/jury-readiness`, od czystej bazy `f1e059d`. Bazę potwierdzono na zdalnym `main` i tagu `v1.0.0`. Wcześniejsze sprawdzenia odbioru jury wykonano na `f9efdbc22de7a4fc1a1c366e76cd00b882907642`. Próbę M04 live z GPT-5.4 mini wykonano na `a751a1c`, a z GPT-6 Luna na `95a55ca`.

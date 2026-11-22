@@ -1,30 +1,28 @@
-# Odbiór zgłoszenia konkursowego
+# Zgłoszenie: lista kontrolna
 
-Stan na 18 listopada 2026 dla lokalnego kandydata „Piko: Misja Funkcja” na `codex/jury-readiness`. Organizator przyjmuje kompletne zgłoszenia do **29 listopada 2026**. Pakiet przekazuje się przez link do chmury. [Strona organizatora i pliki do pobrania](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
+Konkurs „Sztuczna inteligencja wśród nas”, termin **29 listopada 2026**. Link do chmury z kompletem plików wysyła się na **informatyka_konkurs@uwb.edu.pl** ([strona konkursu](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)).
 
-## Materiały wymagane przez organizatora
+Folder do wysłania tworzy `npm run release:prepare` w `release/Piko_Misja_Funkcja_zgloszenie/`.
 
-| Wymóg | Stan kandydata | Dowód lub krok do wykonania |
+## Wymagania regulaminu (§3 ust. 7)
+
+| Wymóg | Plik w folderze | Stan |
 |---|---|---|
-| Wypełniona i podpisana karta zgłoszenia | NOT RUN | Uczestnicy uzupełniają i podpisują oryginalny formularz. |
-| Wypełniona i podpisana klauzula informacyjna | NOT RUN | Uczestnicy uzupełniają i podpisują oryginał. Jeżeli jest wymagana zgoda opiekuna, dopełnij jej przed wysłaniem. |
-| Kod źródłowy i instrukcja kompilacji | GOTOWE LOKALNIE | ZIP źródeł i lockfile, aktualne [polecenia kompilacji](../docs/11-uruchomienie.md). |
-| Wersja binarna i instrukcja uruchomienia | CROSS-BUILD PASS, WINDOWS NOT RUN | Aktualny ZIP Windows x64 w jawnym demo i aktualna instrukcja. Oddzielna paczka testowa HTTPS wskazuje loopback. [Protokół Windows](../docs/16-windows-odbior.md) |
-| Instrukcja użytkownika | GOTOWA LOKALNIE | [Instrukcja użytkownika](../docs/12-instrukcja-uzytkownika.md) i odpowiadający PDF. |
-| Film AVI/MP4 do 5 minut | FINALNY MONTAŻ NOT RUN | Klip aktualnego demo 41,04 s, scenopis 4 min 20 s i historyczne wypowiedzi live opisano w [materiałach filmowych](../docs/18-film-konkursowy.md). |
-| Opis funkcjonalności do jednej strony | GOTOWY LOKALNIE | Jednostronicowy PDF z aktualnym wynikiem M04. [Tekst źródłowy](../docs/14-opis-funkcjonalnosci.md) |
-| Link z pełnym zestawem i wysłanie zgłoszenia | NOT RUN | Autor wybiera chmurę, sprawdza pobieranie spoza własnego konta i wysyła link na adres podany przez organizatora. |
+| Karta Zgłoszenia, wypełniona, skan (Załącznik 1) | `01_formularze/` | **do zrobienia przez autora** |
+| Klauzula Informacyjna, wypełniona, skan (Załącznik 2) | `01_formularze/` | **do zrobienia przez autora** |
+| Wersja binarna + instrukcja uruchomienia | `02_aplikacja/Piko_Misja_Funkcja_Windows.zip`, `instrukcja_uruchomienia.pdf` | gotowe |
+| Kod źródłowy + instrukcja kompilacji | `03_kod/Piko_Misja_Funkcja_kod.zip`, `instrukcja_kompilacji.pdf` | gotowe |
+| Instrukcja korzystania z aplikacji | `04_instrukcja/instrukcja_uzytkownika.pdf` | gotowe |
+| Film do 5 min, AVI lub MP4 | `05_prezentacja/Piko_Misja_Funkcja_film.mp4` (3:41, 1080p) | gotowe |
+| Opis funkcjonalności, maks. 1 strona | `05_prezentacja/opis_funkcjonalnosci.pdf` | gotowe |
+| (dodatkowo) Raport z testów | `06_weryfikacja/` | gotowe |
 
-Uprawnienia uczestnika weryfikuje autor. Organizator wymaga statusu ucznia szkoły ponadpodstawowej, wieku poniżej 21 lat przez cały konkurs, drużyny maksymalnie dwuosobowej i udziału w jednej drużynie. Zgoda opiekuna dotyczy osób niepełnoletnich. Kwestionariusz laureata dotyczy późniejszego etapu. [Oficjalne warunki](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
+## Kroki dla autora
 
-## Odbiór techniczny przed wysłaniem
-
-- [x] Pełna kampania, zapis pierwszej próby, jawne demo i rozdzielony wynik silnika.
-- [x] Historyczna próba GPT-6 Luna Extra High 1.2.0. Silnik zaliczył 7/7 otrzymanych wzorów na dwóch geometriach poza kampanią. Jedna dodatkowa próba przekroczyła czas. [Wyniki](../checks/m04-generalization-1.2.0.live.md)
-- [x] Ograniczony HTTPS na lokalnym Caddy, w tym wariant z kodem dla nieznanej sieci. Zaufanie do certyfikatu, lista sieci, limit budżetu zero i restart SQLite. [Raport](../checks/jury-https-smoke.json)
-- [ ] Docelowy HTTPS, tura z realnym dostawcą w aplikacji na tym adresie, zatwierdzony origin w finalnej paczce Windows. NOT RUN.
-- [ ] Aktualny EXE na Windows i odbiór na osobnym komputerze bez Node. NOT RUN. Wcześniejszy test GitHub Actions dotyczy commita `52ac710`.
-- [ ] Pilotaż 3–5 osób i poprawki z rzeczywistych obserwacji. NOT RUN. [Protokół](../docs/15-pilotaz.md)
-- [ ] Sprawdzenie kompletnego zestawu z finalnym filmem, podpisanymi dokumentami i linkiem widocznym dla organizatora. NOT RUN.
-
-- [x] Nowa nazwa, ikona Windows i otwarcie starego profilu w spakowanej aplikacji na macOS. [Bieżący odbiór](../docs/20-odbior-kandydata.md)
+1. Pobierz ze strony konkursu załączniki (Karta Zgłoszenia, Klauzula Informacyjna), wypełnij je i podpisz. Osoba niepełnoletnia potrzebuje podpisu rodzica lub opiekuna. Zeskanuj albo zrób wyraźne zdjęcia i wrzuć je do `01_formularze/`.
+2. Sprawdź warunki udziału: uczeń szkoły ponadpodstawowej, poniżej 21 lat przez cały konkurs, drużyna maksymalnie dwuosobowa.
+3. (Zalecane) Sprawdź aktualny EXE na Windows. Najprościej: na GitHubie wejdź w Actions, wybierz „Verify release on Windows and Linux”, kliknij Run workflow i wybierz gałąź `codex/jury-readiness`. Możesz też rozpakować ZIP na dowolnym komputerze z Windows i zagrać w misję 1.
+4. Obejrzyj film w całości (dźwięk i napisy).
+5. Wrzuć cały folder `Piko_Misja_Funkcja_zgloszenie` na Google Drive albo OneDrive. Ustaw dostęp „każdy, kto ma link, może wyświetlać”. Otwórz link w oknie prywatnym i sprawdź, czy da się pobrać pliki.
+6. Wyślij link na informatyka_konkurs@uwb.edu.pl przed 29 listopada 2026. W treści podaj tytuł projektu „Piko: Misja Funkcja” oraz imiona i nazwiska członków drużyny.
+7. Po konkursie usuń klucz API użyty w trakcie prac i utwórz nowy (platform.claude.com, API Keys).

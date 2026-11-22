@@ -5,7 +5,7 @@ import path from 'node:path';
 import {PROMPT_VERSION} from '../apps/server/src/system';
 const root=process.env.PIKO_RELEASE_DIR??'release/Piko_Misja_Funkcja_zgloszenie';
 for(const dir of ['01_formularze','02_aplikacja','03_kod','04_instrukcja','05_prezentacja','06_weryfikacja'])await mkdir(`${root}/${dir}`,{recursive:true});
-await writeFile(`${root}/01_formularze/DO_UZUPELNIENIA.txt`,'Brak podpisanych formularzy autora. Sprawdź aktualny regulamin i załączniki u organizatora, uzupełnij dane i podpisy. Nie utworzono fikcyjnych formularzy.\n');
+await writeFile(`${root}/01_formularze/DO_UZUPELNIENIA.txt`,'Tu wstaw skany: Karta Zgłoszenia (Załącznik nr 1) i Klauzula Informacyjna (Załącznik nr 2), wypełnione i podpisane (za osoby niepełnoletnie podpisuje także rodzic lub opiekun). Formularze do pobrania ze strony konkursu.\n');
 for(const [source,target] of [
  [process.env.PIKO_WINDOWS_ZIP??'release/bin/Piko_Misja_Funkcja_1.0.0_Windows_x64.zip','02_aplikacja/Piko_Misja_Funkcja_Windows.zip'],
  ['output/pdf/instrukcja_uruchomienia.pdf','02_aplikacja/instrukcja_uruchomienia.pdf'],
@@ -13,7 +13,7 @@ for(const [source,target] of [
  ['output/pdf/instrukcja_uzytkownika.pdf','04_instrukcja/instrukcja_uzytkownika.pdf'],
  ['output/pdf/opis_funkcjonalnosci.pdf','05_prezentacja/opis_funkcjonalnosci.pdf'],
  ['output/pdf/raport_weryfikacji.pdf','06_weryfikacja/raport_weryfikacji.pdf'],
- ['release/media/Piko_Misja_Funkcja_demo.mp4','05_prezentacja/Piko_Misja_Funkcja_demo.mp4']]){
+ ['release/media/Piko_Misja_Funkcja_film.mp4','05_prezentacja/Piko_Misja_Funkcja_film.mp4']]){
  if(!existsSync(source))throw new Error(`Required release artifact missing: ${source}`);await cp(source,`${root}/${target}`);
 }
 // Historical live clips are described in the report, separate from this candidate's film.
@@ -44,9 +44,8 @@ await writeSourceZip(zipPath,sourceFiles);
 const live=existsSync('checks/ai-live-results.json')?JSON.parse(await readFile('checks/ai-live-results.json','utf8')) as {status:string;promptVersion:string;results:{status:string}[]}:null;
 const verifiedLive=live?.promptVersion===PROMPT_VERSION&&live.status.startsWith('PASSED STRUCTURAL')&&live.results.length===22&&live.results.every(result=>result.status==='PASS');
 const summary={date:new Date().toISOString(),sourceFiles:sourceFiles.length,
- scope:'Local Piko: Misja Funkcja candidate, offline Windows build; public HTTPS and current Windows runtime pending.',
- live:{fullSuiteCurrent:verifiedLive,m04Generalization:'Historical Luna 1.2.0 test: 7/7 received proposals passed on two geometries, one additional timeout.'},
- missing:['Signed author forms','Final contest film and narration','Public HTTPS endpoint and external network acceptance',
- 'Current Windows EXE runtime acceptance','3–5-person pilot','Cloud sharing and formal submission']};
+ scope:'Piko: Misja Funkcja 1.0.0, Windows x64 build in offline showcase mode; live AI: Claude Sonnet 5.5 (server-side key).',
+ live:{fullSuiteCurrent:verifiedLive,promptVersion:PROMPT_VERSION},
+ missing:['Signed author forms (scans)','Current Windows EXE run on GitHub Actions or a Windows PC','Cloud sharing and e-mail to the organizer']};
 await writeFile(`${root}/STAN_PACZKI.json`,JSON.stringify(summary,null,2)+'\n');
 console.log('Prepared',root,'with',sourceFiles.length,'source files. External blockers remain explicit.');

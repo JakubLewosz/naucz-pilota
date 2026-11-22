@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-09T20:53:51.210Z",
+  "date": "2026-11-22T20:04:25.816Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -13,12 +13,12 @@
       "detail": "No alternate embedded author corpus."
     },
     {
-      "name": "renderer index-DnYK5pMC.js",
+      "name": "renderer index-5CvabsyM.js",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
     {
-      "name": "renderer index-sMLlcPif.css",
+      "name": "renderer index-BF7EbypR.css",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
@@ -28,9 +28,14 @@
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
     {
+      "name": "renderer piko.svg",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
       "name": "desktop matches current build",
-      "status": "STALE",
-      "detail": "Local package belongs to an older build."
+      "status": "PASS",
+      "detail": "Renderer, relay and configuration match the current build."
     },
     {
       "name": "desktop package allowlist",
@@ -58,13 +63,18 @@
       "file": "Naucz_Pilota_1.0.0_Windows_x64.zip",
       "size": 153417054,
       "sha256": "211aef37efd8b4843a7bd3798dac78b8f1760adbed9888ab4be8144a8b7111bd"
+    },
+    {
+      "file": "Piko_Misja_Funkcja_1.0.0_Windows_x64.zip",
+      "size": 153226593,
+      "sha256": "6e6686d2f664a158699c4cf18b188749d830a8885edd6a8c4f01e84eea7c286a"
     }
   ],
-  "live": "NOT RUN FOR CURRENT PROMPT",
+  "live": "PASS STRUCTURAL (22 cases with lesson checks); semantic review separate",
   "liveDetails": {
-    "promptVersion": "1.0.2",
+    "promptVersion": "1.3.1",
     "reportedStatus": "PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED",
-    "currentPromptVersion": "1.1.0",
+    "currentPromptVersion": "1.3.1",
     "humanSignoff": "PENDING",
     "limitations": [],
     "browser": "NOT RUN FOR CURRENT PROMPT"

@@ -1,24 +1,37 @@
-# Raport weryfikacji
+# Raport z testów
 
-Piko: Misja Funkcja. Lokalny odbiór na gałęzi codex/jury-readiness, 18 listopada 2026. Środowisko autora to macOS arm64, Node 24.11.0 i npm 11.6.1.
+Piko: Misja Funkcja 1.0.0, stan na 22 listopada 2026. Środowisko: macOS arm64, Node 24.11.0, npm 11.6.1.
 
-## Wykonane sprawdzenia
+## Testy automatyczne
 
-- Kontrola typów, lint, build i 208 testów Vitest przeszły. Parser, geometria i zasady oceniania korzystają z dotychczasowego silnika TypeScript.
-- 17 testów Playwright przeszło. Obejmują całą kampanię, ochronę pierwszej próby, opóźnioną odpowiedź, reset rozmowy, tryb demo i awarie live. Osobna regresja sprawdza współrzędne zatrzymania, brak zaliczenia bramek za miejscem kolizji i pominięcie animacji bez kolejnego zapisu lub wywołania AI.
-- Sprawdzono 1366 × 768, 1440 × 900, 390 × 844, tekst 200%, klawiaturę i ograniczenie ruchu. Zrzuty dziewięciu stanów interfejsu przeszły kontrolę axe A/AA i zostały przejrzane wzrokowo. Jest to zakres wykonanych prób dostępności.
-- Treść ma 62 testy. Walidator Python potwierdził 24 poprawne tory, 37 kontrolnych porażek i 42 kontrole parsera i geometrii. Niezależny audyt treści również przeszedł.
-- Lokalny Caddy sprawdził zaufanie TLS, listę adresów, limit 16 KiB, odrzucenie obcego originu, bezpieczne cookie i trwałą sesję po restarcie. Przy budżecie zero backend odrzucił turę z requestCount=0. Dodatkowy wariant wpuszcza nieznaną sieć z poprawnym kodem odbioru i odrzuca kod błędny lub brakujący.
-- Spakowany Electron na macOS odtworzył M01 offline i zachował pierwszą próbę po restarcie. Nowa paczka otworzyła profil poprzedniej wersji z notatką oraz nieudaną pierwszą próbą. Techniczna nazwa profilu pozostała naucz-pilota.
-- Relay spakowanej aplikacji przeszedł rozmowę i reset, odpowiedź po 17 sekundach, transfer oraz awarię sieci przez lokalny HTTPS. Dostawca był atrapą. Sprawdzono kod dostępu wpisywany przez interfejs i odrzucenie niezaufanego certyfikatu.
-- Windows x64 przeszedł cross-build, kontrolę pliku PE i zgodności ASAR z bieżącym buildem. Paczka ma nową nazwę i ikonę oraz kompletny renderer bez sekretów i rozwiązań autora.
+- Kontrola typów (TypeScript) i lint (ESLint): bez błędów.
+- 216 testów jednostkowych: parser wzorów, geometria i kolizje, zasady zaliczania, kontrakt AI, serwer (sesje, limity, kod dostępu), zapis i migracja postępu oraz oba adaptery AI (Claude i OpenAI) na atrapie HTTP, w tym odmowa, ucięta odpowiedź i błędy 400/404/429.
+- 62 testy treści: 24 plansze mają sprawdzony poprawny tor, a 37 kontrolnych błędnych wzorów jest poprawnie odrzucanych. Niezależny walidator w Pythonie potwierdza to samo.
+- 17 testów całej gry w przeglądarce (Playwright): pełna kampania, ochrona pierwszej próby, opóźniona odpowiedź AI, pominięcie lotu Piko, czyszczenie rozmowy, awarie AI i powrót do trybu pokazowego, kod dostępu, animacja lotu. Zawierają automatyczne kontrole dostępności (axe, poziom A/AA) przy 1366×768, 1440×900 i 390×844.
 
-## Rzeczywisty model
+## Test na prawdziwym modelu
 
-W tej rundzie wykonano zero płatnych żądań. Wcześniejszy test GPT-6 Luna Extra High, prompt 1.2.0, objął dwa nowe układy M04 i osiem prób A/B/C/D. Wszystkie siedem otrzymanych wzorów silnik zaliczył. Ósma próba zakończyła się timeoutem. Warunki i dosłowne wypowiedzi są w checks/m04-generalization-1.2.0.live.md. Wynik dotyczy tego zestawu. Piko odgrywa ucznia przez kontekst i notatkę zapisaną w aplikacji.
+22 tury z Claude Sonnet 5.5 (prompt 1.3.1): 10 przypadków semantycznych (m.in. błędne i niejasne wyjaśnienia, próba wstrzyknięcia poleceń) oraz lekcja i lot Piko w każdej z 6 misji.
 
-## Do odbioru zewnętrznego
+- 22/22 odpowiedzi zgodnych ze schematem i fazą gry, po jednym żądaniu na turę.
+- 6/6 lotów Piko na nowych trasach zaliczonych przez silnik gry.
+- Mediana czasu odpowiedzi 3,6 s. Koszt całego zestawu ok. 0,31 USD.
+- Żadna wypowiedź nie zawiera żargonu technicznego ani form zależnych od płci gracza.
 
-Uruchomienie aktualnego EXE na rzeczywistym Windows, docelowy HTTPS z innej sieci oraz ograniczona tura z dostawcą na tym hostingu mają status NOT RUN. Wymagają komputera odbiorcy, hosta, DNS i osobnej zgody na wywołanie. Historyczny Windows CI dotyczy starszego kodu 52ac710.
+Dla porównania: wcześniejsze testy tego samego zestawu z GPT-5.4 mini dawały 2/6 udanych lotów Piko, a GPT-6 Luna Extra High odpowiadał z medianą ok. 16,5 s. Raport: checks/ai-live-claude-sonnet-5-5.md.
 
-Pilotaż, finalny film, podpisy i udostępnienie zgłoszenia pozostają NOT RUN. Instrukcje, klip demo i protokół są gotowe lokalnie. Dowody i ograniczenia opisano w IMPLEMENTATION_STATUS.md.
+Dodatkowo cztery pełne przejścia misji 4 w interfejsie gry, nagrane do filmu, dały w każdym przypadku poprawną ocenę słabego i pełnego wyjaśnienia, odmowę przy próbie oszustwa i zaliczony lot Piko.
+
+## Aplikacja okienkowa
+
+- Windows x64: paczka zbudowana na macOS (electron-builder). Kontrola `release:check` przeszła: plik EXE, zgodność archiwum aplikacji z buildem, brak sekretów i rozwiązań autora w paczce.
+- macOS: spakowana aplikacja Electron przeszła misję 1 offline i zachowała postęp po ponownym uruchomieniu.
+- Uruchomienie EXE na Windows: wcześniejszy przebieg GitHub Actions (Windows Server) potwierdził start, misję 1 i zachowanie postępu dla starszej wersji. Dla aktualnej wersji ten sam workflow jest gotowy do uruchomienia.
+
+## Serwer
+
+Obraz Docker i stos z Caddy (HTTPS) przeszły lokalny test: zaufany certyfikat, ograniczenie dostępu do adresów IP albo kodu, limit 16 KiB na żądanie, zerowy budżet AI i zachowanie sesji po restarcie.
+
+## Ograniczenia
+
+Gra nie była jeszcze testowana z grupą uczniów. Wyniki opisują wykonanie zadań w grze, a nie trwały przyrost wiedzy. Jakość rozmów oceniono na podstawie przeglądu transkryptów przez autora i automatycznych kontroli. Formalnej oceny według rubryki dokonuje człowiek.
