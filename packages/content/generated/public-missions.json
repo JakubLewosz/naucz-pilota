@@ -126,7 +126,7 @@
         "robot_transfer": {
           "id": "M01-robot_transfer",
           "title": "Nowa trasa Piko",
-          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "instruction": "Piko dostaje Twoją notatkę i próbuje sam na nowej trasie. Przewidź, czy mu się uda — gra dokładnie przeliczy jego lot.",
           "role": "robot_transfer",
           "domain": {
             "xMin": -1,
@@ -351,7 +351,7 @@
         "robot_transfer": {
           "id": "M02-robot_transfer",
           "title": "Nowa trasa Piko",
-          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "instruction": "Piko dostaje Twoją notatkę i próbuje sam na nowej trasie. Przewidź, czy mu się uda — gra dokładnie przeliczy jego lot.",
           "role": "robot_transfer",
           "domain": {
             "xMin": 0,
@@ -576,7 +576,7 @@
         "robot_transfer": {
           "id": "M03-robot_transfer",
           "title": "Nowa trasa Piko",
-          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "instruction": "Piko dostaje Twoją notatkę i próbuje sam na nowej trasie. Przewidź, czy mu się uda — gra dokładnie przeliczy jego lot.",
           "role": "robot_transfer",
           "domain": {
             "xMin": -4,
@@ -805,7 +805,7 @@
         "robot_transfer": {
           "id": "M04-robot_transfer",
           "title": "Nowa trasa Piko",
-          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "instruction": "Piko dostaje Twoją notatkę i próbuje sam na nowej trasie. Przewidź, czy mu się uda — gra dokładnie przeliczy jego lot.",
           "role": "robot_transfer",
           "domain": {
             "xMin": -1,
@@ -1034,7 +1034,7 @@
         "robot_transfer": {
           "id": "M05-robot_transfer",
           "title": "Nowa trasa Piko",
-          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "instruction": "Piko dostaje Twoją notatkę i próbuje sam na nowej trasie. Przewidź, czy mu się uda — gra dokładnie przeliczy jego lot.",
           "role": "robot_transfer",
           "domain": {
             "xMin": 0,
@@ -1253,7 +1253,7 @@
         "robot_transfer": {
           "id": "M06-robot_transfer",
           "title": "Nowa trasa Piko",
-          "instruction": "Sprawdź, jak Piko zastosuje zaakceptowaną regułę na nowej trasie. Jego propozycję zawsze ocenia silnik matematyczny.",
+          "instruction": "Piko dostaje Twoją notatkę i próbuje sam na nowej trasie. Przewidź, czy mu się uda — gra dokładnie przeliczy jego lot.",
           "role": "robot_transfer",
           "domain": {
             "xMin": -4,
