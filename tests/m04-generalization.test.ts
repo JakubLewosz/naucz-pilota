@@ -15,11 +15,12 @@ for(const geometry of geometries)it(`M04 ${geometry.id} has a safe reference and
 const cases=generalizationCases();
 for(const item of cases)it(`M04 ${item.geometry.id} ${item.condition} isolates the note and preserves the SDK reply`,async()=>{
  const control=cases.find(other=>other.geometry===item.geometry&&other.condition==='D')!;
- const {lessonNote,recentExchanges,...trusted}=item.context;
- expect({...trusted,recentExchanges,lessonNote:null}).toEqual(control.context);
+ const {lessonNote,recentExchanges,priorLessons,...trusted}=item.context;
+ expect({...trusted,recentExchanges,priorLessons,lessonNote:null}).toEqual(control.context);
+ expect(priorLessons).toEqual([]);
  expect(recentExchanges).toEqual([]);
- expect(item.context.learnedRules).toEqual([{id:'RULE_QUAD_HORIZONTAL',textPL:expect.any(String)}]);
- expect(item.context.learnedRules[0].textPL.replace('^2','')).not.toMatch(/\d/);
+ // Piko zna tylko notatkę gracza; kanoniczna zasada nie trafia do kontekstu lotu.
+ expect(item.context.learnedRules).toEqual([]);
  expect(item.context.facts).toEqual([]);
  expect(item.context.candidate).toBeNull();
 
@@ -37,7 +38,7 @@ for(const item of cases)it(`M04 ${item.geometry.id} ${item.condition} isolates t
  expect(JSON.stringify(body)).not.toMatch(/witness|knownFailures|human_check|\bSTART_MISS\b|\bshift--?\d|\brebuilt\b/);
  expect(JSON.stringify(body)).not.toContain(item.geometry.reference);
  expect(JSON.stringify(body)).not.toContain(historicalProposal);
- expect(body.instructions).toContain('x startu, każdej bramki i celu');
+ expect(body.instructions).toContain('Stosuj lekcję wiernie');
  expect(result).toMatchObject({actualModel:'offline-stub',schemaValid:true,accepted:true,semanticReview:'NOT REVIEWED'});
  expect(new Ajv2020({strict:false}).validate(body.text.format.schema,JSON.parse(result.text!))).toBe(true);
  const expected=item.geometry.id==='rebuilt'?null:item.geometry===geometries[2]?'START_MISS':'SUCCESS';

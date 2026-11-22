@@ -21,6 +21,15 @@
       "maxLength": 200,
       "description": "Jedno krótkie pytanie lub null."
     },
+    "pikoBeliefPL": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 220,
+      "description": "W teach: jedno zdanie w pierwszej osobie o tym, czego Piko nauczył się ze słów gracza (może być błędne). W robot_propose zawsze null."
+    },
     "explanationAssessment": {
       "type": "string",
       "enum": [

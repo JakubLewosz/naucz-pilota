@@ -173,6 +173,7 @@
               "ruleId": { "type": "string", "pattern": "^RULE_[A-Z_]+$", "maxLength": 40 },
               "explanationPL": { "type": "string", "minLength": 1, "maxLength": 600 },
               "pikoParaphrasePL": { "type": ["string", "null"], "minLength": 1, "maxLength": 450 },
+              "pikoBeliefPL": { "type": ["string", "null"], "minLength": 1, "maxLength": 220 },
               "source": { "enum": ["live", "demo", "skipped"] },
               "confirmation": { "const": "saved_by_player" }
             },

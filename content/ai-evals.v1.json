@@ -29,6 +29,7 @@
     "teach_ack": {
       "utterancePL": "Rozumiem, że przesuwasz wszystkie punkty o tę samą wartość.",
       "followUpPL": "Czy wysokość zmienia się, gdy zwiększasz x?",
+      "pikoBeliefPL": "Myślę, że liczba bez x ustawia wysokość całego toru.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -40,6 +41,7 @@
     "teach_qualified": {
       "utterancePL": "Rozumiem: wzór 2 daje tę samą wysokość dla każdego x. Obie sprawdzone wartości wynoszą 2.",
       "followUpPL": null,
+      "pikoBeliefPL": "Myślę, że dodanie liczby do wzoru przesuwa cały wykres w górę o tę liczbę.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": "RULE_LINE_INTERCEPT",
@@ -52,6 +54,7 @@
     "teach_unclear": {
       "utterancePL": "Nie rozumiem jeszcze, co zmieniasz we wzorze.",
       "followUpPL": "Który składnik przesuwa wykres w pionie?",
+      "pikoBeliefPL": "Jeszcze nie wiem, co dokładnie zmienia ta liczba.",
       "explanationAssessment": "unclear",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -61,6 +64,7 @@
     "teach_incorrect_numbers": {
       "utterancePL": "Mam inne liczby z silnika: dla wzoru 2 obie sprawdzone wysokości wynoszą 2.",
       "followUpPL": "Jaką wartość otrzymujesz po podstawieniu x do tego wzoru?",
+      "pikoBeliefPL": "Myślę, że stała zmienia wysokość toru.",
       "explanationAssessment": "incorrect",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -73,6 +77,7 @@
     "robot_passes": {
       "utterancePL": "Spróbuję stałej wysokości 3. Silnik sprawdzi, czy cały tor mieści się w przejściach.",
       "followUpPL": null,
+      "pikoBeliefPL": null,
       "explanationAssessment": "not_applicable",
       "proposedExpression": "3",
       "suggestedRuleId": null,
@@ -82,6 +87,7 @@
     "robot_fails": {
       "utterancePL": "Proponuję stałą wysokość 1. Sprawdźmy tę próbę.",
       "followUpPL": null,
+      "pikoBeliefPL": null,
       "explanationAssessment": "not_applicable",
       "proposedExpression": "1",
       "suggestedRuleId": null,
@@ -91,6 +97,7 @@
     "robot_uncertain": {
       "utterancePL": "Nie umiem jeszcze zaproponować pewnego wzoru dla tej planszy.",
       "followUpPL": null,
+      "pikoBeliefPL": null,
       "explanationAssessment": "not_applicable",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -100,6 +107,7 @@
     "wrong_numeric_prose": {
       "utterancePL": "Dla wzoru 2 i x=2 wysokość wynosi 99.",
       "followUpPL": null,
+      "pikoBeliefPL": "Myślę, że stała zmienia wysokość toru.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -113,6 +121,7 @@
     "invalid_extra_success": {
       "utterancePL": "Rozumiem, że przesuwasz wszystkie punkty o tę samą wartość.",
       "followUpPL": "Czy wysokość zmienia się, gdy zwiększasz x?",
+      "pikoBeliefPL": "Myślę, że stała zmienia wysokość toru.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -125,6 +134,7 @@
     "invalid_missing_field": {
       "utterancePL": "Rozumiem, że przesuwasz wszystkie punkty o tę samą wartość.",
       "followUpPL": "Czy wysokość zmienia się, gdy zwiększasz x?",
+      "pikoBeliefPL": "Myślę, że stała zmienia wysokość toru.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -135,6 +145,7 @@
     "invalid_unknown_fact": {
       "utterancePL": "Rozumiem, że przesuwasz wszystkie punkty o tę samą wartość.",
       "followUpPL": "Czy wysokość zmienia się, gdy zwiększasz x?",
+      "pikoBeliefPL": "Myślę, że stała zmienia wysokość toru.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": null,
@@ -146,6 +157,7 @@
     "invalid_wrong_rule": {
       "utterancePL": "Rozumiem, że przesuwasz wszystkie punkty o tę samą wartość.",
       "followUpPL": "Czy wysokość zmienia się, gdy zwiększasz x?",
+      "pikoBeliefPL": "Myślę, że stała zmienia wysokość toru.",
       "explanationAssessment": "sound",
       "proposedExpression": null,
       "suggestedRuleId": "RULE_COMBINE",
@@ -157,6 +169,7 @@
     "invalid_teach_proposal": {
       "utterancePL": "Rozumiem, że przesuwasz wszystkie punkty o tę samą wartość.",
       "followUpPL": "Czy wysokość zmienia się, gdy zwiększasz x?",
+      "pikoBeliefPL": null,
       "explanationAssessment": "sound",
       "proposedExpression": "2",
       "suggestedRuleId": null,
@@ -2157,9 +2170,7 @@
         },
         {
           "id": "context_learned_rules_exact",
-          "expected": [
-            "RULE_LINE_INTERCEPT"
-          ]
+          "expected": []
         },
         {
           "id": "no_cross_scene_chat_history"

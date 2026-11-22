@@ -15,7 +15,7 @@ it('live evaluator groups 22 cases and keeps teach/transfer in the same session'
   const result=await executeLiveCases(app,selected,4,async p=>{updates.push([p.providerCalls,p.results.length]);},observed.take);
   expect(result.status).toBe('PASSED STRUCTURAL; HUMAN SEMANTIC REVIEW REQUIRED');expect(result.providerCalls).toBe(2);expect(updates).toEqual([[1,1],[2,2]]);
   expect(result.results[0].envelope?.sessionId).toBe(result.results[1].envelope?.sessionId);expect(result.results[1].envelope?.sessionRevision).toBe(2);
-  expect(result.results[1].envelope?.proposalValidation.status).toBe('failed');expect(contexts[1]).toMatchObject({learnedRules:[{id:'RULE_LINE_INTERCEPT'}],recentExchanges:[]});
+  expect(result.results[1].envelope?.proposalValidation.status).toBe('failed');expect(contexts[1]).toMatchObject({learnedRules:[],priorLessons:[],recentExchanges:[]});
   expect(result.results[1].providerObservations[0].lessonNote).toEqual(selected[1].body.ruleEvidence[0].lessonNote);
   expect(result.results[1].semanticReview).toBe('NOT REVIEWED');
  }finally{store.close();}

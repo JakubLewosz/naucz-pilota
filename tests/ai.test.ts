@@ -188,7 +188,7 @@ it.each(['Stała przesuwa cały poziomy tor.','Zmieniam stałą.','Stała zmieni
  expect(without.lessonNote).toBeNull();
  expect(withNote.lessonNote).toEqual(lessonNote);
  expect(withNote.learnedRules).toEqual(without.learnedRules);
- expect(withNote.learnedRules[0].textPL).not.toBe('Stała zmienia nachylenie.');
+ expect(withNote.learnedRules).toEqual([]);
  expect(withNote.facts).toEqual(without.facts);
  expect(withNote.scene.id).toBe('M01-robot_transfer');
  expect(JSON.stringify(withNote)).not.toMatch(/human_check|witness|knownFailures/);
@@ -233,7 +233,7 @@ it('transfer never inherits a lesson note from old evidence when its current pro
  for(const evidence of [proof,{...current,candidateExpression:'99'}]){
   const result=buildContext(transferRequest(evidence),[previous]);
   expect(result.context.lessonNote).toBeNull();
-  expect(result.context.learnedRules.map(rule=>rule.id)).toEqual(['RULE_LINE_INTERCEPT']);
+  expect(result.context.learnedRules).toEqual([]);
  }
  expect(buildContext({...transferRequest(current),learnedRuleIds:[]}).context.lessonNote).toBeNull();
  expect(buildContext(transferRequest({

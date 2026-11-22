@@ -52,6 +52,7 @@ export type LearnerRequest = {
       ruleId: string;
       explanationPL: string;
       pikoParaphrasePL: string | null;
+      pikoBeliefPL?: string | null;
       source: "live" | "demo" | "skipped";
       confirmation: "saved_by_player";
     };

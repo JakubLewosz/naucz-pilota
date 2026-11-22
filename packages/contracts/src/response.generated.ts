@@ -13,6 +13,10 @@ export interface ModelPayload {
    */
   followUpPL: string | null;
   /**
+   * W teach: jedno zdanie w pierwszej osobie o tym, czego Piko nauczył się ze słów gracza (może być błędne). W robot_propose zawsze null.
+   */
+  pikoBeliefPL?: string | null;
+  /**
    * Orientacyjny komentarz do wyjaśnienia; nigdy próg zaliczenia.
    */
   explanationAssessment: "sound" | "partial" | "incorrect" | "unclear" | "not_applicable";

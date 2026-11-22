@@ -7,13 +7,13 @@ export const roles:Role[]=['practice','teach','robot_transfer','human_check'];
 export const roleLabels:Record<Role,string>={practice:'Twój lot',teach:'Naucz Piko',robot_transfer:'Lot Piko',human_check:'Sprawdź siebie'};
 export type Attempt={id:string;expression:string;sceneId:string;result:EngineResult;index:number;hintCount:number;timestamp:string;source:'human'|'demo'|'live';afterReview:boolean};
 export type Message={text:string;source:'live'|'demo';speaker:'player'|'piko'};
-export type LessonReply=Pick<Message,'text'|'source'>&{assessment?:ModelPayload['explanationAssessment']};
+export type LessonReply=Pick<Message,'text'|'source'>&{assessment?:ModelPayload['explanationAssessment'];belief?:string|null};
 export type Run={
  id:string;role:Role;drafts:Record<Role,string>;explanation:string;predictions:string[];
  attempts:Partial<Record<Role,Attempt[]>>;counts:Partial<Record<Role,number>>;firstHuman:Attempt|null;
  rule:LearnedEvidence|null;hintCount:number;robot:Envelope|null;robotTurns:number;robotFailures:number;
  robotChecked:boolean;prediction:string;unavailable:boolean;messages:Message[];liveChat:boolean;
- lessonReply:LessonReply|null;robotDisposition?:'skipped';
+ lessonReply:LessonReply|null;robotDisposition?:'skipped';lessonAttempts?:number;
  completed:boolean;afterReview:boolean;repairChecked:boolean;numericFeedback:string
 };
 export type GameState={saveVersion:2;contentVersion:'1.0.0';page:'home'|'missions'|'game'|'journal'|'settings'|'about'|'summary';missionId:string;runs:Record<string,Run>;archive:Record<string,Run[]>;rules:LearnedEvidence[];viewRevision:number;mode:'demo'|'live'|'unavailable';liveAvailable:boolean;activeTurnId:string|null;busy:boolean;error:string;settings:{reducedMotion:boolean;hitbox:boolean;fontScale:number};recovery:string|null};
@@ -24,7 +24,7 @@ export function newRun(id:string):Run {
 export function initialState():GameState {return {saveVersion:2,contentVersion:'1.0.0',page:'home',missionId:'M01',runs:{M01:newRun('M01')},archive:{},rules:[],viewRevision:0,mode:'demo',liveAvailable:false,activeTurnId:null,busy:false,error:'',settings:{reducedMotion:false,hitbox:false,fontScale:1},recovery:null};}
 export const numericValue=(s:string)=>/^[-+]?(?:\d+(?:[.,]\d*)?|[.,]\d+)$/.test(s.trim())?Number(s.replace(',','.')):NaN;
 export function numericEvidence(s:GameState):(NumericEvidence & {checkpointId:'G1'|'G2'})[]{const r=s.runs[s.missionId];return (['G1','G2'] as const).map((checkpointId,i)=>({sceneId:`${s.missionId}-teach`,checkpointId,submittedY:numericValue(r.predictions[i])}));}
-export type Action={type:'OPEN';page:GameState['page']}|{type:'MISSION';id:string}|{type:'EDIT';field:'expression'|'explanation'|'prediction0'|'prediction1';value:string}|{type:'CHECK'}|{type:'CHECK_SCRIPT'}|{type:'NEXT'}|{type:'CONFIRM_RULE'}|{type:'HINT'}|{type:'ROBOT_PREDICTION';value:string}|{type:'ROBOT_CHECK'}|{type:'SKIP_ROBOT'}|{type:'AI_START';turnId:string}|{type:'AI_RESULT';turnId:string;revision:number;sceneId:string;envelope:Envelope}|{type:'AI_ERROR';turnId:string;revision:number;message:string}|{type:'MODE';mode:'demo'|'live'}|{type:'STATUS';live:boolean}|{type:'SETTINGS';settings:Partial<GameState['settings']>}|{type:'CLEAR_CHAT_START';turnId:string}|{type:'CLEAR_CHAT';turnId:string;revision:number;error?:string}|{type:'REPLAY';id:string}|{type:'RECOVER'}|{type:'RESET'};
+export type Action={type:'OPEN';page:GameState['page']}|{type:'MISSION';id:string}|{type:'EDIT';field:'expression'|'explanation'|'prediction0'|'prediction1';value:string}|{type:'CHECK'}|{type:'CHECK_SCRIPT'}|{type:'NEXT'}|{type:'CONFIRM_RULE'}|{type:'HINT'}|{type:'ROBOT_PREDICTION';value:string}|{type:'ROBOT_CHECK'}|{type:'SKIP_ROBOT'}|{type:'AI_START';turnId:string}|{type:'AI_RESULT';turnId:string;revision:number;sceneId:string;envelope:Envelope}|{type:'AI_ERROR';turnId:string;revision:number;message:string}|{type:'MODE';mode:'demo'|'live'}|{type:'STATUS';live:boolean}|{type:'SETTINGS';settings:Partial<GameState['settings']>}|{type:'CLEAR_CHAT_START';turnId:string}|{type:'CLEAR_CHAT';turnId:string;revision:number;error?:string}|{type:'REPLAY';id:string}|{type:'RETEACH'}|{type:'RECOVER'}|{type:'RESET'};
 export const hasCompleted=(s:GameState,id:string)=>Boolean(s.runs[id]?.completed||s.archive[id]?.some(r=>r.completed));
 export const canAskRobot=(s:GameState,r:Run)=>r.robotTurns<2
  &&(s.mode==='demo'||r.robotFailures<2)
@@ -87,8 +87,11 @@ export function reducer(state:GameState,action:Action):GameState {
    const evidence=deriveRuleEvidence(m,r.drafts.teach,numericEvidence(s));if(!evidence)return state;
    r.rule={missionId:m.id,candidateExpression:r.drafts.teach,numericEvidence:numericEvidence(s),lessonNote:{
     version:1,ruleId:evidence.ruleId,explanationPL:r.explanation,pikoParaphrasePL:r.lessonReply?.text??null,
+    pikoBeliefPL:r.lessonReply?.belief??null,
     source:r.lessonReply?.source??'skipped',confirmation:'saved_by_player'
    }};
+   // Nowa lekcja = nowa próba Piko na trasie transferu.
+   r.lessonAttempts=(r.lessonAttempts??0)+1;r.robot=null;r.robotTurns=0;r.robotChecked=false;r.prediction='';r.robotFailures=0;delete r.robotDisposition;r.unavailable=false;
    s.rules=[...s.rules.filter(e=>e.missionId!==m.id),r.rule];invalidate();r.role='robot_transfer';break;
   }
   case 'HINT':if(r.role==='practice')r.hintCount=Math.min(3,r.hintCount+1);break;
@@ -120,7 +123,7 @@ export function reducer(state:GameState,action:Action):GameState {
    }
    s.mode=mode;s.error='';r.unavailable=false;
    addMessage({text:learner.utterancePL+(learner.followUpPL?' '+learner.followUpPL:''),source:mode,speaker:'piko'});
-   if(r.role==='teach')r.lessonReply={text:learner.utterancePL,source:mode,
+   if(r.role==='teach')r.lessonReply={text:learner.utterancePL,source:mode,belief:learner.pikoBeliefPL??null,
     ...(mode==='live'?{assessment:learner.explanationAssessment}:{})};
    if(r.role==='robot_transfer'){
     if(learner.proposedExpression){
@@ -147,6 +150,9 @@ export function reducer(state:GameState,action:Action):GameState {
    invalidate();
    if(action.error){s.error=action.error;break;}
    r.messages=[];r.lessonReply=null;r.liveChat=false;break;
+  case 'RETEACH':
+   if(r.role!=='robot_transfer'||s.busy)return state;
+   invalidate();r.role='teach';break;
   case 'REPLAY':
    if(!s.runs[action.id]?.completed)return state;
    invalidate();s.archive[action.id]=[...(s.archive[action.id]??[]),s.runs[action.id]];s.runs[action.id]=newRun(action.id);s.missionId=action.id;s.page='game';break;

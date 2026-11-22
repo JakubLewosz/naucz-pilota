@@ -66,7 +66,8 @@ export function generalizationCases(){
   // The tested geometry and symbolic statement are visible only in this harness.
   // Use the verified production rule ID and proof, without its numeric example.
   const context:Context={
-   ...built.context,learnedRules:[{id:built.memory.learnedRuleIds[0],textPL:rulePL}],
+   // Od promptu 2.0.0 Piko w locie nie dostaje kanonicznej zasady, tylko notatkę gracza.
+   ...built.context,
    scene:{...built.context.scene,domain:scene.domain,start:scene.start,goal:scene.goal,
     gates:scene.gates,obstacles:scene.obstacles,coefficientLocks:scene.coefficientLocks,
     vertexLock:scene.vertexLock,initialExpression:scene.initialExpression}
@@ -86,7 +87,7 @@ export function mockProvider(test:GeneralizationCase,capture:(body:unknown)=>voi
  const {geometry}=test;
  const proposal=geometry.id==='rebuilt'?null:geometry===geometries[2]?geometry.knownFailure:geometry.reference;
  const payload:ModelPayload={
-  utterancePL:'Przygotowana odpowiedź atrapy.',followUpPL:null,explanationAssessment:'not_applicable',
+  utterancePL:'Przygotowana odpowiedź atrapy.',followUpPL:null,pikoBeliefPL:null,explanationAssessment:'not_applicable',
   proposedExpression:proposal,suggestedRuleId:null,usedFactIds:[],action:proposal?'propose_attempt':'acknowledge_uncertainty'
  };
  return openAIProvider('offline-only',model,maxOutputTokens,{reasoningEffort,baseURL:'http://127.0.0.1:1/v1',fetch:async(_input,init)=>{

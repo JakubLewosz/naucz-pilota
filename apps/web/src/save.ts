@@ -24,7 +24,8 @@ const isMission=(v:unknown):v is string=>missions.some(m=>m.id===v);
 const mode=oneOf(['demo','live','unavailable']);
 const source=oneOf(['demo','live']);
 const reply=(v:unknown)=>fields(v,{text:text(450),source,
- assessment:a=>a===undefined||oneOf(['sound','partial','incorrect','unclear','not_applicable'])(a)});
+ assessment:a=>a===undefined||oneOf(['sound','partial','incorrect','unclear','not_applicable'])(a),
+ belief:b=>b===undefined||b===null||text(220)(b)});
 const message=(v:unknown)=>fields(v,{text:text(651),source,speaker:oneOf(['piko','player'])});
 const result=(v:unknown)=>fields(v,{
  ok:flag,parseable:flag,primaryCode:string,messagePL:string,diagnostics:list(string),
@@ -73,7 +74,7 @@ function run(v:unknown,missionId:string):v is Run{
   robot:nullable(r=>envelope(r,missionId)),robotTurns:count(0,2),robotFailures:count(0,2),
   robotChecked:flag,prediction:oneOf(['','Przeleci','Nie przeleci','Jeszcze nie wiem']),
   unavailable:flag,messages:list(message,12),liveChat:flag,lessonReply:nullable(reply),
-  robotDisposition:d=>d===undefined||d==='skipped',
+  robotDisposition:d=>d===undefined||d==='skipped',lessonAttempts:n=>n===undefined||count(0,1000)(n),
   completed:flag,afterReview:flag,repairChecked:flag,numericFeedback:string
  }))return false;
  const r=v as Run;

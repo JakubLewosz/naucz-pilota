@@ -25,14 +25,14 @@ export function nextStep(s:GameState,r:Run):string{
     ?'Kliknij „Powiedz Piko”, żeby sprawdzić, jak zrozumie Twoje wyjaśnienie. Możesz też od razu zapisać notatkę.'
     :'Wyjaśnij Piko własnymi słowami, co ma zmienić i dlaczego. Potem kliknij „Powiedz Piko”.';
    if(r.lessonReply.assessment&&r.lessonReply.assessment!=='sound')return 'Piko czegoś jeszcze nie rozumie. Uzupełnij wyjaśnienie (odpowiedz na jego pytanie) i kliknij „Powiedz Piko” ponownie.';
-   return 'Piko zrozumiał. Zapisz notatkę, którą zabierze na nową trasę.';
+   return 'Przeczytaj, co Piko zapamięta. Na nowej trasie poleci dokładnie według tego zdania. Jeśli się zgadza, zapisz notatkę.';
   }
   case 'robot_transfer':
    if(s.busy)return 'Piko analizuje nową trasę…';
-   if(!r.robot&&!r.unavailable)return 'Kliknij „Piko, spróbuj sam”. Piko użyje Twojej notatki na trasie, której nie widział.';
+   if(!r.robot&&!r.unavailable)return 'Kliknij „Piko, spróbuj sam”. Piko zna tylko Twoją notatkę i poleci według niej na trasie, której nie widział.';
    if(r.robot&&!r.robotChecked)return 'Przeczytaj wzór i uzasadnienie Piko. Zaznacz, czy Twoim zdaniem przeleci, i kliknij „Sprawdź lot Piko”.';
    if(r.robotChecked&&last?.result.ok)return 'Piko przeleciał dzięki Twojej lekcji. Teraz Twoja kolej.';
-   if(r.robotChecked)return 'Piko się pomylił. Możesz dać mu jedną poprawkę albo przejść do własnej próby.';
+   if(r.robotChecked)return 'Piko rozbił się, bo poleciał według Twojej lekcji. Znajdź w jego uzasadnieniu, co go zmyliło, i kliknij „Popraw lekcję dla Piko”.';
    return 'Możesz przejść do własnej próby.';
   case 'human_check':
    if(r.completed)return 'Gotowe! Kliknij „Zobacz podsumowanie”.';

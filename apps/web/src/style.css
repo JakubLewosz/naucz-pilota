@@ -336,3 +336,15 @@ footer { display: flex; justify-content: space-between; align-items: center; gap
 .expression-form .predictions { margin-top: 14px; }
 .expression-form .notice { margin: 12px 0 0; }
 .notice.ok { border-left-color: var(--green); background: var(--green-tint); }
+
+/* Pamięć Piko */
+.belief { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; }
+.belief .piko { width: 34px; height: 34px; margin-top: 2px; }
+.belief small { display: block; font-size: .74em; font-weight: 700; color: var(--ink-soft); }
+.belief p { margin: 2px 0 0; font-family: var(--hand); font-size: 1.05em; font-weight: 600; }
+.piko-memory { margin: 16px 0; padding: 14px 16px; border: 2px dashed var(--orange); border-radius: 12px; background: #fffaf0; }
+.piko-memory h3 { margin: 0 0 4px; font-family: var(--hand); font-size: 1.15em; }
+.piko-memory .muted { margin: 6px 0 0; }
+.notice p { margin: 0 0 10px; }
+.notice p:last-child { margin-bottom: 0; }
+.notice button { margin: 0; }

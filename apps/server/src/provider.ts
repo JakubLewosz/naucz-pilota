@@ -12,9 +12,10 @@ export function openAIProvider(key:string,model:string,maxTokens:number,options:
  const {reasoningEffort,...transport}=options;
  const client=new OpenAI({apiKey:key,maxRetries:0,...transport});
  return async(context,userMessage,signal,repair)=>{
-  const {recentExchanges,lessonNote,...trusted}=context;
+  const {recentExchanges,lessonNote,priorLessons,...trusted}=context;
   const input:ResponseInputItem[]=[{role:'developer',content:JSON.stringify(trusted)}];
   for(const e of recentExchanges)input.push({role:'user',content:e.userPL},{role:'assistant',content:e.pikoPL+(e.followUpPL?' '+e.followUpPL:'')});
+  if(priorLessons.length)input.push({role:'user',content:JSON.stringify({untrustedPriorLessons:priorLessons})});
   if(lessonNote)input.push({role:'user',content:JSON.stringify({untrustedLessonNote:lessonNote})});
   input.push({role:'user',content:userMessage||(context.phase==='robot_propose'?'Zaproponuj własną próbę dla bieżącej planszy.':'Odnieś się do naprawy i sprawdzonych prognoz; pozostań uczniem.')});
   if(repair)input.push({role:'user',content:JSON.stringify({technicalRepair:true,untrustedPreviousOutput:repair.output.slice(0,3500),violations:repair.issues})});
@@ -38,9 +39,10 @@ export function anthropicProvider(key:string,model:string,maxTokens:number,optio
  const {effort,fallbacks=true,...transport}=options;
  const client=new Anthropic({apiKey:key,maxRetries:0,...transport});
  return async(context,userMessage,signal,repair)=>{
-  const {recentExchanges,lessonNote,...trusted}=context;
+  const {recentExchanges,lessonNote,priorLessons,...trusted}=context;
   const messages:Anthropic.Beta.BetaMessageParam[]=[];
   for(const e of recentExchanges)messages.push({role:'user',content:e.userPL},{role:'assistant',content:e.pikoPL+(e.followUpPL?' '+e.followUpPL:'')});
+  if(priorLessons.length)messages.push({role:'user',content:JSON.stringify({untrustedPriorLessons:priorLessons})});
   if(lessonNote)messages.push({role:'user',content:JSON.stringify({untrustedLessonNote:lessonNote})});
   messages.push({role:'user',content:userMessage||(context.phase==='robot_propose'?'Zaproponuj własną próbę dla bieżącej planszy.':'Odnieś się do naprawy i sprawdzonych prognoz; pozostań uczniem.')});
   if(repair)messages.push({role:'user',content:JSON.stringify({technicalRepair:true,untrustedPreviousOutput:repair.output.slice(0,3500),violations:repair.issues})});

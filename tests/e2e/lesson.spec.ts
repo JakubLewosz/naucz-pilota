@@ -35,7 +35,7 @@ for(const scenario of [
   const transfer=JSON.parse(input.input[0].content).phase==='robot_propose';
   const payload:ModelPayload={
    utterancePL:transfer?transferComment:paraphrase,
-   followUpPL:null,explanationAssessment:transfer?'not_applicable':scenario.assessment,
+   followUpPL:null,pikoBeliefPL:transfer?null:'Myślę, że stała ustawia wysokość toru.',explanationAssessment:transfer?'not_applicable':scenario.assessment,
    proposedExpression:transfer?'3':null,suggestedRuleId:null,usedFactIds:[],
    action:transfer?'propose_attempt':'explain_back'
   };
@@ -105,7 +105,7 @@ for(const scenario of [
   await expect(page.getByText(/nauczyłeś Piko/i)).toHaveCount(0);
 
   const expected={version:1,ruleId:mission.canonicalRuleId,explanationPL:explanation,
-   pikoParaphrasePL:paraphrase,source:'live',confirmation:'saved_by_player'};
+   pikoParaphrasePL:paraphrase,pikoBeliefPL:'Myślę, że stała ustawia wysokość toru.',source:'live',confirmation:'saved_by_player'};
   expect(browserRequests).toHaveLength(2);
   expect(browserRequests[0].userMessage).toBe(explanation);
   expect(browserRequests[1].ruleEvidence[0].lessonNote).toEqual(expected);
@@ -114,7 +114,8 @@ for(const scenario of [
   const request=observed[1];
   const developer=request.input.find(message=>message.role==='developer')!;
   const trusted=JSON.parse(developer.content);
-  expect(trusted.learnedRules).toEqual([{id:mission.canonicalRuleId,textPL:mission.ruleText}]);
+  expect(trusted.learnedRules).toEqual([]);
+  expect(JSON.stringify(request.input)).not.toContain(mission.ruleText);
   expect(trusted).not.toHaveProperty('lessonNote');
   const note=request.input.filter(message=>message.content.includes('"untrustedLessonNote"'));
   expect(note).toEqual([{role:'user',content:JSON.stringify({untrustedLessonNote:expected})}]);

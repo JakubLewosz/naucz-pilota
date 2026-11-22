@@ -14,7 +14,7 @@ async function teach(page:Page,mission:typeof data.missions[number]){
  for(const [i,g] of scene.gates.entries())await page.locator(`#prediction${i}`).fill(String((w.c2*g.x+w.c1)*g.x+w.c0));
  await page.getByLabel('Co Piko powinien zmienić i dlaczego?').fill(mission.ruleText);
  await page.getByRole('button',{name:'Sprawdź naprawę'}).click();
- await expect(page.getByText('Zasada sprawdzona przez grę',{exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'3. Zapisz notatkę dla Piko'})).toBeVisible();
  await page.getByRole('button',{name:'Powiedz Piko'}).click();
  await expect(page.getByLabel('Komentarz Piko')).toContainText('Piko (tryb pokazowy)');
  await page.getByRole('button',{name:'Zapisz notatkę dla Piko'}).click();
@@ -199,8 +199,7 @@ for(const path of ['demo','skip'] as const)test(`two failed live turns, reload, 
  await expect(page.getByRole('alert')).toBeVisible();
  await expect(page.getByRole('button',{name:'Spróbuj ponownie'})).toHaveCount(0);
  await page.reload();
- await page.getByText('Notatka z lekcji Piko',{exact:true}).click();
- await expect(page.getByText('Twoje wyjaśnienie',{exact:true})).toBeVisible();
+ await expect(page.getByRole('region',{name:'Pamięć Piko'})).toBeVisible();
  expect(requests).toHaveLength(2);
  expect(requests[1].ruleEvidence[0].lessonNote).toMatchObject({explanationPL:mission.ruleText,source:'demo'});
  if(path==='demo'){

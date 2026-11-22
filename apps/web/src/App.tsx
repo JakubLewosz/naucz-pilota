@@ -37,12 +37,8 @@ function FlightResult({attempt,robotStart}:{attempt:Attempt;robotStart?:{yMin:nu
   </details>
  </section>;
 }
-function LessonText({explanation,paraphrase,source}:{explanation:string;paraphrase:string|null;source?:string}){
- return <dl className="lesson-text">
-  <dt>Twoje wyjaśnienie</dt><dd>{explanation}</dd>
-  <dt>{source==='demo'?'Przygotowany komentarz Piko (tryb pokazowy)':source==='live'?'Jak zrozumiał to Piko':'Odpowiedź Piko'}</dt>
-  <dd>{paraphrase??'Bez odpowiedzi Piko — zapisujemy Twoje słowa.'}</dd>
- </dl>;
+function PikoBelief({belief,fallback}:{belief:string|null;fallback?:string}){
+ return <div className="belief"><Piko/><div><small>Piko zapamięta</small><p>{belief??(fallback?`Twoje słowa: „${fallback}”`:'Bez rozmowy Piko zapamięta tylko Twoje słowa.')}</p></div></div>;
 }
 const assessmentText={
  sound:'Wyjaśnienie opisuje sprawdzoną zasadę.',
@@ -59,7 +55,7 @@ function LessonAssessment({reply}:{reply:LessonReply|null}){
 }
 function robotOutcome(r?:Run){
  const attempt=r?.attempts.robot_transfer?.at(-1);
- if(attempt)return `${attempt.result.ok?'Bezpieczny lot':'Lot nieudany'} (${attempt.source==='live'?'prawdziwe AI':'tryb pokazowy'})`;
+ if(attempt)return `${attempt.result.ok?'Bezpieczny lot':'Lot nieudany'}${(r?.lessonAttempts??1)>1?` po ${r!.lessonAttempts}. lekcji`:''} (${attempt.source==='live'?'prawdziwe AI':'tryb pokazowy'})`;
  return r?.robotDisposition==='skipped'?'Pominięto lot Piko.':'Brak sprawdzonego lotu Piko.';
 }
 function Summary({r}:{r:Run}){
@@ -227,14 +223,10 @@ export function App(){
  {role==='practice'&&<><div className="hint-box"><h3>Potrzebujesz wskazówki?</h3><p>Odkrywaj po jednej. Gra zapamięta ich użycie.</p>{hints.missions.find(h=>h.missionId===m.id)?.hints.slice(0,r.hintCount).map(h=><div key={h.level}><strong>{h.level}. {h.titlePL}</strong><p>{h.textPL}</p></div>)}{r.hintCount<3&&<button className="secondary" onClick={()=>dispatch({type:'HINT'})}>Wskazówka {r.hintCount+1} / 3</button>}</div>{last?.result.ok&&<button onClick={()=>dispatch({type:'NEXT'})}>Teraz naucz Piko</button>}</>}
  {role==='teach'&&<><div className="piko-says"><Piko/><div className="bubble"><small>Pomysł Piko (przygotowany)</small><p>{m.scriptedRobotUtterance}</p><code>f(x) = {scene.initialExpression}</code><button className="secondary" onClick={()=>dispatch({type:'CHECK_SCRIPT'})}>Sprawdź pomysł Piko</button></div></div><h3>2. Wyjaśnij Piko zasadę</h3><label htmlFor="explanation">Co Piko powinien zmienić i dlaczego?</label><textarea id="explanation" value={r.explanation} maxLength={600} rows={3} onChange={e=>dispatch({type:'EDIT',field:'explanation',value:e.target.value})}/><p className="muted">Wystarczy jedno lub dwa zdania. {r.explanation.length}/600</p>{s.mode==='live'&&<p className="privacy">Twoje wyjaśnienie trafi do AI. Nie wpisuj danych osobowych.</p>}<button className="secondary" disabled={s.busy||!r.explanation.trim()} onClick={()=>void askPiko()}>Powiedz Piko</button>{conversation}{!s.busy&&r.lessonReply?.assessment&&r.lessonReply.assessment!=='sound'&&<p className="notice">Uzupełnij wyjaśnienie w polu powyżej, odpowiadając na pytanie Piko, i kliknij „Powiedz Piko” jeszcze raz.</p>}{!r.explanation.trim()&&<p className="muted">Najpierw wpisz własną próbę wyjaśnienia.</p>}{canRule&&<div className="rule-card note-card">
   <h3>3. Zapisz notatkę dla Piko</h3>
-  <strong>Zasada sprawdzona przez grę</strong><p>{m.ruleText}</p>
-  <LessonText explanation={r.explanation} paraphrase={r.lessonReply?.text??null} source={r.lessonReply?.source}/>
+  <dl className="lesson-text"><dt>Twoje wyjaśnienie</dt><dd>{r.explanation}</dd></dl>
+  <PikoBelief belief={r.lessonReply?.belief??null}/>
   <LessonAssessment reply={r.lessonReply}/>
-  {r.lessonReply?.source==='live'
-   ? <p className="muted">Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i kliknij ponownie „Powiedz Piko”.</p>
-   : <p className="muted">{r.lessonReply?.source==='demo'
-     ? 'Piko zabierze tę notatkę na nową trasę.'
-     : 'Możesz najpierw zapytać Piko albo od razu zapisać notatkę.'}</p>}
+  <p className="muted">Na nowej trasie Piko zastosuje dokładnie tę notatkę, także jeśli jest w niej błąd. {r.lessonReply?'Jeśli Piko źle Cię zrozumiał, popraw wyjaśnienie i kliknij „Powiedz Piko” jeszcze raz.':'Możesz najpierw zapytać Piko, jak to zrozumiał.'}</p>
   <button disabled={s.busy} onClick={()=>dispatch({type:'CONFIRM_RULE'})}>Zapisz notatkę dla Piko</button>
  </div>}{!canRule&&<p className="muted">Sprawdź bezpieczny tor, obie prognozy i wpisz własne wyjaśnienie, aby przygotować notatkę.</p>}</>}
  {role==='robot_transfer'&&<> <div role="status" id="transfer-wait">{s.busy&&<div className="notice ai-wait">
@@ -245,11 +237,12 @@ export function App(){
   </div>
  </div>}</div>
  {s.busy&&<button className="secondary" aria-describedby="transfer-wait" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby</button>}
-{r.rule?.lessonNote&&<details className="rule-card note-card">
-  <summary>Notatka z lekcji Piko</summary>
-  <LessonText explanation={r.rule.lessonNote.explanationPL} paraphrase={r.rule.lessonNote.pikoParaphrasePL} source={r.rule.lessonNote.source}/>
-  <p><strong>Sprawdzona zasada</strong><br/>{m.ruleText}</p>
- </details>}{r.rule?.lessonNote&&<LessonAssessment reply={r.lessonReply}/>}
+{r.rule?.lessonNote&&<section className="piko-memory" aria-label="Pamięć Piko">
+  <h3>Pamięć Piko{(r.lessonAttempts??1)>1?` (lekcja ${r.lessonAttempts})`:''}</h3>
+  <PikoBelief belief={r.rule.lessonNote.pikoBeliefPL??null} fallback={r.rule.lessonNote.explanationPL}/>
+  <LessonAssessment reply={r.lessonReply}/>
+  <p className="muted">Piko zna tylko to, czego nauczył się od Ciebie. Gotowej zasady z gry nie dostaje.</p>
+ </section>}
  {!r.robot&&<div className="piko-says"><Piko/><div className="bubble"><p>Mam Twoją notatkę. Spróbuję sam dobrać wzór na tej trasie. Ciekawe, czy Twoja lekcja wystarczy?</p></div></div>}
  {r.robot?.learner?.proposedExpression&&<div className="proposal">
   <h3>Propozycja Piko</h3>
@@ -259,9 +252,12 @@ export function App(){
   {!r.robotChecked&&<button disabled={s.busy||!r.prediction} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
   {!r.prediction&&<p className="muted">Wybierz przewidywanie, by zobaczyć wynik.</p>}
  </div>}
- {s.mode!=='unavailable'&&canAskRobot(s,r)&&<button disabled={s.busy} onClick={()=>void askPiko()}>{r.robotTurns===0?'Piko, spróbuj sam':'Jedna poprawka Piko'}</button>}
+ {s.mode!=='unavailable'&&canAskRobot(s,r)&&(!r.robot||r.robotTurns===0)&&<button disabled={s.busy} onClick={()=>void askPiko()}>Piko, spróbuj sam</button>}
+ {!s.busy&&r.robotChecked&&(r.attempts.robot_transfer?.at(-1)?.result.ok
+  ? <p className="notice ok">Twoja lekcja zadziałała: Piko przeleciał nową trasę, stosując Twoją notatkę.</p>
+  : <div className="notice"><p>Piko poleciał tak, jak wynika z Twojej lekcji, i się rozbił. Sprawdź jego uzasadnienie: które zdanie notatki go zmyliło albo czego w niej zabrakło?</p><button onClick={()=>dispatch({type:'RETEACH'})}>Popraw lekcję dla Piko</button></div>)}
  {!s.busy&&(r.robotChecked
-  ? <button onClick={()=>dispatch({type:'NEXT'})}>Teraz mój samodzielny lot</button>
+  ? <button className={r.attempts.robot_transfer?.at(-1)?.result.ok?undefined:'secondary'} onClick={()=>dispatch({type:'NEXT'})}>Teraz mój samodzielny lot</button>
   : <button className="secondary" onClick={()=>dispatch({type:'SKIP_ROBOT'})}>Pomiń lot Piko i przejdź do własnej próby</button>)}</>}
  {role==='robot_transfer'&&!r.robot?.learner?.proposedExpression&&r.messages.length>0&&conversation}
  {role==='human_check'&&<><p className="notice">Liczy się pierwsza próba — zapiszemy ją, nawet jeśli potem poprawisz wzór.</p>{r.firstHuman&&<p>Pierwsza próba: <strong>{r.firstHuman.result.ok?'poprawna':'do poprawy'}</strong>. Liczba prób: {r.counts.human_check}.</p>}{r.completed&&<><p className="success">✓ Misja ukończona{(r.counts.human_check??0)>1?` w ${r.counts.human_check}. próbie. Pierwsza próba pozostaje w podsumowaniu.`:'.'}</p><button onClick={()=>dispatch({type:'NEXT'})}>Zobacz podsumowanie</button></>}</>}
