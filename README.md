@@ -59,7 +59,7 @@ Wersja produkcyjna: `npm run build`, a potem `npm start` (aplikacja i API na htt
 
 ```sh
 npm run typecheck && npm run lint
-npm test                     # 216 testów jednostkowych (silnik, kontrakt AI, serwer, zapis)
+npm test                     # 219 testów jednostkowych (silnik, kontrakt AI, serwer, zapis)
 npm run test:content         # 62 testy treści misji
 npx playwright install chromium
 npm run test:e2e             # 17 testów całej gry w przeglądarce

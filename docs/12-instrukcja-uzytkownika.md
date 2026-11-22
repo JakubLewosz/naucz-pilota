@@ -18,6 +18,8 @@ Oś x biegnie w prawo, oś y w górę. START i META to wejście i wyjście, G1 i
 
 ## Cztery kroki misji
 
+W prawym panelu ramka „Co teraz?” zawsze mówi, co zrobić w następnej kolejności. W kroku Naucz Piko lista zadań pokazuje, co już jest zrobione.
+
 1. Twój lot. Wpisz wzór i kliknij Leć (albo naciśnij Enter). Jeśli utkniesz, odsłaniaj po kolei trzy wskazówki. Po udanym locie kliknij Teraz naucz Piko.
 2. Naucz Piko. Piko ma błędny pomysł. Kliknij Sprawdź pomysł Piko, żeby zobaczyć, gdzie się myli. Popraw wzór, wpisz, jaką wysokość przewidujesz w bramkach G1 i G2, i kliknij Sprawdź naprawę. Potem napisz jednym lub dwoma zdaniami, co Piko powinien zmienić i dlaczego, i kliknij Powiedz Piko. Piko powie, jak to zrozumiał, i może zadać pytanie. Na koniec kliknij Zapisz notatkę dla Piko.
 3. Lot Piko. Piko dostaje Twoją notatkę i nową trasę. Kliknij Piko, spróbuj sam. Przeczytaj jego wzór i uzasadnienie, zaznacz, czy Twoim zdaniem przeleci, i kliknij Sprawdź lot Piko. Gra przelicza jego lot dokładnie. Rozwiń Dlaczego?, żeby zobaczyć wysokość toru w każdym punkcie. Jeśli Piko się pomylił, możesz dać mu jedną poprawkę. Możesz też pominąć jego lot.
@@ -27,7 +29,7 @@ Po misji zobaczysz podsumowanie: zapisaną zasadę, wynik Piko i swoją pierwsz�
 
 ## Jak zapisywać wzory
 
-Możesz używać liczb, x, znaków + - * /, nawiasów i potęgi ^2. Działa też przecinek dziesiętny. Przykłady zapisu: 2x+1, 0,5x, 0.25(x-2)^2+1, (x+1)(x-1). Możesz zacząć od y= albo f(x)=. Nie działają: sin, pierwiastki, dzielenie przez x i potęgi wyższe niż 2. Uwaga: -x^2 to minus kwadrat, a (-x)^2 to kwadrat liczby ujemnej (wynik dodatni).
+Możesz używać liczb, x, znaków + - * /, nawiasów i potęgi ^2. Pod polem wzoru są przyciski, które wstawiają x, x², nawiasy i znaki działań, a napis „Gra czyta” pokazuje wzór zapisany jak w zeszycie. Działa też przecinek dziesiętny. Przykłady zapisu: 2x+1, 0,5x, 0.25(x-2)^2+1, (x+1)(x-1). Możesz zacząć od y= albo f(x)=. Nie działają: sin, pierwiastki, dzielenie przez x i potęgi wyższe niż 2. Uwaga: -x^2 to minus kwadrat, a (-x)^2 to kwadrat liczby ujemnej (wynik dodatni).
 
 ## Klawiatura i czytelność
 

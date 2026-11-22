@@ -309,3 +309,30 @@ footer { display: flex; justify-content: space-between; align-items: center; gap
   .header nav { gap: 0; justify-content: flex-start; }
   .header nav button { padding: .4em .55em; font-size: .9em; }
 }
+
+/* Prowadzenie gracza */
+.next-step { margin: 4px 0 16px; padding: 12px 14px; border-radius: 10px; background: #fff7e6; border: 2px solid #ffd08a; }
+.next-step strong { color: #8a4b00; }
+.checklist { list-style: none; margin: 0 0 18px; padding: 0; counter-reset: task; }
+.checklist li { position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 0; color: var(--ink-soft); font-weight: 600; font-size: .92em; counter-increment: task; }
+.checklist li > span:first-child { display: grid; place-items: center; width: 24px; height: 24px; flex-shrink: 0; border: 2px solid var(--line); border-radius: 6px; background: var(--paper); color: #fff; font-size: .8em; }
+.checklist li.done { color: var(--green); }
+.checklist li.done > span:first-child { border-color: var(--green); background: var(--green); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.legend-intro { margin: 0 0 18px; padding: 14px 16px; border-radius: 10px; background: #f2f5f8; }
+.legend-intro h3 { margin: 0 0 8px; }
+.legend-intro ul { margin: 0; padding: 0; list-style: none; }
+.legend-intro li { display: flex; align-items: flex-start; gap: 10px; margin: 8px 0; font-size: .92em; }
+.legend-intro b { flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; }
+.lg-portal { border-left: 3px solid var(--ink); border-right: 3px solid var(--ink); border-top: 3px solid transparent; background: linear-gradient(90deg, transparent 9px, var(--ink) 9px, var(--ink) 11px, transparent 11px); }
+.lg-gate { background: linear-gradient(var(--ink), var(--ink)) top/100% 3px no-repeat, linear-gradient(var(--ink), var(--ink)) bottom/100% 3px no-repeat, repeating-linear-gradient(var(--ink) 0 3px, transparent 3px 6px) center/2px 100% no-repeat; }
+.lg-obstacle { border: 2px solid var(--red); background: repeating-linear-gradient(35deg, var(--red-tint) 0 3px, #e2828e 3px 4px); }
+.lg-piko { border-radius: 6px; background: var(--orange); border: 2px solid var(--ink); }
+.formula-keys { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.formula-keys .key { min-width: 42px; min-height: 38px; padding: .2em .6em; border-width: 2px; border-color: var(--line); border-radius: 8px; color: var(--ink); background: var(--paper); box-shadow: 0 2px 0 var(--line); font-family: var(--mono); font-weight: 700; }
+.formula-keys .key:hover { background: var(--blue-tint); }
+.formula-preview { margin: 10px 0 0; color: var(--ink-soft); font-size: .9em; }
+.formula-preview span { color: var(--blue); font-family: var(--hand); font-size: 1.15em; font-weight: 600; }
+.expression-form .predictions { margin-top: 14px; }
+.expression-form .notice { margin: 12px 0 0; }
+.notice.ok { border-left-color: var(--green); background: var(--green-tint); }

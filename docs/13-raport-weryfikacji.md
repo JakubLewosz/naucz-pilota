@@ -5,7 +5,7 @@ Piko: Misja Funkcja 1.0.0, stan na 22 listopada 2026. Środowisko: macOS arm64, 
 ## Testy automatyczne
 
 - Kontrola typów (TypeScript) i lint (ESLint): bez błędów.
-- 216 testów jednostkowych: parser wzorów, geometria i kolizje, zasady zaliczania, kontrakt AI, serwer (sesje, limity, kod dostępu), zapis i migracja postępu oraz oba adaptery AI (Claude i OpenAI) na atrapie HTTP, w tym odmowa, ucięta odpowiedź i błędy 400/404/429.
+- 219 testów jednostkowych: parser wzorów, geometria i kolizje, zasady zaliczania, kontrakt AI, serwer (sesje, limity, kod dostępu), zapis i migracja postępu oraz oba adaptery AI (Claude i OpenAI) na atrapie HTTP, w tym odmowa, ucięta odpowiedź i błędy 400/404/429.
 - 62 testy treści: 24 plansze mają sprawdzony poprawny tor, a 37 kontrolnych błędnych wzorów jest poprawnie odrzucanych. Niezależny walidator w Pythonie potwierdza to samo.
 - 17 testów całej gry w przeglądarce (Playwright): pełna kampania, ochrona pierwszej próby, opóźniona odpowiedź AI, pominięcie lotu Piko, czyszczenie rozmowy, awarie AI i powrót do trybu pokazowego, kod dostępu, animacja lotu. Zawierają automatyczne kontrole dostępności (axe, poziom A/AA) przy 1366×768, 1440×900 i 390×844.
 
