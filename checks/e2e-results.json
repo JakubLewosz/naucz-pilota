@@ -117,12 +117,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1665,
+                  "duration": 1590,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:29.718Z",
+                  "startTime": "2026-11-22T20:02:00.156Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -132,7 +132,7 @@
           ],
           "id": "ba824951ebd2097fff00-7e80efb3970580335371",
           "file": "campaign.spec.ts",
-          "line": 38,
+          "line": 42,
           "column": 1
         },
         {
@@ -151,12 +151,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3623,
+                  "duration": 3785,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:31.707Z",
+                  "startTime": "2026-11-22T20:02:02.025Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -166,7 +166,7 @@
           ],
           "id": "ba824951ebd2097fff00-8aa2c601656b784dcb8d",
           "file": "campaign.spec.ts",
-          "line": 47,
+          "line": 51,
           "column": 1
         },
         {
@@ -185,12 +185,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1103,
+                  "duration": 1035,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:35.336Z",
+                  "startTime": "2026-11-22T20:02:05.816Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -200,7 +200,7 @@
           ],
           "id": "ba824951ebd2097fff00-5137c2b426eb4dcf53fe",
           "file": "campaign.spec.ts",
-          "line": 60,
+          "line": 64,
           "column": 92
         },
         {
@@ -219,12 +219,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1044,
+                  "duration": 998,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:36.445Z",
+                  "startTime": "2026-11-22T20:02:06.857Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -234,7 +234,7 @@
           ],
           "id": "ba824951ebd2097fff00-0865622498f304667074",
           "file": "campaign.spec.ts",
-          "line": 60,
+          "line": 64,
           "column": 92
         },
         {
@@ -253,12 +253,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1031,
+                  "duration": 1025,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:37.494Z",
+                  "startTime": "2026-11-22T20:02:07.860Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -268,7 +268,7 @@
           ],
           "id": "ba824951ebd2097fff00-882e705e73dcb64c3cbc",
           "file": "campaign.spec.ts",
-          "line": 60,
+          "line": 64,
           "column": 92
         },
         {
@@ -287,12 +287,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 789,
+                  "duration": 700,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:38.532Z",
+                  "startTime": "2026-11-22T20:02:08.890Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -302,7 +302,7 @@
           ],
           "id": "ba824951ebd2097fff00-3e5f524c0a3df7d13313",
           "file": "campaign.spec.ts",
-          "line": 69,
+          "line": 73,
           "column": 1
         },
         {
@@ -321,12 +321,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 755,
+                  "duration": 643,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:39.329Z",
+                  "startTime": "2026-11-22T20:02:09.595Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -336,7 +336,41 @@
           ],
           "id": "ba824951ebd2097fff00-6b9cf5119e836809aee6",
           "file": "campaign.spec.ts",
-          "line": 77,
+          "line": 81,
+          "column": 1
+        },
+        {
+          "title": "MOCK: skip during a 21 s desktop reply preserves the independent attempt and archive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 22651,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T20:02:10.242Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ba824951ebd2097fff00-4ca94a633c4295cee7f6",
+          "file": "campaign.spec.ts",
+          "line": 104,
           "column": 1
         },
         {
@@ -355,12 +389,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1348,
+                  "duration": 1497,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:40.091Z",
+                  "startTime": "2026-11-22T20:02:32.898Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -370,7 +404,7 @@
           ],
           "id": "ba824951ebd2097fff00-f4a6fd062192d8b10685",
           "file": "campaign.spec.ts",
-          "line": 107,
+          "line": 181,
           "column": 44
         },
         {
@@ -389,12 +423,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1132,
+                  "duration": 1318,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:41.444Z",
+                  "startTime": "2026-11-22T20:02:34.400Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -404,7 +438,7 @@
           ],
           "id": "ba824951ebd2097fff00-2648cfe1a4140c22a231",
           "file": "campaign.spec.ts",
-          "line": 107,
+          "line": 181,
           "column": 44
         },
         {
@@ -423,12 +457,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 955,
+                  "duration": 1023,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:42.581Z",
+                  "startTime": "2026-11-22T20:02:35.724Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -438,7 +472,7 @@
           ],
           "id": "ba824951ebd2097fff00-d882aef2b484b378da9e",
           "file": "campaign.spec.ts",
-          "line": 139,
+          "line": 215,
           "column": 1
         },
         {
@@ -457,12 +491,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2710,
+                  "duration": 2973,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:43.541Z",
+                  "startTime": "2026-11-22T20:02:36.753Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -472,7 +506,7 @@
           ],
           "id": "ba824951ebd2097fff00-02d3f3ddda7302b9eb72",
           "file": "campaign.spec.ts",
-          "line": 188,
+          "line": 264,
           "column": 1
         }
       ]
@@ -484,7 +518,7 @@
       "line": 0,
       "specs": [
         {
-          "title": "MOCK: exact player lesson survives reload and reaches the SDK as user data",
+          "title": "MOCK: untrusted instruction remains user data and a safe lot does not verify the lesson",
           "ok": true,
           "tags": [],
           "tests": [
@@ -499,12 +533,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1045,
+                  "duration": 1362,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-09T20:53:46.385Z",
+                  "startTime": "2026-11-22T20:02:40.048Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -512,9 +546,153 @@
               "status": "expected"
             }
           ],
-          "id": "494131e17e8f463803f2-b5d3591b7b635b2ceb52",
+          "id": "494131e17e8f463803f2-1e3e6702cdb45f020ea4",
           "file": "lesson.spec.ts",
-          "line": 18,
+          "line": 25,
+          "column": 12
+        },
+        {
+          "title": "MOCK: incorrect remains user data and a safe lot does not verify the lesson",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1204,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T20:02:41.415Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "494131e17e8f463803f2-378da1faeacaca789bef",
+          "file": "lesson.spec.ts",
+          "line": 25,
+          "column": 12
+        },
+        {
+          "title": "MOCK: abc remains user data and a safe lot does not verify the lesson",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1301,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T20:02:42.625Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "494131e17e8f463803f2-b0d9a0553dfbe53adde7",
+          "file": "lesson.spec.ts",
+          "line": 25,
+          "column": 12
+        }
+      ]
+    },
+    {
+      "title": "presentation.spec.ts",
+      "file": "presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "jury code authorizes the browser connection and is cleared by a page reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 650,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T20:02:43.936Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "57a964c83dbf6a737e02-1d82be251d0681e15360",
+          "file": "presentation.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "flight markers follow engine events, skipping is cosmetic and reduced motion ends immediately",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 598,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-22T20:02:44.591Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "57a964c83dbf6a737e02-9d08a742463ce66e1fdc",
+          "file": "presentation.spec.ts",
+          "line": 29,
           "column": 1
         }
       ]
@@ -522,9 +700,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-09T20:53:27.143Z",
-    "duration": 20391.362,
-    "expected": 12,
+    "startTime": "2026-11-22T20:01:57.378Z",
+    "duration": 47914.908,
+    "expected": 17,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
