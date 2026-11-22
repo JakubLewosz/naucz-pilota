@@ -52,7 +52,7 @@ test('E4 all six missions, 24 distinct scenes, M04 robot failure does not block 
  let apiCalls=0;page.on('request',r=>{if(r.url().includes('learner-turn'))apiCalls++;});
  await page.goto('/');await page.getByRole('button',{name:'Rozpocznij'}).click();
  for(const m of data.missions){await practice(page,m);await teach(page,m);await transfer(page,m.id==='M04');await blind(page);await page.getByLabel('Wzór funkcji',{exact:true}).fill(m.scenes.human_check.witness.expression);await page.getByLabel('Wzór funkcji',{exact:true}).press('Enter');await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();if(m.order<6)await page.getByRole('button',{name:'Następna misja'}).click();}
- await expect(page.getByRole('heading',{name:'Dobra robota — ukończyłeś sześć misji'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Dobra robota — wszystkie sześć misji ukończone'})).toBeVisible();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('naucz-pilota.v1')!));expect(Object.values(saved.runs).every((r:unknown)=>(r as {completed:boolean}).completed)).toBe(true);expect(saved.runs.M04.attempts.robot_transfer[0].result.ok).toBe(false);expect(apiCalls).toBe(0);
  await openMission(page,data.missions[1].title);
  await page.getByRole('button',{name:'Zobacz podsumowanie'}).click();

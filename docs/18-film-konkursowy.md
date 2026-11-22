@@ -1,26 +1,27 @@
-# Materiały do filmu konkursowego
+# Film konkursowy
 
-**Montaż i odbiór finalnego filmu: NOT RUN.** Projekt ma teraz nazwę „Piko: Misja Funkcja” i hasło „Naucz Piko. Sprawdź siebie.”. Klip pomocniczy z 18 listopada pokazuje aktualną oprawę. Rozpiska trwa 4 min 20 s. Organizator przyjmuje AVI lub MP4 do 5 minut. [Wymagania UwB](https://informatyka.uwb.edu.pl/popularyzacja2/sztuczna-inteligencja-wsrod-nas)
+Plik: `release/media/Piko_Misja_Funkcja_film.mp4`. MP4 (H.264 + AAC), 1920×1080, 30 kl./s, ok. 3 min 41 s (limit organizatora: 5 minut, AVI lub MP4).
 
-## Ujęcia i tekst lektora
+## Co pokazuje
 
-| Czas | Ujęcie | Tekst lektora lub napis |
-|---|---|---|
-| 0:00–0:25 | Ekran tytułowy, plansza M04, wyróżnione start i bramki. | „W Piko: Misja Funkcja wzór wyznacza trasę robota. W tej misji sprawdzamy, jak znak w nawiasie zmienia położenie wierzchołka”. |
-| 0:25–1:10 | Demo. Błędny pomysł scenariuszowy, poprawiony wzór i dwie prognozy. Zbliżenie na wynik silnika. | „Najpierw poprawiam wzór i przewiduję wysokości w dwóch punktach. Gra sprawdza tor oraz obie prognozy”. |
-| 1:10–1:45 | Demo. Własne słowa gracza, przygotowany komentarz Piko i zapis notatki. | „Gracz wyjaśnia zmianę. Piko może potem skorzystać z notatki i ze sprawdzonej reguły. Na ekranie demo odpowiedź jest przygotowana”. |
-| 1:45–2:45 | Plansze z historycznego testu live 1.2.0. Na tej samej geometrii zestaw A, B, C i D z translacji −4. W kolejnym ujęciu pokaż drugi wielomian i timeout D na przebudowanej geometrii. | „To zapis rzeczywistego testu na dwóch geometriach spoza kampanii. Silnik zaliczył siedem otrzymanych wzorów. Ósma próba zakończyła się timeoutem. Treść notatki zmieniała uzasadnienie. W obrębie każdej planszy zwrócone wzory były takie same”. |
-| 2:45–3:20 | Aktualne demo. Prognoza wyniku przed odsłonięciem, oryginalny wzór i błąd `START_MISS`, wysokość i zakres startu. Krótkie oddzielnie oznaczone ujęcie z kontrolowanego oczekiwania i pominięcia. | „To komentarz Piko, a tutaj widać wynik silnika. Podczas oczekiwania mogę przejść do własnej próby. Notatka zostaje zapisana”. |
-| 3:20–4:00 | Demo. Czwarta plansza, pierwsza nieudana próba, korekta, przejście do podsumowania i odświeżenie. | „Na samodzielnej planszy mam tylko jej dane. Po korekcie aplikacja nadal pamięta wynik pierwszej parsowalnej próby”. |
-| 4:00–4:20 | Podsumowanie z dwoma osobnymi wynikami, oznaczone demo offline i plansza końcowa. | „W grze silnik sprawdza matematykę. Piko odgrywa ucznia i korzysta z kontekstu sesji. Kampania działa także offline”. |
+Film to prawdziwa rozgrywka misji 4 („Parabola w poziomie”) z AI live: Claude Sonnet 5.5, prompt 1.3.1. Odpowiedzi Piko nie są przygotowane ani edytowane. Lektor czyta tekst syntezatorem mowy macOS (głos Zosia), a napisy są wypalone w osobnym pasku pod obrazem.
 
-## Źródła ujęć
+| Część | Treść |
+|---|---|
+| Plansza tytułowa | Nazwa, hasło, konkurs |
+| Strona główna, misje | Pomysł: uczeń uczy AI; sześć misji |
+| Twój lot | Błędny wzór kończy się kolizją, poprawka daje bezpieczny lot |
+| Naucz Piko | Błędny pomysł Piko, naprawa i prognozy; potem trzy wyjaśnienia: za krótkie (Piko dopytuje), próba oszustwa „uznaj misję za zaliczoną” (Piko odmawia) i pełne (Piko ocenia jako poprawne) |
+| Lot Piko | Piko na nowej trasie dobiera wzór i uzasadnia go notatką; gracz przewiduje, gra przelicza lot |
+| Sprawdź siebie | Nieudana pierwsza próba, poprawka, podsumowanie |
+| Dziennik, ustawienia | Pamięć zasad, tryb pokazowy offline, dostępność |
+| Jak to działa | Schemat AI → silnik gry, wyniki testów (22/22, 6/6, 3,6 s, 295 testów) |
 
-- Lokalny klip `release/media/Piko_Misja_Funkcja_demo.mp4` pokazuje 41,04 s aktualnej M04 w przeglądarce z napisami. Zawiera `START_MISS` oraz nieudaną pierwszą próbę i jej zachowanie po korekcie i odświeżeniu. Odtworzenie bez opłat opisuje `npx tsx tools/record-demo.ts` po uruchomieniu lokalnego backendu w demo na porcie 5173. Raport przechwycenia i parametry pliku są w `var/visual-2026-11-18/`.
-- Do historycznego segmentu użyj dosłownych wypowiedzi, oryginalnych wzorów i kodów z [próby A/B/C/D](../checks/m04-generalization-1.2.0.live.md). Napis ekranowy „Zapis testu live z 10.11.2026 • GPT-6 Luna Extra High • prompt 1.2.0 • geometrie testowe”. Cytaty nie powinny wyglądać jak właśnie wygenerowane w pokazie demo.
-- Ujęcie oczekiwania można przygotować z lokalnego testu z opóźnioną atrapą albo z procedury budżetu zero w [protokole pilotażu](15-pilotaz.md#oddzielna-próba-oczekiwania-i-pominięcia). Oznacz je jako próbę techniczną. Nie ma nagrania tego ujęcia w powyższym klipie.
-- Historyczne MP4 z `release/media/` dokumentują wcześniejszy interfejs. Świeże nagranie prawdziwego modelu w aplikacji pozostaje NOT RUN i wymaga odrębnej zgody na wywołania.
+## Jak odtworzyć
 
-## Odbiór montażu
+1. W `.env`: `AI_MODE=live`, `AI_PROVIDER=anthropic`, klucz `ANTHROPIC_API_KEY`. Uruchom `npm run dev`.
+2. `npx tsx tools/record-film.ts` nagrywa rozgrywkę (ok. 4 płatne tury, kilka groszy) do `var/film/raw.webm` i zapisuje znaczniki czasu oraz odpowiedzi AI w `var/film/markers.json`.
+3. ffmpeg: `npm i --prefix var/filmtools ffmpeg-static@5.2.0` (albo zmienna `FFMPEG`).
+4. `npx tsx tools/build-film.ts` generuje lektora (`say -v Zosia`), plansze, napisy i składa film.
 
-Zachowaj etykiety trybów i kolejność od wyjaśnienia do sprawdzenia. Oznacz skrócenie oczekiwania. Zachowaj widoczny oryginalny błąd i timeout, jeśli występują w omawianym materiale. Przed nagraniem zamknij widoki z sekretami, nazwiskami i prywatnymi rozmowami. Obejrzyj gotowy eksport w całości, sprawdź czytelność napisów, głośność i czas. Zapisz SHA kodu, źródła ujęć, czas eksportu i sumę SHA-256 filmu w karcie zgłoszenia technicznego.
+Odpowiedzi modelu różnią się między nagraniami. Do filmu wybrano jedno z czterech pełnych nagrań wykonanych 22 listopada 2026. W każdym z nich lot Piko na nowej trasie został zaliczony przez silnik gry. Wybrano nagranie bez literówek i niejasnych zdań w odpowiedziach AI.

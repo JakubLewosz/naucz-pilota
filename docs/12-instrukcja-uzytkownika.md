@@ -23,7 +23,7 @@ Oś x biegnie w prawo, oś y w górę. START i META to wejście i wyjście, G1 i
 3. Lot Piko. Piko dostaje Twoją notatkę i nową trasę. Kliknij Piko, spróbuj sam. Przeczytaj jego wzór i uzasadnienie, zaznacz, czy Twoim zdaniem przeleci, i kliknij Sprawdź lot Piko. Gra przelicza jego lot dokładnie. Rozwiń Dlaczego?, żeby zobaczyć wysokość toru w każdym punkcie. Jeśli Piko się pomylił, możesz dać mu jedną poprawkę. Możesz też pominąć jego lot.
 4. Sprawdź siebie. Nowa plansza, tym razem bez podglądu toru, wskazówek i pomocy Piko. Wpisz wzór i kliknij Sprawdź mój lot. Liczy się pierwsza próba, ale po porażce możesz poprawiać wzór aż do skutku. Literówka (wzór, którego gra nie rozumie) nie zużywa próby.
 
-Po misji zobaczysz podsumowanie: zapisaną zasadę, wynik Piko i swoją pierwszą próbę. Kolejna misja odblokowuje się po ukończeniu poprzedniej. Dziennik zasad pokazuje wszystko, czego nauczyłeś Piko.
+Po misji zobaczysz podsumowanie: zapisaną zasadę, wynik Piko i swoją pierwszą próbę. Kolejna misja odblokowuje się po ukończeniu poprzedniej. Dziennik zasad pokazuje wszystkie zasady przekazane Piko.
 
 ## Jak zapisywać wzory
 

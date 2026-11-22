@@ -25,7 +25,7 @@ Najlepiej uczymy się, tłumacząc coś komuś innemu (tzw. efekt protegowanego,
 | Lot Piko | Piko czyta notatkę z lekcji, sam dobiera wzór dla **nowej** trasy i uzasadnia wybór. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Gracz najpierw przewiduje, czy Piko przeleci. |
 | Bezpieczeństwo | Odpowiedź ma wymuszony schemat JSON. Tekst gracza trafia do modelu wyłącznie jako dane, nie jako polecenie. | Odrzuca odpowiedzi niezgodne z fazą gry, a błędnych wzorów Piko nie poprawia po cichu. |
 
-Wynik testu na prawdziwym modelu (22 listopada 2026): **22/22 tur poprawnych, 6/6 lotów Piko zaliczonych przez silnik**, mediana odpowiedzi 3,9 s. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](checks/ai-live-claude-sonnet-5-5.md).
+Wynik testu na prawdziwym modelu (22 listopada 2026): **22/22 tur poprawnych, 6/6 lotów Piko zaliczonych przez silnik**, mediana odpowiedzi 3,6 s. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](checks/ai-live-claude-sonnet-5-5.md).
 
 ## Szybki start (kod źródłowy)
 

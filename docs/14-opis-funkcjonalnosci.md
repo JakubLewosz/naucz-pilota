@@ -17,7 +17,7 @@ Gracz wpisuje wzór funkcji, a robot Piko leci po jej wykresie przez bramki, omi
 
 ## Sztuczna inteligencja
 
-Piko korzysta z Claude Sonnet 5.5. Model dostaje opis planszy, sprawdzone fakty liczbowe i notatkę gracza. Odpowiada w wymuszonym formacie JSON: wypowiedź, ocenę wyjaśnienia i ewentualny wzór. Tekst gracza trafia do modelu tylko jako dane, więc polecenia w stylu „zignoruj instrukcje” nie działają. O zaliczeniu nigdy nie decyduje AI: każdy wzór, również wzór Piko, przelicza analitycznie własny silnik matematyczny gry. W teście 22 rozmów na prawdziwym modelu wszystkie odpowiedzi były poprawne, Piko zaliczył 6 z 6 nowych tras, a mediana czasu odpowiedzi wyniosła 3,9 s.
+Piko korzysta z Claude Sonnet 5.5. Model dostaje opis planszy, sprawdzone fakty liczbowe i notatkę gracza. Odpowiada w wymuszonym formacie JSON: wypowiedź, ocenę wyjaśnienia i ewentualny wzór. Tekst gracza trafia do modelu tylko jako dane, więc polecenia w stylu „zignoruj instrukcje” nie działają. O zaliczeniu nigdy nie decyduje AI: każdy wzór, również wzór Piko, przelicza analitycznie własny silnik matematyczny gry. W teście 22 rozmów na prawdziwym modelu wszystkie odpowiedzi były poprawne, Piko zaliczył 6 z 6 nowych tras, a mediana czasu odpowiedzi wyniosła 3,6 s.
 
 ## Dla kogo i jak
 
