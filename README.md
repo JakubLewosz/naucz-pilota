@@ -1,108 +1,91 @@
 # Piko: Misja Funkcja
 
-Działająca lokalnie gra edukacyjna po polsku: sześć misji, 24 plansze, funkcje stopnia 0–2, robot Piko i osobna samodzielna próba gracza. Matematyka jest liczona analitycznie przez współdzielony silnik TypeScript. Demo działa bez klucza, serwera i internetu po załadowaniu zasobów aplikacji.
+**Naucz Piko. Sprawdź siebie.**
 
-**Naucz Piko. Sprawdź siebie.** Nowa oprawa pracowni lotów ma grafitowe tło, turkusowy tor i bursztynowego robota. Cztery kroki misji to „Twój lot”, „Naucz Piko”, „Lot Piko” i „Sprawdź siebie”.
+Gra edukacyjna o funkcjach dla uczniów szkół średnich. Gracz dobiera wzór funkcji, który przeprowadzi robota Piko przez bramki. Potem **uczy Piko** tej zasady własnymi słowami. Piko, sterowany przez model językowy Claude, próbuje ją zastosować na nowej trasie. Na koniec gracz sprawdza siebie na planszy, której jeszcze nie widział.
 
-**Stan na 18 listopada 2026.** GPT-6 Luna Extra High z promptem 1.2.0 ma wcześniejszy wynik 7/7 otrzymanych propozycji na dwóch geometriach testowych M04, z jedną dodatkową próbą zakończoną timeoutem. Nowy interfejs sprawdzono lokalnie. Uruchomienie aktualnego EXE na Windows pozostaje NOT RUN. [Stan i wyniki](IMPLEMENTATION_STATUS.md)
+Projekt na konkurs „Sztuczna inteligencja wśród nas” Wydziału Informatyki Uniwersytetu w Białymstoku (2026).
 
-Wcześniejsza nazwa projektu to „Naucz Pilota”. Repozytorium, identyfikator `pl.nauczpilota.app`, profil Electron `naucz-pilota` i klucz zapisu są zgodne z poprzednią wersją. Otwarcie dotychczasowego profilu sprawdzono między dwiema spakowanymi aplikacjami na macOS.
+![Ekran lekcji](checks/piko-2026-11-18/lesson.png)
 
-## Szybki start
+## Pomysł
 
-Wymagany Node 24.x (sprawdzono 24.11.0) i npm. Python nie jest wymagany do uruchomienia gry.
+Najlepiej uczymy się, tłumacząc coś komuś innemu (tzw. efekt protegowanego, *learning by teaching*). W większości aplikacji to AI tłumaczy uczniowi. W Piko jest odwrotnie: **uczeń tłumaczy AI**, a gra uczciwie sprawdza, czy to wyjaśnienie wystarczyło.
+
+- Sześć misji i 24 plansze: wyraz wolny, nachylenie prostej, przesunięcia paraboli w pionie i poziomie, szerokość paraboli i łączenie przekształceń.
+- Każda misja ma cztery kroki: **Twój lot → Naucz Piko → Lot Piko → Sprawdź siebie**.
+- Matematykę liczy własny silnik gry (analitycznie, bez przybliżeń). AI nigdy nie decyduje o zaliczeniu.
+- Gra działa po polsku, bez kont i rankingów. Cała kampania działa też offline, w trybie pokazowym.
+
+## Gdzie jest sztuczna inteligencja
+
+| Moment | Co robi AI (Claude Sonnet 5.5) | Co robi gra |
+|---|---|---|
+| Naucz Piko | Piko parafrazuje wyjaśnienie gracza, ocenia je (poprawne / częściowe / błędne / niejasne) i zadaje jedno pytanie, jak uczeń. | Sprawdza wzór i dwie prognozy gracza. |
+| Lot Piko | Piko czyta notatkę z lekcji, sam dobiera wzór dla **nowej** trasy i uzasadnia wybór. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Gracz najpierw przewiduje, czy Piko przeleci. |
+| Bezpieczeństwo | Odpowiedź ma wymuszony schemat JSON. Tekst gracza trafia do modelu wyłącznie jako dane, nie jako polecenie. | Odrzuca odpowiedzi niezgodne z fazą gry, a błędnych wzorów Piko nie poprawia po cichu. |
+
+Wynik testu na prawdziwym modelu (22 listopada 2026): **22/22 tur poprawnych, 6/6 lotów Piko zaliczonych przez silnik**, mediana odpowiedzi 3,9 s. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](checks/ai-live-claude-sonnet-5-5.md).
+
+## Szybki start (kod źródłowy)
+
+Wymagany Node.js 24 i npm.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Otwórz http://127.0.0.1:5173. Backend działa na porcie 3001; Vite przekazuje `/api`. Domyślnie wybrane jest jawne demo. Wyłączenie backendu nie blokuje rozgrywki demo.
+Otwórz http://127.0.0.1:5173. Bez klucza API gra działa w **trybie pokazowym** (Piko odpowiada przygotowanymi tekstami).
+
+Żeby włączyć prawdziwe AI, skopiuj `.env.example` do `.env` i ustaw:
 
 ```sh
-npm run typecheck
-npm run lint
-npm test
-npm run test:content
-npm run test:m04:offline
-npx playwright install chromium ffmpeg
-npm run test:e2e
-npm run build
-npm start
+AI_MODE=live
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-...
+AI_MODEL=claude-sonnet-5-5
 ```
 
-Po buildzie `npm start` serwuje aplikację i API pod http://127.0.0.1:3001. Do lokalnych testów live w tym wariancie ustaw PUBLIC_ORIGIN=http://127.0.0.1:3001. Domyślny origin w `.env.example` dotyczy Vite.
+Potem uruchom serwer ponownie. Klucz zostaje wyłącznie na serwerze i nigdy nie trafia do przeglądarki. Zamiast Claude można użyć OpenAI (`AI_PROVIDER=openai`, `OPENAI_API_KEY`).
 
-## Prawdziwe AI
+Wersja produkcyjna: `npm run build`, a potem `npm start` (aplikacja i API na http://127.0.0.1:3001; ustaw wtedy `PUBLIC_ORIGIN=http://127.0.0.1:3001`).
 
-Skopiuj `.env.example` do `.env`. Ustaw na backendzie `AI_MODE=live` i `OPENAI_API_KEY`. Przykład konfiguruje `AI_MODEL=gpt-6-luna`, `AI_REASONING_EFFORT=xhigh`, `AI_MAX_OUTPUT_TOKENS=8192` i `AI_TURN_TIMEOUT_MS=90000`. Klucz ustaw wyłącznie na backendzie. Zrestartuj backend, a w ustawieniach gry wybierz live. [Konfiguracja i protokół próby GPT-6 Luna](docs/19-gpt-6-luna-xhigh.md)
+## Wersja na Windows
 
-Weryfikacja zestawu M04 bez połączenia z dostawcą:
+`npm run desktop:dist` buduje `release/bin/Piko_Misja_Funkcja_1.0.0_Windows_x64.zip`. Rozpakuj cały folder i uruchom `Piko Misja Funkcja.exe`. Node nie jest potrzebny. Paczka startuje w trybie pokazowym. Żeby połączyć ją z serwerem z prawdziwym AI, przy budowie podaj `PIKO_DESKTOP_HTTPS_ORIGIN` ([wdrożenie HTTPS](docs/17-odbior-live.md)).
+
+## Testy
 
 ```sh
-npm run test:ai:live -- --dry-run --case M04-LESSONS --max-calls 12
+npm run typecheck && npm run lint
+npm test                     # 216 testów jednostkowych (silnik, kontrakt AI, serwer, zapis)
+npm run test:content         # 62 testy treści misji
+npx playwright install chromium
+npm run test:e2e             # 17 testów całej gry w przeglądarce
+npm run test:ai:live -- --dry-run          # zestaw live bez wywołań API
+npm run test:ai:live -- --allow-paid --max-calls 44   # 22 tury na prawdziwym modelu (~0,30 USD)
 ```
 
-Płatne uruchomienie wymaga `--allow-paid`, jawnego `--max-calls`, zgody operatora i poświadczeń. Standardowy zestaw ma 22 tury. M04-A/B/C to osobne sześć tur w trzech sesjach. Każdy przebieg ma oddzielny raport w `var/ai-live/`. Asercje sprawdzają dostarczenie notatki i matematykę. Jakość dialogu ocenia człowiek. [Instrukcja odbioru live i HTTPS](docs/17-odbior-live.md)
+## Budowa projektu
 
-## Desktop i wydanie
-
-```sh
-npm run desktop:dev
-npm run desktop:dist
-npm run release:check
-npm run release:prepare
+```
+apps/web        interfejs gry (React + Vite)
+apps/server     serwer API (Express): sesje SQLite, limity, połączenie z modelem
+apps/desktop    aplikacja okienkowa (Electron)
+packages/core   silnik matematyczny: parser wzorów, geometria, wykrywanie kolizji
+packages/contracts  kontrakt AI: kontekst dla modelu, schemat odpowiedzi, walidacja
+content         misje, wskazówki i przypadki testowe AI (dane autora)
+tests           testy jednostkowe, e2e (Playwright) i testy live
 ```
 
-`desktop:dev` otwiera lokalnego Electrona. `desktop:dist` buduje niepodpisany ZIP Windows x64 w `release/bin`. Rozpakuj cały katalog i uruchom `Piko Misja Funkcja.exe`. Node jest potrzebny do budowania aplikacji. [Odbiór Windows](docs/16-windows-odbior.md)
+## Dokumenty
 
-Paczka domyślnie uruchamia jawne demo. Aby połączyć ją z zatwierdzonym adresem live, podaj `PIKO_DESKTOP_HTTPS_ORIGIN` przy budowie. Na hostingu użyj `deploy/jury/compose.yaml` z Caddy i budżetem zero. Dla odbiorcy o nieznanym IP jest opcjonalny `compose-code.yaml` oraz kod wpisywany w ustawieniach. Klucz ustaw wyłącznie w chronionym pliku backendu. [Wdrożenie i próba HTTPS](docs/17-odbior-live.md)
+- [Opis funkcjonalności (1 strona)](docs/14-opis-funkcjonalnosci.md)
+- [Instrukcja użytkownika](docs/12-instrukcja-uzytkownika.md)
+- [Instrukcja kompilacji i uruchomienia](docs/11-uruchomienie.md)
+- [Raport z testów](docs/13-raport-weryfikacji.md)
+- [Projekt gry i dydaktyka](docs/02-game-and-learning.md), [architektura](docs/03-architecture.md), [silnik matematyczny](docs/04-math-engine.md), [kontrakt AI](docs/05-ai-contract.md)
+- Historia prac i wcześniejsze testy (GPT-5.4 mini, GPT-6 Luna): [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)
 
-## Rozgrywka i zapis
-
-Każda misja: practice → teach → robot_transfer → human_check. W teach popraw wzór, przewidź G1/G2, napisz wyjaśnienie, przeczytaj parafrazę Piko i potwierdź treść notatki z lekcji. Możesz zapisać lekcję bez odpowiedzi Piko. Transfer używa notatki wraz ze sprawdzoną zasadą. Opinia AI nie steruje zaliczeniem. Przed pierwszą parsowalną próbą samodzielną zasada danej misji jest ukryta również w dzienniku otwartym z innej misji i w podsumowaniu kampanii. Powtórka wymaga własnej pierwszej próby. Pierwszy parsowalny wynik jest zachowany również po poprawkach i odświeżeniu. Powtórzenie ukończonej misji zachowuje poprzednie podejście.
-
-Postęp jest wersjonowany w localStorage. Zapis wersji 1 migruje do wersji 2 z zachowaniem pierwszej próby i archiwum. Uszkodzony zapis wymaga zachowania kopii przed rozpoczęciem nowego. W live opcja „Wyczyść rozmowę” czyści także kontekst tej sceny w aktywnej sesji SQLite. Ustawienia pozwalają ograniczyć ruch, pokazać obrys Piko, powiększyć tekst i usunąć postęp po potwierdzeniu. Instrukcja: [docs/12-instrukcja-uzytkownika.md](docs/12-instrukcja-uzytkownika.md).
-
-## Dane, testy i dokumenty
-
-`content/` zawiera oryginalne dane autora. `build:content` waliduje schemat i generuje dane publiczne bez witness/knownFailures oraz typy i statyczne walidatory DTO. Produkcyjny renderer nie kompiluje kodu z tekstu. Referencyjny Python pozostaje narzędziem autora:
-
-```sh
-python3 tools/validate_missions.py
-python3 tools/audit_package.py
-```
-
-Raporty są w `checks/`. Stan materiałów i braki formalne podaje checklista. Oryginalny README paczki zachowano w `docs/README-pakiet-startowy.md`. [Raport weryfikacji](docs/13-raport-weryfikacji.md) · [Checklista konkursowa](release/CHECKLISTA.md)
-
-## Odbiór wydania i test live w małym zakresie
-
-Obecna wersja ma również:
-
-```sh
-npm run test:ai:live -- --dry-run --case M01 --max-calls 4
-npm run desktop:smoke
-npm run desktop:smoke -- --executable "release/bin/win-unpacked/Naucz Pilota.exe"
-npm run docker:build
-npm run docker:smoke
-npm run jury:https:smoke
-```
-
-Pierwsza komenda sprawdza wejścia teach i transfer M01 bez wywołań dostawcy. Dla zatwierdzonej próby live zatrzymaj backend korzystający z tej samej bazy SQLite. Nadal obowiązuje limit dobowy.
-
-Kontener został lokalnie zbudowany i uruchomiony; testowane są health, brak .env/rozwiązań autora w obrazie, użytkownik bez uprawnień root i trwałość sesji po restarcie. Publiczny hosting HTTPS nadal nie jest skonfigurowany. Test kontenera nie uruchamia płatnego API.
-
-Instrukcje dalszego odbioru: docs/15-pilotaz.md i docs/16-windows-odbior.md. Ręczny workflow GitHub Actions dla Windows i Linux jest przygotowany w .github/workflows/verify.yml; można go uruchomić w zakładce Actions repozytorium. Przebieg dla poprawek przeszedł na Windows i Linuksie, w tym start i wznowienie spakowanego EXE oraz reset rozmowy Electrona z atrapą. [Wynik GitHub Actions](https://github.com/JakubLewosz/naucz-pilota/actions/runs/42685071630).
-
-
-## Historyczny odbiór live promptu 1.0.2
-
-3 listopada 2026: prompt 1.0.2, model gpt-5.4-mini-2026-03-17. Pełne 22 tury przeszły kontrolę schematu, pamięci i zgodności z niezależnym silnikiem, po jednym żądaniu dostawcy na turę. W sześciu transferach robot uzyskał 2 poprawne tory i 4 odrzucone przez silnik; błędne propozycje zachowano bez podstawiania rozwiązań. M04 przeszła też rzeczywisty test UI live z zachowaniem błędnej pierwszej próby po poprawce i odświeżeniu. Nagranie live ma 45,28 s.
-
-Historyczne raporty to checks/ai-live-final-v1.0.2.json, checks/ai-semantic-review.json i checks/browser-live.json. Przegląd wykonany przez asystenta jest wstępny; SEM03 i SEM09 mają etykiety oceny różniące się od rubryki, a Piko czasem mówi zbyt nauczycielsko. Akceptacja jakości dialogu przez człowieka i pilotaż pozostają do wykonania. Lokalna konfiguracja klucza działa; klucz nie jest częścią repozytorium ani wydania.
-
-Repozytorium zawiera kod, lockfile, dane autora, testy, raporty, PDF-y oraz nagrania [demo](release/media/Naucz_Pilota_demo.mp4) i [live](release/media/Naucz_Pilota_live.mp4). Komenda `npm run desktop:dist` pozwala odtworzyć paczkę Windows. Gotowy ZIP jest dostępny w [wydaniu 1.0.0](https://github.com/JakubLewosz/naucz-pilota/releases/tag/v1.0.0).
-
-## Odbiór oprawy i paczki
-
-`npx tsx tools/capture-presentation.ts` zapisuje ekrany i sprawdza dostępność bez API po uruchomieniu `npm run dev` w demo. `npx tsx tools/build-icon.ts` odtwarza ikony z tego samego wektora co postać. Otwarcie starego profilu sprawdza osobny runner `tools/smoke-desktop-rename.ts`. [Bieżący odbiór i ograniczenia](docs/20-odbior-kandydata.md)
+Wcześniejsza nazwa projektu to „Naucz Pilota”. Identyfikator aplikacji i klucz zapisu zostały bez zmian, więc stary postęp się zachowuje.

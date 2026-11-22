@@ -49,33 +49,26 @@ def make(name,text):
 source=Path('docs/11-uruchomienie.md').read_text()
 launch='''# Instrukcja uruchomienia
 
-Piko: Misja Funkcja 1.0.0, kandydat konkursowy. Paczka offline udostępnia całą kampanię demo. Docelowy adres live jest do skonfigurowania.
+Piko: Misja Funkcja 1.0.0 dla Windows 10/11 (64-bit). Node.js ani Python nie są potrzebne.
 
-## Windows x64
+## Uruchomienie
 
-1. Rozpakuj cały plik Piko_Misja_Funkcja_Windows.zip do własnego folderu.
-2. Uruchom Piko Misja Funkcja.exe z rozpakowanego folderu. Zachowaj wszystkie pliki i resources/. Node i Python nie są potrzebne.
-3. Etykieta Demo informuje, że odpowiedzi Piko są scenariuszowe. Cała kampania działa bez internetu.
-4. Kliknij Rozpocznij. Szczegóły czterech etapów znajdziesz w instrukcji użytkownika.
-5. Zamknij okno. Przy kolejnym uruchomieniu postęp pozostaje na tym urządzeniu. W Ustawieniach możesz usunąć go po potwierdzeniu.
+1. Rozpakuj cały plik Piko_Misja_Funkcja_1.0.0_Windows_x64.zip do dowolnego folderu (np. na Pulpit). Nie uruchamiaj programu bezpośrednio z archiwum ZIP.
+2. W rozpakowanym folderze uruchom Piko Misja Funkcja.exe. Zostaw obok wszystkie pozostałe pliki i folder resources.
+3. Jeśli Windows pokaże okno „System Windows ochronił ten komputer”, kliknij Więcej informacji, a potem Uruchom mimo to. Paczka nie ma płatnego podpisu cyfrowego.
+4. Kliknij Rozpocznij. Opis gry jest w instrukcji użytkownika.
 
-Paczka jest niepodpisana. Test GitHub Actions potwierdził start i wznowienie EXE starszego commita 52ac710. Aktualny plik sprawdzono statycznie. Uruchomienie aktualnej paczki na Windows jest do wykonania.
+## Tryb gry
 
-## Kod źródłowy na komputerze autora
+Paczka działa w trybie pokazowym: Piko odpowiada przygotowanymi tekstami, a cała kampania (6 misji) działa bez internetu. Tryb jest zawsze widoczny w prawym górnym rogu. Rozmowy z prawdziwym AI (Claude) pokazuje film. Prawdziwe AI można też uruchomić z kodu źródłowego z własnym kluczem API, według instrukcji kompilacji.
 
-Wymagany Node 24.x i npm (sprawdzono 24.11.0). W katalogu projektu wykonaj npm ci, potem npm run dev. Otwórz http://127.0.0.1:5173. Zatrzymasz serwer przez Ctrl+C. Python nie jest wymagany do gry.
+## Postęp
 
-Po npm run build polecenie npm start udostępnia aplikację na http://127.0.0.1:3001. Przy lokalnym live w tym wariancie ustaw PUBLIC_ORIGIN=http://127.0.0.1:3001. Pełna instrukcja kompilacji opisuje konfigurację backendu i wydania.
+Postęp zapisuje się automatycznie na tym komputerze i zostaje po zamknięciu okna. W Ustawieniach można go usunąć.
 
-## Live i brak sieci
+## Wersja w przeglądarce
 
-Klucz i model konfiguruje autor wyłącznie na backendzie. Paczka jury z live wymaga zaufanego adresu HTTPS wskazanego w PIKO_DESKTOP_HTTPS_ORIGIN przy budowie. Dostęp do serwera może być ograniczony do sieci jury.
-
-Gdy model jest niedostępny, aplikacja pokazuje błąd i zachowuje wzór oraz wyjaśnienie. Dopiero wybór gracza przełącza na demo. Gra nie udaje odpowiedzi modelu.
-
-## Pierwszy odbiór na Windows
-
-Sprawdź start bez Node, M01 offline, zamknięcie i wznowienie, pierwszą próbę bez podpowiedzi oraz ponowne uruchomienie po korekcie. Po przygotowaniu HTTPS sprawdź live i odłączenie sieci. Zapisz rzeczywisty wynik w raporcie. Nie oznaczaj nieuruchomionego testu jako PASS.
+Na dowolnym systemie z Node.js 24: w folderze z kodem wykonaj npm ci, potem npm run dev i otwórz http://127.0.0.1:5173.
 '''
 make('instrukcja_uruchomienia.pdf',launch)
 make('instrukcja_kompilacji.pdf',source)
