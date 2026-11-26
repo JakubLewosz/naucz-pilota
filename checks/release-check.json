@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-22T20:04:25.816Z",
+  "date": "2026-11-22T20:35:38.791Z",
   "status": "PASS LOCAL CHECKS",
   "checks": [
     {
@@ -13,12 +13,57 @@
       "detail": "No alternate embedded author corpus."
     },
     {
-      "name": "renderer index-5CvabsyM.js",
+      "name": "renderer atkinson-hyperlegible-mono-latin-ext-wght-normal-CXgNM06D.woff2",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
     {
-      "name": "renderer index-BF7EbypR.css",
+      "name": "renderer atkinson-hyperlegible-mono-latin-wght-normal-CoA7y8X5.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer atkinson-hyperlegible-next-latin-ext-wght-normal-C6vrW8VD.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer atkinson-hyperlegible-next-latin-wght-normal-BcXVPD7q.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer index-7AgRCWBx.css",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer index-BWwRNFCo.js",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer shantell-sans-cyrillic-ext-wght-normal-C5IA4B3w.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer shantell-sans-cyrillic-wght-normal-C3g4RRlc.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer shantell-sans-latin-ext-wght-normal-CkCuiz5d.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer shantell-sans-latin-wght-normal-B8jqu5lV.woff2",
+      "status": "PASS",
+      "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
+    },
+    {
+      "name": "renderer shantell-sans-vietnamese-wght-normal-0TYE14Fi.woff2",
       "status": "PASS",
       "detail": "No answer corpus, provider keys, runtime code compilation or source maps."
     },
@@ -48,9 +93,14 @@
       "detail": "Static configuration plus separate macOS runtime smoke."
     },
     {
+      "name": "embedded AI key not in plain text",
+      "status": "PASS",
+      "detail": "Embedded Claude server present; no sk-ant key readable as plain text in the archive."
+    },
+    {
       "name": "jury live endpoint",
-      "status": "NOT READY",
-      "detail": "No HTTPS endpoint supplied; offline demo only."
+      "status": "EMBEDDED CLAUDE",
+      "detail": "Local AI server inside the app (127.0.0.1); key packaged, obfuscated."
     },
     {
       "name": "Windows PE executable",
@@ -66,8 +116,8 @@
     },
     {
       "file": "Piko_Misja_Funkcja_1.0.0_Windows_x64.zip",
-      "size": 153226593,
-      "sha256": "6e6686d2f664a158699c4cf18b188749d830a8885edd6a8c4f01e84eea7c286a"
+      "size": 154167844,
+      "sha256": "fabfd7f265391e3fa20bade13636086f71cf0fe6ffd525dfca8584893dcc7a23"
     }
   ],
   "live": "PASS STRUCTURAL (22 cases with lesson checks); semantic review separate",
