@@ -6,7 +6,7 @@ Gra edukacyjna o funkcjach dla uczniów szkół średnich. Gracz dobiera wzór f
 
 Projekt na konkurs „Sztuczna inteligencja wśród nas” Wydziału Informatyki Uniwersytetu w Białymstoku (2026).
 
-![Ekran lekcji](checks/piko-2026-11-18/lesson.png)
+![Lot Piko z pamięcią z lekcji ucznia](docs/img/piko-lot.png)
 
 ## Pomysł
 
@@ -27,7 +27,7 @@ Piko naprawdę uczy się tylko od gracza. Po lekcji zapisuje w pamięci jedno zd
 | Lot Piko | Piko zna **tylko** swoje przekonania z lekcji (bez kanonicznej zasady), sam dobiera wzór dla **nowej** trasy i mówi, które zdanie lekcji stosuje. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Po porażce gracz poprawia lekcję i Piko leci jeszcze raz. |
 | Bezpieczeństwo | Odpowiedź ma wymuszony schemat JSON. Tekst gracza trafia do modelu wyłącznie jako dane, nie jako polecenie. | Odrzuca odpowiedzi niezgodne z fazą gry, a błędnych wzorów Piko nie poprawia po cichu. |
 
-Wynik testu na prawdziwym modelu (prompt 2.0.0): 22/22 tur poprawnych. Przekonania Piko wiernie oddają słowa gracza, także błędne. Lot Piko zależy od lekcji: w misji 4 dobra lekcja daje udany lot, a błędna („plus przesuwa w prawo”) i pusta kończą się rozbiciem. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](checks/ai-live-claude-sonnet-5-5.md).
+Wynik testu na prawdziwym modelu (prompt 2.1.0): 22/22 tur poprawnych. Przekonania Piko wiernie oddają słowa gracza, także błędne. Lot Piko zależy od lekcji: w misji 4 dobra lekcja daje udany lot, a błędna („plus przesuwa w prawo”) i pusta kończą się rozbiciem. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/ai-live-claude-sonnet-5-5.md).
 
 ## Szybki start (kod źródłowy)
 
@@ -66,7 +66,7 @@ Do paczki z wbudowanym AI używaj osobnego klucza z limitem wydatków ustawionym
 
 ```sh
 npm run typecheck && npm run lint
-npm test                     # 223 testy jednostkowe (silnik, kontrakt AI, serwer, zapis)
+npm test                     # 225 testów jednostkowych (silnik, kontrakt AI, serwer, zapis)
 npm run test:content         # 62 testy treści misji
 npx playwright install chromium
 npm run test:e2e             # 17 testów całej gry w przeglądarce
@@ -93,6 +93,6 @@ tests           testy jednostkowe, e2e (Playwright) i testy live
 - [Instrukcja kompilacji i uruchomienia](docs/11-uruchomienie.md)
 - [Raport z testów](docs/13-raport-weryfikacji.md)
 - [Projekt gry i dydaktyka](docs/02-game-and-learning.md), [architektura](docs/03-architecture.md), [silnik matematyczny](docs/04-math-engine.md), [kontrakt AI](docs/05-ai-contract.md)
-- Historia prac i wcześniejsze testy (GPT-5.4 mini, GPT-6 Luna): [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)
+- Historia prac i wcześniejsze testy (GPT-5.4 mini, GPT-6 Luna): [IMPLEMENTATION_STATUS.md](https://github.com/JakubLewosz/naucz-pilota/blob/main/IMPLEMENTATION_STATUS.md)
 
 Wcześniejsza nazwa projektu to „Naucz Pilota”. Identyfikator aplikacji i klucz zapisu zostały bez zmian, więc stary postęp się zachowuje.

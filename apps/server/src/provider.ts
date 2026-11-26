@@ -5,6 +5,8 @@ import type {ResponseInputItem} from 'openai/resources/responses/responses';
 import type {ReasoningEffort} from 'openai/resources/shared';
 import {providerSchemaForContext,type Context} from '@piko/contracts';
 import {SYSTEM_PROMPT,FOLLOW_UP_POLICY,TEACH_ROLE_POLICY,LESSON_POLICY} from './system';
+// Lot Piko nie ma wiadomości gracza; dostawcy odrzucają puste wiadomości w historii.
+const EMPTY_TURN='(Gracz poprosił Piko o próbę lotu.)';
 export class ProviderError extends Error {constructor(public code:string,public status:number){super(code);}}
 /** Zamienia błąd dostawcy na kod gry i zapisuje w logu serwera status i typ błędu (bez klucza i treści gracza). */
 export function classifyProviderError(provider:'anthropic'|'openai',error:unknown,aborted:boolean):ProviderError{
@@ -30,7 +32,7 @@ export function openAIProvider(key:string,model:string,maxTokens:number,options:
  return async(context,userMessage,signal,repair)=>{
   const {recentExchanges,lessonNote,priorLessons,...trusted}=context;
   const input:ResponseInputItem[]=[{role:'developer',content:JSON.stringify(trusted)}];
-  for(const e of recentExchanges)input.push({role:'user',content:e.userPL},{role:'assistant',content:e.pikoPL+(e.followUpPL?' '+e.followUpPL:'')});
+  for(const e of recentExchanges)input.push({role:'user',content:e.userPL||EMPTY_TURN},{role:'assistant',content:e.pikoPL+(e.followUpPL?' '+e.followUpPL:'')});
   if(priorLessons.length)input.push({role:'user',content:JSON.stringify({untrustedPriorLessons:priorLessons})});
   if(lessonNote)input.push({role:'user',content:JSON.stringify({untrustedLessonNote:lessonNote})});
   input.push({role:'user',content:userMessage||(context.phase==='robot_propose'?'Zaproponuj własną próbę dla bieżącej planszy.':'Odnieś się do naprawy i sprawdzonych prognoz; pozostań uczniem.')});
@@ -54,7 +56,7 @@ export function anthropicProvider(key:string,model:string,maxTokens:number,optio
  return async(context,userMessage,signal,repair)=>{
   const {recentExchanges,lessonNote,priorLessons,...trusted}=context;
   const messages:Anthropic.Beta.BetaMessageParam[]=[];
-  for(const e of recentExchanges)messages.push({role:'user',content:e.userPL},{role:'assistant',content:e.pikoPL+(e.followUpPL?' '+e.followUpPL:'')});
+  for(const e of recentExchanges)messages.push({role:'user',content:e.userPL||EMPTY_TURN},{role:'assistant',content:e.pikoPL+(e.followUpPL?' '+e.followUpPL:'')});
   if(priorLessons.length)messages.push({role:'user',content:JSON.stringify({untrustedPriorLessons:priorLessons})});
   if(lessonNote)messages.push({role:'user',content:JSON.stringify({untrustedLessonNote:lessonNote})});
   messages.push({role:'user',content:userMessage||(context.phase==='robot_propose'?'Zaproponuj własną próbę dla bieżącej planszy.':'Odnieś się do naprawy i sprawdzonych prognoz; pozostań uczniem.')});

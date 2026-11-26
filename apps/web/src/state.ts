@@ -151,7 +151,11 @@ export function reducer(state:GameState,action:Action):GameState {
   case 'AI_ERROR':
    if(s.activeTurnId!==action.turnId||s.viewRevision!==action.revision)return state;
    s.busy=false;s.activeTurnId=null;s.mode='unavailable';s.error=action.message;r.unavailable=true;break;
-  case 'MODE':invalidate();s.mode=action.mode;break;
+  case 'MODE':
+   invalidate();s.mode=action.mode;
+   // Lot z innego trybu nie mówi nic o lekcji w nowym trybie: Piko może polecieć od nowa.
+   if(r.role==='robot_transfer'&&r.robot&&r.robot.mode!==action.mode){r.robot=null;r.robotTurns=0;r.robotChecked=false;r.prediction='';r.robotFailures=0;r.unavailable=false;delete r.robotDisposition;}
+   break;
   case 'STATUS':s.liveAvailable=action.live;
    // Nowy gracz dostaje prawdziwe AI od razu, gdy serwer je udostępnia.
    if(action.live&&s.mode==='demo'&&Object.values(s.runs).every(run=>!run.messages.length&&!Object.keys(run.counts).length))s.mode='live';

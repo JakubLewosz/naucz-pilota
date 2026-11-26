@@ -1,5 +1,7 @@
 # Interfejs i doświadczenie gracza
 
+> Zmiana z 26.11.2026: gracz nie wpisuje już prognoz w G1 i G2; gra liczy je sama z poprawionego wzoru. Fragmenty o polach prognoz opisują pierwotny projekt.
+
 Status: specyfikacja wykonawcza MVP. Język interfejsu: polski. Wspólne źródło mechaniki: `02-game-and-learning.md`. Geometryczne wymiary plansz, tolerancje i współczynniki należy pobierać z treści, bez przepisywania do komponentów.
 
 ## 1. Kierunek wizualny
@@ -60,7 +62,7 @@ Docelowy układ dla szerokości od 1120 px:
 - Obszar główny: plansza po lewej, około dwóch trzecich dostępnej szerokości; po prawej panel etapu o minimalnej szerokości 300 px.
 - Bezpośrednio pod planszą: edytor funkcji, widoczne ograniczenia oraz główna akcja.
 - Pod edytorem: jeden komunikat wyniku; dalsze szczegóły w rozwijanym „Dlaczego?”.
-- Panel boczny: cel etapu, wypowiedzi Piko lub podsumowanie, dwie prognozy w `teach`, lokalna historia ostatnich prób. Dziennik reguł otwierany osobnym przyciskiem, z wyjątkiem `human_check`.
+- Panel boczny: cel etapu, wypowiedzi Piko lub podsumowanie, lista zadań i notatka w `teach`, lokalna historia ostatnich prób. Dziennik reguł otwierany osobnym przyciskiem, z wyjątkiem `human_check`.
 
 Plansza ma zajmować większość uwagi. Po otrzymaniu wypowiedzi AI nie przesuwać nagle widoku i nie zmniejszać wykresu. Historia rozmowy przewija się we własnym panelu.
 
@@ -127,8 +129,7 @@ Poniższe teksty są wzorcami; szczegóły współrzędnych podstawia silnik, be
 |---|---|
 | Początek ćwiczenia | „Ułóż tor, który przeprowadzi Piko przez bramki i ominie przeszkody.” |
 | Naprawa robota | „Piko ma pomysł. Sprawdź go, a potem wyjaśnij, co warto zmienić.” |
-| Prognozy | „Zanim sprawdzisz lot, przewidź dwie wartości funkcji.” |
-| Prognoza niezgodna | „Dla x = … Twój wzór daje y = …. Porównaj to ze swoją prognozą.” |
+| Co teraz? | „Popraw wzór Piko i kliknij „Sprawdź naprawę”.” |
 | Naprawa zaliczona | „Naprawa działa. Teraz wyjaśnij Piko, co miał zmienić i dlaczego.” |
 | Opinia AI | „Tak Piko odczytał Twoje wyjaśnienie. Wynik matematyczny sprawdza silnik.” |
 | Chybiony start | „Tor omija otwór startowy. Sprawdź wartość funkcji przy x = ….” |
@@ -151,11 +152,11 @@ Po błędzie połączenia pokaż dwie główne akcje: „Spróbuj ponownie” i 
 
 ## 7. Klawiatura i dostępność
 
-- Wszystkie przyciski, edytor, prognozy i wybór przewidywania dostępne przez Tab; widoczny obrys fokusu.
+- Wszystkie przyciski, edytor, przyciski wzoru i wybór przewidywania dostępne przez Tab; widoczny obrys fokusu.
 - Enter w jednowierszowym edytorze uruchamia główną akcję tylko wtedy, gdy nie trwa wysyłanie lub animacja. Enter w polu wyjaśnienia wstawia nowy wiersz; wysłanie jest przyciskiem, ewentualnie Ctrl+Enter z widoczną informacją.
 - Escape zamyka pomoc lub dziennik, lecz nie kasuje treści formularzy. Nie przypisuj pojedynczych liter do globalnych skrótów, które przeszkadzają w pisaniu wzoru.
 - Wyniki i błędy mają tekstowy opis; `aria-live="polite"` ogłasza wynik raz po zakończeniu obliczenia. Nie ogłaszaj każdej klatki animacji ani każdego znaku wzoru.
-- Etykiety pól zawierają cel: „Wzór funkcji”, „Prognoza y dla x = …”, „Wyjaśnienie dla Piko”. Placeholder nie zastępuje etykiety.
+- Etykiety pól zawierają cel: „Wzór funkcji”, „Wyjaśnienie dla Piko”. Placeholder nie zastępuje etykiety.
 - Sukces i porażka używają tekstu oraz symbolu, a nie samej zieleni i czerwieni. Przeszkody mają kreskowanie, bramki podpisy i inny kształt.
 - Powiększenie tekstu do 200% nie ukrywa akcji. Plansza ma tekstowe „Dane planszy” i wynik, ale nie deklaruj pełnej dostępności dydaktycznej dla użytkowników niewidomych bez osobnego sprawdzenia.
 - `prefers-reduced-motion` jest respektowane domyślnie. Zmiana ustawienia nie wpływa na wynik matematyczny.
@@ -174,7 +175,7 @@ To plan nagrania rzeczywiście działającej aplikacji, nie animatyku. Przed nag
 |---|---|---|
 | 0:00–0:25 | Start, lista sześciu misji, otwarcie M04 | Gracz uczy funkcji, tłumacząc robotowi jego błąd |
 | 0:25–0:55 | Krótka samodzielna próba; pokaz toru i bramek | Wpisany wzór realnie steruje trasą i ma sprawdzany wynik |
-| 0:55–1:45 | Błędny pomysł Piko, poprawa, dwie prognozy, jedno wyjaśnienie | Gracz nie tylko kopiuje odpowiedź, lecz przewiduje i tłumaczy |
+| 0:55–1:45 | Błędny pomysł Piko, poprawa, jedno wyjaśnienie | Gracz nie tylko kopiuje odpowiedź, lecz przewiduje i tłumaczy |
 | 1:45–2:20 | Rzeczywista odpowiedź modelu, zapis reguły | Rola AI jest widoczna, a matematykę potwierdza silnik |
 | 2:20–3:10 | Nowa plansza, propozycja Piko, przewidywanie i lot | Robot stosuje regułę na nowej geometrii; jego błąd jest dopuszczalny i jawny |
 | 3:10–4:00 | Odrębna plansza `human_check`, brak podglądu przed zatwierdzeniem, lot gracza | Istnieje sprawdzenie gracza bez pomocy AI |

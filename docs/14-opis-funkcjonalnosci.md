@@ -25,4 +25,4 @@ Gra jest po polsku, jednoosobowa, bez kont i rankingów. Postęp zostaje na urz�
 
 ## Technologia
 
-TypeScript, React, Express, SQLite i Electron. Kod jest sprawdzany przez 223 testy jednostkowe, 62 testy treści i 17 testów całej gry w przeglądarce.
+TypeScript, React, Express, SQLite i Electron. Kod jest sprawdzany przez 225 testów jednostkowych, 62 testy treści i 17 testów całej gry w przeglądarce.

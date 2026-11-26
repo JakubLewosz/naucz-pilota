@@ -1,34 +1,31 @@
 # Film konkursowy
 
-Plik: `release/media/Piko_Misja_Funkcja_film.mp4`. MP4 (H.264 + AAC), 1920×1080, 30 kl./s, 2 min 56 s (limit organizatora: 5 minut).
+Plik: `release/media/Piko_Misja_Funkcja_film.mp4`. MP4 (H.264 + AAC), 1920×1080, 30 kl./s, 2 min 25 s (limit organizatora: 5 minut).
 
-## Scenariusz
+## Forma
 
-Prawdziwa rozgrywka misji 4 („Parabola w poziomie”) z AI live (Claude Sonnet 5.5, prompt 2.0.0). Odpowiedzi Piko nie są edytowane.
+Film jest animacją renderowaną klatka po klatce (HTML + Playwright), z czterema wstawkami z prawdziwej gry w ramce okna. Odpowiedzi Piko w dymkach to prawdziwe odpowiedzi Claude Sonnet 5.5 z nagrania rozgrywki misji 4.
 
-| Część | Treść |
+| Scena | Treść |
 |---|---|
-| Plansza otwierająca | „Co by się stało, gdyby to uczeń uczył sztuczną inteligencję?”, Piko leci po rysującej się paraboli |
-| Start, misje | Pomysł gry, sześć misji |
-| Twój lot | Błędny wzór kończy się kolizją, poprawka daje bezpieczny lot |
-| Lekcja 1 | Uczeń poprawia wzór Piko, ale wyjaśnia niepełnie („plus w nawiasie przesuwa parabolę”). Piko zapamiętuje to i sam zauważa, czego nie wie |
-| Lot Piko 1 | Piko stosuje lekcję na nowej trasie (`0,25(x+2)²`) i się rozbija |
-| Lekcja 2 | Pełne wyjaśnienie (nawias zeruje się w wierzchołku). Piko zapamiętuje ogólną regułę |
-| Lot Piko 2 | Piko wybiera `0,25(x−2)²` i przelatuje |
-| Sprawdź siebie, podsumowanie, dziennik | Samodzielny lot ucznia i porównanie pamięci Piko z zasadą gry |
-| Jak to działa | Animowany schemat: lekcja → Claude jako Piko → lot według lekcji → silnik matematyczny |
-| Plansza końcowa | Nazwa i hasło |
-
-## Realizacja
-
-- Nagranie: Playwright, okno 1920×1200 z powiększeniem strony 1,5 (układ jak na laptopie, ostry obraz), widoczny kursor z efektem kliknięcia. Montaż kadruje i powiększa ważne miejsca z lekkim ruchem kamery, segmenty łączy płynnym przejściem.
-- Lektor: Piper TTS, polski głos neuronowy `pl_PL-mc_speech-medium` (offline, bez opłat), z kompresją i normalizacją głośności.
-- Muzyka: syntetyzowana od zera przez `tools/film-music.py` (bez cudzych nagrań), automatycznie ściszana pod głosem.
-- Napisy wypalone w obrazie, plansze animowane w HTML.
+| Haczyk | AI i uczeń; strzałka „tłumaczy” odwraca się w „uczy” |
+| Tytuł | Piko: Misja Funkcja |
+| Zasady | Wzór rysuje tor, Piko leci przez bramki |
+| Wstawka 1 | Lot gracza w prawdziwej grze |
+| Cztery kroki | Twój lot, Naucz Piko, Lot Piko, Sprawdź siebie |
+| Lekcja 1 | Niepełne wyjaśnienie; Piko zapamiętuje je i pyta „w którą stronę? o ile?” |
+| Lot 1 | Piko stosuje lekcję i się rozbija |
+| Wstawka 2 | To samo rozbicie w grze |
+| Wniosek | Błąd Piko pokazuje lukę w wyjaśnieniu ucznia |
+| Lekcja 2 | Pełne wyjaśnienie z rysunkiem wierzchołka |
+| Lot 2 | Udany lot, konfetti |
+| Wstawki 3–4 | Udany lot w grze, samodzielna próba, dziennik |
+| Jak to działa | Lekcja → Claude jako Piko → wzór → silnik gry |
 
 ## Jak odtworzyć
 
-1. `.env`: `AI_MODE=live`, `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`. Uruchom `npm run dev`.
-2. `npx tsx tools/record-film.ts` (ok. 4 płatne tury). Sprawdź w `var/film/markers.json`, że `ok.crash` i `ok.success` są `true`; odpowiedzi modelu różnią się między nagraniami.
-3. Narzędzia: `uv venv -p 3.12 var/tts && uv pip install -p var/tts/bin/python piper-tts`, głos: `var/tts/bin/python -m piper.download_voices pl_PL-mc_speech-medium` w `var/film/voice`; ffmpeg: `npm i --prefix var/filmtools ffmpeg-static@5.2.0`.
-4. `npx tsx tools/build-film.ts`.
+1. Nagranie rozgrywki: `npx tsx tools/record-film.ts` (wymaga `npm run dev` z AI_MODE=live).
+2. Narzędzia: Piper TTS w `var/tts` z głosami `pl_PL-mc_speech-medium` (lektor) i `pl_PL-gosia-medium` (Piko) w `var/film/voice`, ffmpeg w `var/filmtools`.
+3. Render: `npx tsx tools/build-film-b.ts` (podgląd wybranych sekund: `--frames=12,40`). Wynik: `release/media/Piko_Misja_Funkcja_film_v3.mp4`, skopiowany jako film zgłoszenia.
+
+Starsze wersje montażu: `tools/build-film.ts` (wersja 1) i `tools/build-film-v2.ts` (wersja 2).

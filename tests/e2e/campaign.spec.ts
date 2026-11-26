@@ -63,11 +63,11 @@ test('E4 all six missions, 24 distinct scenes, M04 robot failure does not block 
 for(const size of [{width:1366,height:768},{width:1440,height:900},{width:390,height:844}])test(`E5 layout and accessibility ${size.width}x${size.height}`,async({page})=>{
  await page.setViewportSize(size);await page.goto('/');
  const a11y=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa']).analyze();expect(a11y.violations).toEqual([]);
- await page.screenshot({path:`checks/home-${size.width}.png`,fullPage:true});
+ await page.screenshot({path:`test-results/screens/home-${size.width}.png`,fullPage:true});
  await page.getByRole('button',{name:'Rozpocznij'}).click();await expect(page.getByLabel('Wzór funkcji',{exact:true})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  const game=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa']).analyze();expect(game.violations).toEqual([]);
- await page.screenshot({path:`checks/practice-${size.width}.png`,fullPage:true});
+ await page.screenshot({path:`test-results/screens/practice-${size.width}.png`,fullPage:true});
 });
 test('live connection error preserves input and requires explicit demo selection',async({page})=>{
  await page.goto('/');await page.getByRole('button',{name:'Rozpocznij'}).click();await practice(page,data.missions[0]);

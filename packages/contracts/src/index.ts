@@ -90,7 +90,7 @@ export function demoTurn(request:LearnerRequest):Envelope {
   ? 'To przygotowany lot demonstracyjny: w trybie pokazowym lecę gotowym wzorem, a nie według Twojej lekcji. Gra sprawdzi tor.'
   : request.phase==='teach_repair' && context.eligibleRuleIds.includes(mission.canonicalRuleId)
    ? 'To przygotowany komentarz demonstracyjny. Zapamiętam Twoje słowa i spróbuję je zastosować na nowej trasie.'
-   : 'To przygotowany komentarz demonstracyjny. Najpierw sprawdź swój wzór i prognozy.';
+   : 'To przygotowany komentarz demonstracyjny. Najpierw popraw wzór i kliknij „Sprawdź naprawę”.';
  // Tryb pokazowy nie rozumie tekstu: zapamiętuje dosłownie słowa gracza.
  const words=request.userMessage.trim().replace(/\s+/g,' ');
  const pikoBeliefPL=robot?null:words?`Zapamiętam Twoje słowa: „${words.length>180?words.slice(0,177)+'…':words}”`:'Jeszcze nie wiem, co mam zmienić.';

@@ -76,3 +76,17 @@ it('classifies provider errors into clear game codes',async()=>{
   expect(classifyProviderError('anthropic',new Error('aborted'),true).code).toBe('AI_TIMEOUT');
  }finally{console.error=quiet;}
 });
+
+it('Claude: an earlier Piko flight without player text never sends an empty user message',async()=>{
+ let sent:{messages:{role:string;content:string}[]}={messages:[]};
+ const server=createServer(async(request,response)=>{let data='';for await(const chunk of request)data+=chunk;sent=JSON.parse(data);response.writeHead(429,{'Content-Type':'application/json'});response.end(JSON.stringify({type:'error',error:{type:'rate_limit_error',message:'test only'}}));});
+ await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));
+ const quiet=console.error;console.error=()=>{};
+ try{
+  const address=server.address();if(!address||typeof address==='string')throw new Error('No address');
+  const provider=anthropicProvider('test-key','stub',1200,{baseURL:`http://127.0.0.1:${address.port}`});
+  const {context}=buildContext(req,[],[{userPL:'',pikoPL:'Spróbuję.',followUpPL:null}]);
+  await expect(provider(context,'',new AbortController().signal)).rejects.toMatchObject({code:'AI_RATE_LIMITED'});
+  expect(sent.messages.every(m=>m.content.trim().length>0)).toBe(true);
+ }finally{console.error=quiet;await new Promise<void>(resolve=>server.close(()=>resolve()));}
+});

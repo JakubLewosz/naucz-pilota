@@ -1,0 +1,52 @@
+*{box-sizing:border-box;margin:0}
+html,body{width:1920px;height:1080px;overflow:hidden}
+body{background:#f5f8fa;background-image:linear-gradient(#e1e9f0 1.5px,transparent 1.5px),linear-gradient(90deg,#e1e9f0 1.5px,transparent 1.5px);background-size:40px 40px;
+ font-family:"Atkinson Hyperlegible Next Variable",Arial,sans-serif;color:#1b2a4a}
+#margin{position:absolute;left:96px;top:0;bottom:0;width:3px;background:#e8a0a8}
+#stage{position:absolute;inset:0}
+.scene{position:absolute;inset:0;opacity:0}
+.abs{position:absolute}
+.hand{font-family:"Shantell Sans Variable",sans-serif}
+.label,.sub,h1.big{font-family:"Shantell Sans Variable",sans-serif}
+.title{position:absolute;left:140px;top:52px;font:700 58px "Shantell Sans Variable",sans-serif}
+.card{position:absolute;background:#fff;border-radius:14px;box-shadow:0 2px 0 #d6e0e8,0 30px 50px -34px rgba(27,42,74,.6)}
+.sheet{position:absolute;background:#fff;border-radius:10px;padding:34px 40px 34px 76px;box-shadow:0 2px 0 #d6e0e8,0 30px 50px -34px rgba(27,42,74,.6);
+ background-image:linear-gradient(90deg,transparent 54px,#e8a0a8 54px,#e8a0a8 57px,transparent 57px),repeating-linear-gradient(transparent 0 61px,#d3e1ec 61px 63px);background-position:0 0,0 60px}
+.sheet .who{font:700 24px "Atkinson Hyperlegible Next Variable",Arial;color:#4a5872;line-height:63px}
+.sheet .txt{font:600 44px/63px "Shantell Sans Variable",sans-serif;color:#2747b8;min-height:252px}
+.bubble{position:absolute;background:#fff;border:4px solid #1b2a4a;border-radius:8px 34px 34px 34px;padding:24px 30px 28px;font:600 36px/1.36 "Shantell Sans Variable",sans-serif}
+.tag{display:table;font:700 21px "Atkinson Hyperlegible Next Variable",Arial;padding:5px 15px;border-radius:30px;background:#fff4e3;color:#8a4b00;border:2px solid #ffb648;margin-bottom:12px}
+.note{position:absolute;background:#fff2a6;padding:20px 26px 22px;font:600 27px/1.36 "Shantell Sans Variable",sans-serif;box-shadow:0 20px 28px -20px rgba(80,60,0,.65);rotate:-1.2deg}
+.note b{display:block;font:700 20px "Atkinson Hyperlegible Next Variable",Arial;color:#6b5a12;margin-bottom:6px}
+.formula{position:absolute;font:700 50px "Shantell Sans Variable",sans-serif;background:#fff4e3;border:4px solid #1b2a4a;border-radius:18px;padding:12px 30px;color:#8a4b00;white-space:nowrap;box-shadow:0 7px 0 #1b2a4a}
+.stamp{position:absolute;padding:8px 40px;border:9px solid;border-radius:20px;font:800 96px "Shantell Sans Variable",sans-serif;background:rgba(255,255,255,.95);rotate:-5deg;white-space:nowrap}
+.stamp.bad{color:#c81e33;border-color:#c81e33}.stamp.good{color:#1a7a50;border-color:#1a7a50}
+.chip{position:absolute;font:700 30px "Atkinson Hyperlegible Next Variable",Arial;padding:12px 26px;border-radius:50px;white-space:nowrap}
+.chip.q{background:#fdecee;color:#c81e33;border:3px solid #c81e33;font-family:"Shantell Sans Variable",sans-serif;font-size:34px}
+.chip.ok{background:#e7f6ee;color:#1a7a50;border:3px solid #1a7a50}
+.chip.saved{background:#1a7a50;color:#fff}
+.row{position:absolute;display:flex;align-items:center;gap:20px;font:600 34px "Atkinson Hyperlegible Next Variable",Arial}
+.row i{flex:none;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font:800 30px "Shantell Sans Variable",sans-serif;font-style:normal;color:#fff}
+.step{position:absolute;width:380px;height:300px;background:#fff;border-radius:16px;padding:28px;border:4px solid #1b2a4a;box-shadow:0 8px 0 #1b2a4a}
+.step.ai{border-color:#c66a00;box-shadow:0 8px 0 #c66a00}
+.step b{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#ff9f1c;border:4px solid #1b2a4a;font:800 34px "Shantell Sans Variable",sans-serif}
+.step h3{font:700 40px "Shantell Sans Variable",sans-serif;margin:16px 0 8px;white-space:nowrap}
+.step p{font-size:27px;line-height:1.35;color:#4a5872}
+.box{position:absolute;width:360px;height:210px;background:#fff;border-radius:18px;padding:26px;border:4px solid #1b2a4a;box-shadow:0 8px 0 #1b2a4a}
+.box h3{font:700 34px "Shantell Sans Variable",sans-serif;margin-bottom:10px;white-space:nowrap}
+.box p{font-size:25px;line-height:1.35;color:#4a5872}
+.box.ai{border-color:#c66a00;box-shadow:0 8px 0 #c66a00}.box.ai h3{color:#8a4b00}
+.box.eng{border-color:#2747b8;box-shadow:0 8px 0 #2747b8}.box.eng h3{color:#1d3a9e}
+.fact{position:absolute;display:flex;align-items:center;gap:22px;background:#fff;border-radius:16px;padding:22px 30px;font:700 32px "Atkinson Hyperlegible Next Variable",Arial;box-shadow:0 2px 0 #d6e0e8,0 30px 50px -34px rgba(27,42,74,.6)}
+.fact svg{flex:none}
+.window{position:absolute;border-radius:18px;overflow:hidden;border:5px solid #1b2a4a;box-shadow:0 40px 70px -36px rgba(27,42,74,.75);background:#fff}
+.window .bar{height:54px;background:#1b2a4a;color:#fff;display:flex;align-items:center;gap:10px;padding:0 20px;font:700 23px "Atkinson Hyperlegible Next Variable",Arial}
+.window .bar i{width:15px;height:15px;border-radius:50%;background:#ff9f1c}.window .bar i+i{background:#7fe0f0}.window .bar i+i+i{background:#a1dfbe;margin-right:14px}
+.window img{display:block;width:100%}
+#caption{position:absolute;left:0;right:0;bottom:30px;text-align:center}
+#caption span{display:inline-block;background:#1b2a4a;color:#fff;font:700 37px/1.25 "Atkinson Hyperlegible Next Variable",Arial;padding:13px 32px;border-radius:16px;max-width:1560px}
+h1.big{position:absolute;font:800 160px/.95 "Shantell Sans Variable",sans-serif;letter-spacing:-3px}
+h1.big span{color:#2747b8}
+.sub{position:absolute;font:700 60px "Shantell Sans Variable",sans-serif;color:#c66a00}
+.label{position:absolute;font:700 46px "Shantell Sans Variable",sans-serif;text-align:center}
+.confetti{position:absolute;width:16px;height:22px;border-radius:3px;opacity:0}

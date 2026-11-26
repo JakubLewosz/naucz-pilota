@@ -20,7 +20,7 @@ Sprawdź, czy uczestnik:
 
 1. Rozpoznaje start, bramki, przeszkodę, cel i znaczenie rozmiaru robota.
 2. Znajduje pole wzoru, uruchamia lot i rozumie komunikat porażki.
-3. Potrafi podać dwie prognozy i odróżnia sprawdzone liczby od komentarza Piko.
+3. Odróżnia wynik policzony przez grę od komentarza Piko i rozumie, że Piko leci tylko według lekcji.
 4. Własnymi słowami rozróżnia zapis swojej notatki, przygotowany komentarz demo i regułę sprawdzoną liczbami.
 5. Przewiduje lot robota przed odsłonięciem wyniku.
 6. Odróżnia nową samodzielną planszę od transferu Piko i rozumie trwałość pierwszej próby.

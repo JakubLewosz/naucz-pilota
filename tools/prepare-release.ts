@@ -15,14 +15,14 @@ for(const [source,target] of [
  ['output/pdf/instrukcja_uzytkownika.pdf','04_instrukcja/instrukcja_uzytkownika.pdf'],
  ['output/pdf/opis_funkcjonalnosci.pdf','05_prezentacja/opis_funkcjonalnosci.pdf'],
  ['output/pdf/raport_weryfikacji.pdf','06_weryfikacja/raport_weryfikacji.pdf'],
- ['05_prezentacja/Piko_Misja_Funkcja_film.mp4']]){
+ ['release/media/Piko_Misja_Funkcja_film.mp4','05_prezentacja/Piko_Misja_Funkcja_film.mp4']]){
  if(!existsSync(source))throw new Error(`Required release artifact missing: ${source}`);await cp(source,`${root}/${target}`);
 }
 // Historical live clips are described in the report, separate from this candidate's film.
 for(const file of await readdir('docs/konkurs'))await cp(`docs/konkurs/${file}`,`${root}/01_formularze/${file}`);
 await cp('release/CHECKLISTA.md',`${root}/CHECKLISTA.md`);
 // Dla jury tylko aktualne wyniki; historyczne raporty z prac zostają w repozytorium.
-for(const name of ['ai-live-claude-sonnet-5-5.md','ai-live-results.json','e2e-results.json'])if(existsSync(`checks/${name}`))await cp(`checks/${name}`,`${root}/06_weryfikacja/${name}`);
+for(const file of ['checks/ai-live-claude-sonnet-5-5.md','checks/ai-live-results.json','test-results/e2e-results.json'])if(existsSync(file))await cp(file,`${root}/06_weryfikacja/${path.basename(file)}`);
 const lock=JSON.parse(await readFile('package-lock.json','utf8')) as {packages:Record<string,{version?:string;license?:string}>};
 let notices='PIKO: MISJA FUNKCJA 1.0.0 — THIRD-PARTY NOTICES\n\nRuntime and author tools resolved by package-lock.json. Electron distribution includes LICENSE and LICENSES.chromium.html. Source code author identity and licensing are to be confirmed by its owner.\n';
 for(const [entry,meta]of Object.entries(lock.packages)){

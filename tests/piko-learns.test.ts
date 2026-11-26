@@ -59,3 +59,14 @@ describe('pętla: popraw lekcję po porażce Piko',()=>{
   expect(run(s).rule?.lessonNote?.pikoBeliefPL).toBeNull();
  });
 });
+
+describe('przełączenie na prawdziwe AI po locie w trybie pokazowym',()=>{
+ it('czyści lot pokazowy, żeby Piko mógł polecieć według lekcji',async()=>{
+  const {canAskRobot}=await import('../apps/web/src/state');
+  const s=initialState();const r=run(s);r.role='robot_transfer';
+  r.robot={mode:'demo'} as never;r.robotTurns=1;r.robotChecked=true;r.prediction='Przeleci';
+  const next=reducer(s,{type:'MODE',mode:'live'});
+  expect(run(next)).toMatchObject({robot:null,robotTurns:0,robotChecked:false,prediction:''});
+  expect(canAskRobot({...next,mode:'live'},run(next))).toBe(true);
+ });
+});
