@@ -11,7 +11,7 @@ Najlepiej uczymy się, gdy tłumaczymy coś innym. Zwykle to AI tłumaczy ucznio
 Gracz wpisuje wzór funkcji, a robot Piko leci po jej wykresie przez bramki, omijając przeszkody. Sześć misji obejmuje wyraz wolny, nachylenie prostej, przesunięcia paraboli w pionie i poziomie, jej szerokość oraz łączenie przekształceń. Każda misja ma cztery kroki:
 
 1. Twój lot: gracz dobiera wzór, w razie potrzeby odsłania jedną z trzech wskazówek.
-2. Naucz Piko: gracz poprawia błędny pomysł Piko, przewiduje wartości funkcji w dwóch punktach i własnymi słowami wyjaśnia zasadę. Piko parafrazuje wyjaśnienie, zadaje pytanie jak prawdziwy uczeń i zapisuje w pamięci, co zrozumiał (nawet jeśli to błąd).
+2. Naucz Piko: gracz widzi, jak kończy się błędny pomysł Piko, poprawia jego wzór i własnymi słowami wyjaśnia zasadę. Piko parafrazuje wyjaśnienie, zadaje pytanie jak prawdziwy uczeń i zapisuje w pamięci, co zrozumiał (nawet jeśli to błąd).
 3. Lot Piko: Piko zna tylko swoją pamięć z lekcji, bez gotowej zasady. Sam dobiera wzór dla nowej trasy i mówi, które zdanie lekcji stosuje. Gracz przewiduje wynik, a gra przelicza lot. Po porażce gracz poprawia lekcję i Piko próbuje znowu.
 4. Sprawdź siebie: nowa plansza bez podpowiedzi i bez AI. Gra zapamiętuje pierwszą próbę osobno od późniejszych poprawek.
 
@@ -25,4 +25,4 @@ Gra jest po polsku, jednoosobowa, bez kont i rankingów. Postęp zostaje na urz�
 
 ## Technologia
 
-TypeScript, React, Express, SQLite i Electron. Kod jest sprawdzany przez 222 testy jednostkowe, 62 testy treści i 17 testów całej gry w przeglądarce.
+TypeScript, React, Express, SQLite i Electron. Kod jest sprawdzany przez 223 testy jednostkowe, 62 testy treści i 17 testów całej gry w przeglądarce.

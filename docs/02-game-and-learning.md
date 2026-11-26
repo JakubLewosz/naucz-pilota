@@ -19,7 +19,7 @@ Każda misja ma cztery sceny. Ich geometria pochodzi z pliku treści; nie kopiow
 | Etap i identyfikator | Co robi gracz | Co robi Piko | Warunek ukończenia etapu |
 |---|---|---|---|
 | 1. „Sprawdź tor” — `practice` | Układa wzór, obserwuje neutralny podgląd, uruchamia lot; może otworzyć stopniowane wskazówki | Tylko przedstawia krótkie zadanie; nie prowadzi rozmowy z modelem | Silnik zaakceptował funkcję i cały lot |
-| 2. „Naucz Piko” — `teach` | Naprawia błędny wzór, podaje dwie prognozy liczbowe i własnymi słowami wyjaśnia zmianę | Pokazuje zaprojektowane nieporozumienie, dopytuje i opisuje swoim językiem to, co zrozumiał | Poprawny lot, zaliczone prognozy G1/G2, próba wyjaśnienia tekstowego i świadome zatwierdzenie reguły kanonicznej |
+| 2. „Naucz Piko” — `teach` | Naprawia błędny wzór i własnymi słowami wyjaśnia zmianę (wartości w bramkach liczy gra) | Pokazuje zaprojektowane nieporozumienie, dopytuje i opisuje swoim językiem to, co zrozumiał | Poprawny lot, zaliczone prognozy G1/G2, próba wyjaśnienia tekstowego i świadome zatwierdzenie reguły kanonicznej |
 | 3. „Lot Piko” — `robot_transfer` | Najpierw przewiduje, czy propozycja robota zadziała, następnie ogląda wynik i porównuje przewidywanie z obliczeniem | Proponuje wzór na nową planszę, korzystając z zatwierdzonych zasad | Oceniono jedną propozycję albo pokazano jawnie brak użytecznej propozycji; wynik robota nie blokuje kolejnego etapu |
 | 4. „Twój samodzielny lot” — `human_check` | Rozwiązuje inną nową planszę bez AI i wskazówek; przed pierwszym lotem nie widzi podglądu toru | Milczy; nie otrzymuje tej planszy w kontekście | Co najmniej jeden poprawny samodzielny lot; wynik pierwszej próby zostaje zachowany osobno |
 
@@ -36,7 +36,9 @@ Gra nie dowodzi zrozumienia na podstawie tego, że Piko rozwiązał zadanie. Wyn
 
 Nie wysyłaj wywołań modelu przy wpisywaniu wzoru, każdym ruchu myszy, otwieraniu wskazówki lub uruchamianiu lotu gracza.
 
-### 2.2. `teach`: naprawa, dwie prognozy, wyjaśnienie
+### 2.2. `teach`: naprawa i wyjaśnienie
+
+> Zmiana z 26.11.2026: gracz nie wpisuje już ręcznie prognoz w G1 i G2. Gra wylicza je z poprawionego wzoru i wysyła jako `numericEvidence`; kontrakt i walidacja po stronie serwera się nie zmieniły. Dalsze akapity opisują pierwotny projekt z ręcznymi prognozami.
 
 Początkowa wypowiedź i błędny wzór są elementem scenariusza. Interfejs ma pokazywać je jako „Pomysł Piko”, nie jako wynik eksperymentu dowodzącego, że wybrany model rzeczywiście popełnia ten błąd samodzielnie.
 

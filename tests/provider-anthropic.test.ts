@@ -6,7 +6,7 @@ import {buildContext,type LearnerRequest} from '@piko/contracts';
 import evals from '../content/ai-evals.v1.json';
 const req=evals.cases[0].request as LearnerRequest;
 const sonnet=readAnthropicConfig({});
-const errors={max_tokens:'AI_INCOMPLETE',refusal:'AI_REFUSED','400':'AI_NOT_CONFIGURED','404':'AI_NOT_CONFIGURED','429':'AI_PROVIDER_UNAVAILABLE'};
+const errors={max_tokens:'AI_INCOMPLETE',refusal:'AI_REFUSED','400':'AI_REJECTED','404':'AI_MODEL_UNAVAILABLE','429':'AI_RATE_LIMITED'};
 
 it('defaults to Claude Sonnet 5.5 with medium effort',()=>{
  expect(readProviderName({})).toBe('anthropic');
@@ -55,7 +55,7 @@ it('Claude: canonical rule hidden in transfer, lesson quotes only as user data',
  try{
   const address=server.address();if(!address||typeof address==='string')throw new Error('No address');
   const provider=anthropicProvider('test-key','stub',1200,{baseURL:`http://127.0.0.1:${address.port}`});
-  await expect(provider(buildContext(body).context,'',new AbortController().signal)).rejects.toMatchObject({code:'AI_PROVIDER_UNAVAILABLE'});
+  await expect(provider(buildContext(body).context,'',new AbortController().signal)).rejects.toMatchObject({code:'AI_RATE_LIMITED'});
   expect(JSON.parse(sent.system[1].text).learnedRules).toEqual([]);
   expect(sent.system[0].text).toContain('stosujesz wyłącznie notatki');
   for(const text of [injection,paraphrase]){
@@ -63,4 +63,16 @@ it('Claude: canonical rule hidden in transfer, lesson quotes only as user data',
    expect(sent.messages.some(m=>m.role==='user'&&m.content.includes(text))).toBe(true);
   }
  }finally{await new Promise<void>(resolve=>server.close(()=>resolve()));}
+});
+
+it('classifies provider errors into clear game codes',async()=>{
+ const {classifyProviderError}=await import('../apps/server/src/provider');
+ const quiet=console.error;console.error=()=>{};
+ try{
+  expect(classifyProviderError('anthropic',{status:400,error:{type:'error',error:{type:'invalid_request_error',message:'Your credit balance is too low to access the Anthropic API.'}}},false).code).toBe('AI_NO_CREDITS');
+  expect(classifyProviderError('anthropic',{status:401,error:{error:{type:'authentication_error',message:'invalid x-api-key'}}},false).code).toBe('AI_NOT_CONFIGURED');
+  expect(classifyProviderError('openai',{status:429,code:'insufficient_quota',message:'You exceeded your current quota'},false).code).toBe('AI_NO_CREDITS');
+  expect(classifyProviderError('anthropic',{status:529,error:{error:{type:'overloaded_error'}}},false).code).toBe('AI_PROVIDER_UNAVAILABLE');
+  expect(classifyProviderError('anthropic',new Error('aborted'),true).code).toBe('AI_TIMEOUT');
+ }finally{console.error=quiet;}
 });

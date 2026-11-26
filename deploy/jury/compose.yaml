@@ -7,8 +7,10 @@ services:
     environment:
       PUBLIC_ORIGIN: https://${PIKO_JURY_HOST:?Set the jury DNS hostname}
       AI_MODE: live
-      AI_MODEL: gpt-6-luna
-      AI_REASONING_EFFORT: xhigh
+      AI_PROVIDER: anthropic
+      AI_MODEL: claude-sonnet-5-5
+      AI_REASONING_EFFORT: medium
+      TRUST_PROXY: loopback
       AI_DAILY_REQUEST_BUDGET: ${PIKO_JURY_DAILY_BUDGET:-0}
       AI_MAX_PROVIDER_REQUESTS_PER_TURN: '1'
     ports:

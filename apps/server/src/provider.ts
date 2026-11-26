@@ -6,6 +6,22 @@ import type {ReasoningEffort} from 'openai/resources/shared';
 import {providerSchemaForContext,type Context} from '@piko/contracts';
 import {SYSTEM_PROMPT,FOLLOW_UP_POLICY,TEACH_ROLE_POLICY,LESSON_POLICY} from './system';
 export class ProviderError extends Error {constructor(public code:string,public status:number){super(code);}}
+/** Zamienia błąd dostawcy na kod gry i zapisuje w logu serwera status i typ błędu (bez klucza i treści gracza). */
+export function classifyProviderError(provider:'anthropic'|'openai',error:unknown,aborted:boolean):ProviderError{
+ if(error instanceof ProviderError)return error;
+ if(aborted){console.error(JSON.stringify({event:'ai_provider_error',provider,status:null,type:'timeout'}));return new ProviderError('AI_TIMEOUT',504);}
+ const e=error as {status?:number;error?:{error?:{type?:string;message?:string};type?:string;code?:string;message?:string};type?:string;code?:string;message?:string;name?:string};
+ const status=typeof e?.status==='number'?e.status:null;
+ const type=e?.error?.error?.type??e?.error?.type??e?.type??e?.error?.code??e?.code??e?.name??'unknown';
+ const message=String(e?.error?.error?.message??e?.error?.message??e?.message??'').slice(0,240);
+ console.error(JSON.stringify({event:'ai_provider_error',provider,status,type,message}));
+ if(status===401||status===403)return new ProviderError('AI_NOT_CONFIGURED',503);
+ if(status===404)return new ProviderError('AI_MODEL_UNAVAILABLE',503);
+ if(/credit|quota|billing|balance/i.test(`${type} ${message}`))return new ProviderError('AI_NO_CREDITS',503);
+ if(status===429)return new ProviderError('AI_RATE_LIMITED',503);
+ if(status===400||status===422)return new ProviderError('AI_REJECTED',503);
+ return new ProviderError('AI_PROVIDER_UNAVAILABLE',503);
+}
 export type ProviderResult={text:string;actualModel:string;responseId:string;inputTokens:number|null;outputTokens:number|null};
 export type Provider=(context:Context,userMessage:string,signal:AbortSignal,repair?:{output:string;issues:string})=>Promise<ProviderResult>;
 export function openAIProvider(key:string,model:string,maxTokens:number,options:{baseURL?:string;fetch?:typeof fetch;reasoningEffort?:ReasoningEffort}={}):Provider {
@@ -25,10 +41,7 @@ export function openAIProvider(key:string,model:string,maxTokens:number,options:
    if(response.status!=='completed'||!response.output_text)throw new ProviderError('AI_INCOMPLETE',502);
    return {text:response.output_text,actualModel:response.model,responseId:response.id,inputTokens:response.usage?.input_tokens??null,outputTokens:response.usage?.output_tokens??null};
   }catch(e){
-   if(e instanceof ProviderError)throw e;
-   if(signal.aborted)throw new ProviderError('AI_TIMEOUT',504);
-   if(e instanceof OpenAI.APIError&&[400,401,403,404].includes(e.status??0))throw new ProviderError('AI_NOT_CONFIGURED',503);
-   throw new ProviderError('AI_PROVIDER_UNAVAILABLE',503);
+   throw classifyProviderError('openai',e,signal.aborted);
   }
  };
 }
@@ -59,10 +72,7 @@ export function anthropicProvider(key:string,model:string,maxTokens:number,optio
    if(response.stop_reason!=='end_turn'||!text)throw new ProviderError('AI_INCOMPLETE',502);
    return {text,actualModel:response.model,responseId:response.id,inputTokens:response.usage.input_tokens??null,outputTokens:response.usage.output_tokens??null};
   }catch(e){
-   if(e instanceof ProviderError)throw e;
-   if(signal.aborted)throw new ProviderError('AI_TIMEOUT',504);
-   if(e instanceof Anthropic.APIError&&[400,401,403,404].includes(e.status??0))throw new ProviderError('AI_NOT_CONFIGURED',503);
-   throw new ProviderError('AI_PROVIDER_UNAVAILABLE',503);
+   throw classifyProviderError('anthropic',e,signal.aborted);
   }
  };
 }

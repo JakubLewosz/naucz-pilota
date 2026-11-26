@@ -26,7 +26,7 @@ async function transfer(page:Page,checkStartMiss=false){
  await page.getByRole('button',{name:'Sprawdź lot Piko'}).click();
  if(checkStartMiss){
   await expect(page.locator('.proposal code')).toHaveText('f(x) = 0.25(x+2)^2');
-  await expect(page.getByTestId('engine-result')).toContainText('Przy x = -1 tor osiągnął y = 0.25. Otwór startowy sięga od y = 1.87 do y = 2.63.');
+  await expect(page.getByTestId('engine-result')).toContainText('Przy x = -1 tor osiągnął y = 0,25. Otwór startowy sięga od y = 1,87 do y = 2,63.');
  }
  await page.getByRole('button',{name:'Teraz mój samodzielny lot'}).click();
 }

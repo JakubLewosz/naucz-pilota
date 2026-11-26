@@ -1,6 +1,6 @@
 import {useEffect,useReducer,useRef,useState} from 'react';
 import {hints,missionById,missions} from '@piko/content';
-import {deriveRuleEvidence,parseExpression,type EngineResult,type Event} from '@piko/core';
+import {deriveRuleEvidence,parseExpression,resultMessages,type EngineResult,type Event} from '@piko/core';
 import type {LearnerRequest} from '@piko/contracts';
 import {Board} from './Board';
 import {Piko} from './Piko';
@@ -21,19 +21,25 @@ function eventLabel(event:Event){
  if(event.subject==='goal')return 'minięcie mety';
  return `minięcie bramki ${event.subject}`;
 }
+// Liczby po polsku: przecinek dziesiętny, bez zbędnych zer.
+const num=(v:number,digits=3)=>String(Number(v.toFixed(digits))).replace('.',',');
 function FlightResult({attempt,robotStart}:{attempt:Attempt;robotStart?:{yMin:number;yMax:number}}){
- const {expression,result}=attempt;
- const missedStart=result.primaryCode==='START_MISS'?result.checkpoints.find(point=>point.id==='start'):undefined;
+ const {expression,result}=attempt,event=result.firstPhysicalEvent;
+ // Nagłówek opisuje to samo, co „Co poszło nie tak”: pierwsze zdarzenie na trasie (chyba że wzór łamie zasady misji).
+ const ruleBroken=result.diagnostics.some(d=>d==='FAMILY_MISMATCH'||d==='CONSTRAINT_VIOLATION');
+ const shownCode=result.ok||ruleBroken||!event?result.primaryCode:event.code;
+ const headline=resultMessages[shownCode]??result.messagePL;
+ const missedStart=shownCode==='START_MISS'?result.checkpoints.find(point=>point.id==='start'):undefined;
  return <section className={result.ok?'success':'error'} data-testid="engine-result" aria-label="Wynik lotu">
   <h3>{attempt.source==='demo'&&attempt.sceneId.endsWith('-teach')?'Lot według pomysłu Piko':'Wynik lotu'}</h3>
   <p>Wzór <code>f(x) = {expression}</code></p>
-  <strong>{result.ok?'✓':'×'} {result.messagePL}</strong>
-  {result.firstPhysicalEvent&&<p>Co poszło nie tak: {eventLabel(result.firstPhysicalEvent)}, x ≈ {result.firstPhysicalEvent.x.toFixed(3)}.</p>}
-  {robotStart&&missedStart&&<p>Przy x = {missedStart.x} tor osiągnął y = {Number(missedStart.y.toFixed(6))}. Otwór startowy sięga od y = {robotStart.yMin} do y = {robotStart.yMax}.</p>}
+  <strong>{result.ok?'✓':'×'} {headline}</strong>
+  {event&&!ruleBroken&&<p>Co poszło nie tak: {eventLabel(event)}, x ≈ {num(event.x,2)}.</p>}
+  {robotStart&&missedStart&&<p>Przy x = {num(missedStart.x)} tor osiągnął y = {num(missedStart.y)}. Otwór startowy sięga od y = {num(robotStart.yMin)} do y = {num(robotStart.yMax)}.</p>}
   <details>
    <summary>Dlaczego? Wysokość toru w każdym punkcie</summary>
-   <ul>{result.checkpoints.map(c=><li key={c.id}>{c.passed?'✓':'×'} {pointName(c.id)}: x={c.x}, y={Number(c.y.toFixed(6))}</li>)}</ul>
-   <p className="muted">Kod techniczny: {result.primaryCode}{result.firstPhysicalEvent&&`, ${result.firstPhysicalEvent.subject}`}</p>
+   <ul>{result.checkpoints.map(c=><li key={c.id}>{c.passed?'✓':'×'} {pointName(c.id)}: x = {num(c.x)}, y = {num(c.y,4)}</li>)}</ul>
+   <p className="muted">Kod techniczny: {shownCode}{event&&!ruleBroken&&`, ${event.subject}`}</p>
   </details>
  </section>;
 }
@@ -61,9 +67,12 @@ function robotOutcome(r?:Run){
 function Summary({r}:{r:Run}){
  const first=r.firstHuman;
  return <div className="summary-grid">
-  <div><h3>Zasada z lekcji</h3>
-   <p>{r.rule?missionById(r.rule.missionId).ruleText:'Jeszcze bez zapisanej zasady.'}</p>
-   {r.rule?.lessonNote&&<LessonAssessment reply={r.lessonReply}/>}
+  <div><h3>Twoja lekcja</h3>
+   {r.rule?.lessonNote?<>
+    <p>„{r.rule.lessonNote.explanationPL}”</p>
+    <PikoBelief label="Piko zapamiętał" belief={r.rule.lessonNote.pikoBeliefPL??null} fallback={r.rule.lessonNote.explanationPL}/>
+   </>:<p>Jeszcze bez zapisanej lekcji.</p>}
+   {r.rule&&<p className="muted"><strong>Zasada sprawdzona przez grę:</strong> <span>{missionById(r.rule.missionId).ruleText}</span></p>}
   </div>
   <div><h3>Lot Piko</h3><p>{robotOutcome(r)}</p>
    {r.robotDisposition==='skipped'&&r.attempts.robot_transfer?.length?<p>Pominięto dalszy lot Piko.</p>:null}
@@ -251,7 +260,8 @@ export function App(){
   {!r.robotChecked&&<button disabled={s.busy} onClick={()=>dispatch({type:'ROBOT_CHECK'})}>Sprawdź lot Piko</button>}
  </div>}
  {s.mode!=='unavailable'&&canAskRobot(s,r)&&(!r.robot||r.robotTurns===0)&&<button disabled={s.busy} onClick={()=>void askPiko()}>Piko, spróbuj sam</button>}
- {!s.busy&&r.robotChecked&&(r.attempts.robot_transfer?.at(-1)?.result.ok
+ {!s.busy&&r.robotChecked&&r.robot?.mode==='demo'&&<div className="notice"><p>Tryb pokazowy: Piko poleciał przygotowanym wzorem, a nie według Twojej lekcji, więc ten wynik nic o niej nie mówi. Żeby sprawdzić lekcję, włącz prawdziwe AI.</p>{s.liveAvailable&&<button onClick={()=>dispatch({type:'MODE',mode:'live'})}>Włącz prawdziwe AI</button>}</div>}
+ {!s.busy&&r.robotChecked&&r.robot?.mode!=='demo'&&(r.attempts.robot_transfer?.at(-1)?.result.ok
   ? <p className="notice ok">Twoja lekcja zadziałała: Piko przeleciał nową trasę, stosując Twoją notatkę.</p>
   : <div className="notice"><p>Piko poleciał tak, jak wynika z Twojej lekcji, i się rozbił. Sprawdź jego uzasadnienie: które zdanie notatki go zmyliło albo czego w niej zabrakło?</p><button onClick={()=>dispatch({type:'RETEACH'})}>Popraw lekcję dla Piko</button></div>)}
  {!s.busy&&(r.robotChecked

@@ -129,7 +129,7 @@ Poniższe teksty są wzorcami; szczegóły współrzędnych podstawia silnik, be
 | Naprawa robota | „Piko ma pomysł. Sprawdź go, a potem wyjaśnij, co warto zmienić.” |
 | Prognozy | „Zanim sprawdzisz lot, przewidź dwie wartości funkcji.” |
 | Prognoza niezgodna | „Dla x = … Twój wzór daje y = …. Porównaj to ze swoją prognozą.” |
-| Zaliczone liczby | „Tor i obie prognozy są poprawne. Zapisz zasadę, z której Piko skorzysta dalej.” |
+| Naprawa zaliczona | „Naprawa działa. Teraz wyjaśnij Piko, co miał zmienić i dlaczego.” |
 | Opinia AI | „Tak Piko odczytał Twoje wyjaśnienie. Wynik matematyczny sprawdza silnik.” |
 | Chybiony start | „Tor omija otwór startowy. Sprawdź wartość funkcji przy x = ….” |
 | Wyjście z planszy | „W tym miejscu Piko wychodzi poza planszę. Cały robot musi zmieścić się w jej granicach.” |

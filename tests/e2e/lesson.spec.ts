@@ -98,7 +98,7 @@ for(const scenario of [
   await expect(verified).toContainText('Bezpieczny lot');
   await expect(verified).toContainText('f(x) = 3');
   await verified.getByText('Dlaczego? Wysokość toru w każdym punkcie').click();
-  await expect(verified.getByText(/Start: x=.+, y=3$/)).toBeVisible();
+  await expect(verified.getByText(/Start: x = .+, y = 3$/)).toBeVisible();
   await expect(verified).not.toContainText(/999|888|START_MISS/);
   await expect(page.getByText(scenario.feedback,{exact:true})).toBeVisible();
   await expect(page.getByText(/nauczyłeś Piko/i)).toHaveCount(0);

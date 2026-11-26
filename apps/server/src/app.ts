@@ -8,14 +8,14 @@ import {ProviderError,type Provider} from './provider';
 import {DEFAULT_AI_TIMEOUT_MS} from './config';
 export type ServerConfig={mode:'demo'|'live';provider:'openai'|'anthropic';model:string;publicOrigin:string;production:boolean;timeoutMs:number;dailyBudget:number;sessionLimit:number;bodyBytes:number;maxProviderRequests:number;accessCode:string;requireAccessCode:boolean};
 const defaultConfig:ServerConfig={mode:'demo',provider:'openai',model:'',publicOrigin:'http://127.0.0.1:5173',production:false,timeoutMs:DEFAULT_AI_TIMEOUT_MS,dailyBudget:200,sessionLimit:6,bodyBytes:16384,maxProviderRequests:2,accessCode:'',requireAccessCode:false};
-const errorText:Record<string,string>={AI_NOT_CONFIGURED:'Sprawdź konfigurację modelu live i dostęp konta do tego modelu.',AI_TIMEOUT:'Nie udało się otrzymać odpowiedzi w limicie czasu. Twoje wpisy są zachowane.',AI_PROVIDER_UNAVAILABLE:'Usługa AI jest chwilowo niedostępna.',AI_REFUSED:'Piko nie otrzymał odpowiedzi od usługi AI.',AI_INCOMPLETE:'Odpowiedź modelu była niekompletna.',AI_INVALID_OUTPUT:'Model nie zwrócił poprawnej odpowiedzi.',DAILY_BUDGET_EXHAUSTED:'Dzienny limit wywołań AI został wyczerpany.',TURN_INTERRUPTED:'Poprzednia tura została przerwana. Możesz wysłać nową.'};
+const errorText:Record<string,string>={AI_NOT_CONFIGURED:'Serwer nie ma działającego klucza AI (brak klucza albo klucz odrzucony). Możesz grać w trybie pokazowym.',AI_MODEL_UNAVAILABLE:'Wybrany model AI nie jest dostępny na tym koncie. Sprawdź AI_MODEL na serwerze.',AI_NO_CREDITS:'Na koncie AI skończyły się środki. Możesz grać w trybie pokazowym.',AI_RATE_LIMITED:'Za dużo zapytań do AI naraz. Spróbuj ponownie za chwilę.',AI_REJECTED:'Usługa AI odrzuciła to zapytanie. Spróbuj ponownie albo przejdź do trybu pokazowego.',AI_TIMEOUT:'Nie udało się otrzymać odpowiedzi w limicie czasu. Twoje wpisy są zachowane.',AI_PROVIDER_UNAVAILABLE:'Usługa AI jest chwilowo niedostępna.',AI_REFUSED:'Piko nie otrzymał odpowiedzi od usługi AI.',AI_INCOMPLETE:'Odpowiedź modelu była niekompletna.',AI_INVALID_OUTPUT:'Model nie zwrócił poprawnej odpowiedzi.',DAILY_BUDGET_EXHAUSTED:'Dzienny limit wywołań AI został wyczerpany.',TURN_INTERRUPTED:'Poprzednia tura została przerwana. Możesz wysłać nową.'};
 export function createApp(options:{store:Store;provider?:Provider;config?:Partial<ServerConfig>}){
  const app=express(),config={...defaultConfig,...options.config},store=options.store;
  if((config.requireAccessCode||config.accessCode)&&(config.accessCode.length<32||config.accessCode.length>256))throw new Error('JURY_ACCESS_CODE requires 32–256 characters.');
  const accessHash=config.accessCode?createHash('sha256').update(config.accessCode).digest():null;
  const pending=new Map<string,Promise<{status:number;envelope:Envelope}>>(),ipWindow=new Map<string,{count:number;start:number}>();
  app.disable('x-powered-by');app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],connectSrc:["'self'"],objectSrc:["'none'"],upgradeInsecureRequests:config.production?[]:null}}}));
- const minimal=(code:string)=>({error:{code,messagePL:errorText[code]??'Żądanie odrzucone. Sprawdź sesję i dane, a następnie spróbuj ponownie.',retryable:['AI_TIMEOUT','AI_PROVIDER_UNAVAILABLE','SESSION_REQUIRED','STALE_SESSION_REVISION'].includes(code)}});
+ const minimal=(code:string)=>({error:{code,messagePL:errorText[code]??'Żądanie odrzucone. Sprawdź sesję i dane, a następnie spróbuj ponownie.',retryable:['AI_TIMEOUT','AI_PROVIDER_UNAVAILABLE','AI_RATE_LIMITED','AI_REJECTED','SESSION_REQUIRED','STALE_SESSION_REVISION'].includes(code)}});
  app.use('/api',(req,res,next)=>{
   const origin=req.get('origin');
   if(origin&&origin!==config.publicOrigin&&!(origin==='app://piko'&&req.get('x-piko-desktop')==='1')){res.status(403).json(minimal('ORIGIN_NOT_ALLOWED'));return;}
@@ -108,6 +108,7 @@ export function createApp(options:{store:Store;provider?:Provider;config?:Partia
    envelope.model.requestCount=count;envelope.model.latencyMs=Math.round(performance.now()-started);
    // Store status with envelope for exact idempotent replay, including errors.
    store.db.prepare('UPDATE turns SET status=\'done\',response=? WHERE session_id=? AND turn_id=?').run(JSON.stringify({status,envelope}),session.id,request.turnId);
+   if(envelope.error&&!config.production)console.error(JSON.stringify({event:'learner_turn_failed',turnId:request.turnId,missionId:request.missionId,error:envelope.error.code}));
    if(config.production)console.log(JSON.stringify({turnId:request.turnId,missionId:request.missionId,mode:envelope.mode,model:envelope.model.actualModel,requestCount:count,latencyMs:envelope.model.latencyMs,error:envelope.error?.code??null}));
    return {status,envelope};
   };

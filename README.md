@@ -23,7 +23,7 @@ Piko naprawdę uczy się tylko od gracza. Po lekcji zapisuje w pamięci jedno zd
 
 | Moment | Co robi AI (Claude Sonnet 5.5) | Co robi gra |
 |---|---|---|
-| Naucz Piko | Piko parafrazuje wyjaśnienie gracza, ocenia je (poprawne / częściowe / błędne / niejasne), zadaje jedno pytanie i zapisuje swoje przekonanie („Myślę, że…”), wiernie według słów gracza. | Sprawdza wzór i dwie prognozy gracza. |
+| Naucz Piko | Piko parafrazuje wyjaśnienie gracza, ocenia je (poprawne / częściowe / błędne / niejasne), zadaje jedno pytanie i zapisuje swoje przekonanie („Myślę, że…”), wiernie według słów gracza. | Sprawdza poprawiony wzór gracza i sama liczy wartości w bramkach. |
 | Lot Piko | Piko zna **tylko** swoje przekonania z lekcji (bez kanonicznej zasady), sam dobiera wzór dla **nowej** trasy i mówi, które zdanie lekcji stosuje. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Po porażce gracz poprawia lekcję i Piko leci jeszcze raz. |
 | Bezpieczeństwo | Odpowiedź ma wymuszony schemat JSON. Tekst gracza trafia do modelu wyłącznie jako dane, nie jako polecenie. | Odrzuca odpowiedzi niezgodne z fazą gry, a błędnych wzorów Piko nie poprawia po cichu. |
 
@@ -66,7 +66,7 @@ Do paczki z wbudowanym AI używaj osobnego klucza z limitem wydatków ustawionym
 
 ```sh
 npm run typecheck && npm run lint
-npm test                     # 222 testy jednostkowe (silnik, kontrakt AI, serwer, zapis)
+npm test                     # 223 testy jednostkowe (silnik, kontrakt AI, serwer, zapis)
 npm run test:content         # 62 testy treści misji
 npx playwright install chromium
 npm run test:e2e             # 17 testów całej gry w przeglądarce

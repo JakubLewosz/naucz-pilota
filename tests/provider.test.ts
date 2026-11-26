@@ -7,7 +7,7 @@ import {buildContext,type LearnerRequest} from '@piko/contracts';
 import evals from '../content/ai-evals.v1.json';
 const req=evals.cases[0].request as LearnerRequest;
 const luna=readOpenAIConfig({AI_MODEL:'gpt-6-luna'});
-const errors={incomplete:'AI_INCOMPLETE',refusal:'AI_REFUSED','400':'AI_NOT_CONFIGURED','404':'AI_NOT_CONFIGURED','429':'AI_PROVIDER_UNAVAILABLE'};
+const errors={incomplete:'AI_INCOMPLETE',refusal:'AI_REFUSED','400':'AI_REJECTED','404':'AI_MODEL_UNAVAILABLE','429':'AI_RATE_LIMITED'};
 for(const scenario of ['completed','incomplete','refusal','400','404','429'] as const)it(`Luna xhigh SDK HTTP stub: ${scenario}, no hidden retries, strict response format`,async()=>{
  let calls=0;let sent:Record<string,unknown>|null=null;
  const server=createServer(async(request,response)=>{
@@ -63,7 +63,7 @@ it('hides the canonical rule in transfer and sends lesson quotes only as user da
   const address=server.address();
   if(!address||typeof address==='string')throw new Error('No address');
   const provider=openAIProvider('test-key','stub',1200,{baseURL:`http://127.0.0.1:${address.port}/v1`});
-  await expect(provider(buildContext(body).context,'',new AbortController().signal)).rejects.toMatchObject({code:'AI_PROVIDER_UNAVAILABLE'});
+  await expect(provider(buildContext(body).context,'',new AbortController().signal)).rejects.toMatchObject({code:'AI_RATE_LIMITED'});
   expect(input.filter(i=>i.role==='developer')).toHaveLength(1);
   // Piko w locie nie dostaje kanonicznej zasady: zna tylko notatkę gracza (jako dane użytkownika).
   expect(JSON.parse(input[0].content).learnedRules).toEqual([]);

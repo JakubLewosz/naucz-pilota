@@ -118,10 +118,10 @@ const SRC_W=viewport.w,SRC_H=viewport.h;
 function cropFor(id:string){
  const m=markers.find(x=>x.id===id),def={x:0,y:Math.round((SRC_H-SRC_W*9/16)/2),w:SRC_W,h:Math.round(SRC_W*9/16)};
  if(!m?.focus||segments.find(s=>s.id===id)?.full)return def;
- const pad=70,f=m.focus;let x0=f.x-pad,y0=f.y-pad,x1=f.x+f.w+pad,y1=f.y+f.h+pad*1.6;
+ const pad=70,f=m.focus,x0=f.x-pad,y0=f.y-pad,x1=f.x+f.w+pad,y1=f.y+f.h+pad*1.6;
  let w=Math.max(x1-x0,(y1-y0)*16/9,SRC_W/1.45);if(w>=SRC_W)return def;
  const h=w*9/16,cx=(x0+x1)/2,cy=(y0+y1)/2;
- let x=Math.min(Math.max(0,cx-w/2),SRC_W-w),y=Math.min(Math.max(0,cy-h/2),SRC_H-h);
+ const x=Math.min(Math.max(0,cx-w/2),SRC_W-w),y=Math.min(Math.max(0,cy-h/2),SRC_H-h);
  w=Math.round(w/2)*2;return {x:Math.round(x),y:Math.round(y),w,h:Math.round(w*9/16/2)*2};
 }
 const parts:{file:string;dur:number;seg:Seg}[]=[];

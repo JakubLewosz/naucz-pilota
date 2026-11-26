@@ -72,7 +72,7 @@ W filmie pokaż wynik działania, nie samą stronę startową i kod. Odpowiedzi 
 
 Naucz Pilota pomaga ćwiczyć wpływ parametrów na wykres funkcji. W sześciu misjach użytkownik zapisuje wzór wyznaczający trasę robota Piko, przechodzi przez bramki i unika przeszkód. Misje obejmują wysokość i nachylenie prostej, przesunięcia i szerokość paraboli oraz łączenie przekształceń.
 
-Piko odgrywa początkującego ucznia. Gracz poprawia jego błędny pomysł, wyjaśnia zasadę i przewiduje wartości funkcji. Model językowy reaguje na wyjaśnienie, a na innej planszy proponuje własny wzór na podstawie zapisanych zasad. Wszystkie propozycje ocenia deterministyczny silnik matematyczny.
+Piko odgrywa początkującego ucznia. Gracz poprawia jego błędny pomysł i wyjaśnia zasadę. Model językowy reaguje na wyjaśnienie, a na innej planszy proponuje własny wzór na podstawie zapisanych zasad. Wszystkie propozycje ocenia deterministyczny silnik matematyczny.
 
 Każdą misję kończy osobne zadanie gracza bez pomocy AI. Aplikacja rozróżnia pierwszy samodzielny wynik, późniejsze próby i wynik robota. Pamięć Piko jest stanem aplikacji oraz kontekstem rozmowy; projekt nie trenuje wag modelu.
 

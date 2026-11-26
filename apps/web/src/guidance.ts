@@ -29,6 +29,7 @@ export function nextStep(s:GameState,r:Run):string{
    if(s.busy)return 'Piko analizuje nową trasę…';
    if(!r.robot&&!r.unavailable)return 'Kliknij „Piko, spróbuj sam”. Piko zna tylko Twoją notatkę i poleci według niej na trasie, której nie widział.';
    if(r.robot&&!r.robotChecked)return 'Przeczytaj wzór i uzasadnienie Piko, zgadnij, czy przeleci, i kliknij „Sprawdź lot Piko”.';
+   if(r.robotChecked&&r.robot?.mode==='demo')return 'To był przygotowany lot z trybu pokazowego. Żeby sprawdzić Twoją lekcję, włącz prawdziwe AI albo przejdź do własnej próby.';
    if(r.robotChecked&&last?.result.ok)return 'Piko przeleciał dzięki Twojej lekcji. Teraz Twoja kolej.';
    if(r.robotChecked)return 'Piko rozbił się, bo poleciał według Twojej lekcji. Znajdź w jego uzasadnieniu, co go zmyliło, i kliknij „Popraw lekcję dla Piko”.';
    return 'Możesz przejść do własnej próby.';

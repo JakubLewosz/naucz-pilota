@@ -27,7 +27,7 @@ Sam pomysł „uczenia agenta” ani gra z wykresami nie są nowe. Nie używać 
 |---|---|
 | Kampania | 6 misji, po 4 różne plansze w każdej |
 | Matematyka | Wielomiany stopnia najwyżej 2; proste, stałe i parabole |
-| Akcje | Wpisanie wzoru, uruchomienie przejazdu, krótkie wyjaśnienie, dwie prognozy liczbowe, obserwacja próby Piko |
+| Akcje | Wpisanie wzoru, uruchomienie przejazdu, krótkie wyjaśnienie, obserwacja próby Piko (wartości w bramkach liczy gra) |
 | AI | Jeden symulowany uczeń; polski dialog; propozycja wzoru w scenie transferu |
 | Weryfikacja | Wspólny, deterministyczny silnik matematyczny w przeglądarce i na serwerze |
 | Zapis | Lokalny postęp na jednym urządzeniu; bez kont |
