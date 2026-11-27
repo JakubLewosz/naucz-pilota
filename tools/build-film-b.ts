@@ -38,7 +38,7 @@ const scenes:Scene[]=[
  {id:'lesson2',lines:[n('Lekcja druga. Tym razem pełna: nawias zeruje się w wierzchołku.'),
   p('Myślę, że liczba w nawiasie ma przeciwny znak niż x wierzchołka, bo nawias zeruje się w wierzchołku.','Myślę, że liczba w nawiasie ma przeciwny znak, niż iks wierzchołka, bo nawias zeruje się w wierzchołku.')],tail:1.7},
  {id:'flight2',lines:[n('Ta sama trasa, druga próba.'),
-  p('Bramki są w x = 1 i x = 3, więc dołek toru chcę mieć pośrodku, w x = 2. Spróbuję nawiasu (x − 2).','Bramki są w iks równym jeden, i iks równym trzy, więc dołek toru chcę mieć pośrodku, w iks równym dwa. Spróbuję nawiasu, iks minus dwa.'),
+  p('Bramki są w x=1 i x=3, więc dołek toru chcę mieć pośrodku, w x=2. Spróbuję wzoru 0,25(x-2)^2, bo nawias zeruje się wtedy dla x=2.','Bramki są w iks równym jeden, i iks równym trzy, więc dołek toru chcę mieć pośrodku, w iks równym dwa. Spróbuję wzoru zero przecinek dwadzieścia pięć, razy nawias iks minus dwa, do kwadratu, bo nawias zeruje się wtedy dla iks równego dwa.'),
   n('Udało się!',undefined,4.6)],tail:2.2},
  {id:'game3',clips:['transfer2-success'],lines:[n('Piko się nauczył, bo uczeń naprawdę to zrozumiał.')],tail:.9,min:5},
  {id:'game4',clips:['human','journal'],lines:[n('Na koniec uczeń leci sam, bez pomocy. A dziennik pokazuje, co zapamiętał Piko.')],tail:.9},

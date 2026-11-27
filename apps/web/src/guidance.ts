@@ -32,7 +32,9 @@ export function nextStep(s:GameState,r:Run):string{
     :'Kliknij „Piko, spróbuj sam”. Piko zna tylko Twoją notatkę i poleci według niej na trasie, której nie widział.';
    if(r.robot&&!r.robotChecked)return 'Przeczytaj wzór i uzasadnienie Piko, zgadnij, czy przeleci, i kliknij „Sprawdź lot Piko”.';
    if(r.robotChecked&&r.robot?.mode==='demo')return 'To był przygotowany lot z trybu pokazowego. Żeby sprawdzić Twoją lekcję, włącz prawdziwe AI albo przejdź do własnej próby.';
-   if(r.robotChecked&&last?.result.ok)return r.lessonReply?.assessment==='sound'?'Piko przeleciał dzięki Twojej lekcji. Teraz Twoja kolej.':'Piko przeleciał, ale lekcja nie była pełna. Możesz ją poprawić albo przejść do własnej próby.';
+   if(r.robotChecked&&last?.result.ok)return r.lessonReply?.source==='live'&&r.lessonReply.assessment==='sound'?'Piko przeleciał dzięki Twojej lekcji. Teraz Twoja kolej.'
+    :r.lessonReply?.source==='live'&&r.lessonReply.assessment?'Piko przeleciał, ale lekcja nie była pełna. Możesz ją poprawić albo przejść do własnej próby.'
+    :'Piko przeleciał, ale nie ocenił tej lekcji. Możesz zapytać go o nią („Popraw lekcję”) albo przejść do własnej próby.';
    if(r.robotChecked)return 'Piko rozbił się, bo poleciał według Twojej lekcji. Znajdź w jego uzasadnieniu, co go zmyliło, i kliknij „Popraw lekcję dla Piko”.';
    return 'Możesz przejść do własnej próby.';
   case 'human_check':

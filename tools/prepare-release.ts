@@ -22,7 +22,7 @@ for(const [source,target] of [
 for(const file of await readdir('docs/konkurs'))await cp(`docs/konkurs/${file}`,`${root}/01_formularze/${file}`);
 await cp('release/CHECKLISTA.md',`${root}/CHECKLISTA.md`);
 // Dla jury tylko aktualne wyniki; historyczne raporty z prac zostają w repozytorium.
-for(const file of ['checks/ai-live-claude-sonnet-5-5.md','checks/ai-live-results.json','test-results/e2e-results.json'])if(existsSync(file))await cp(file,`${root}/06_weryfikacja/${path.basename(file)}`);
+for(const file of ['checks/ai-live-claude-sonnet-5-5.md','checks/ai-live-results.json','checks/film-odpowiedzi-ai.json','test-results/e2e-results.json'])if(existsSync(file))await cp(file,`${root}/06_weryfikacja/${path.basename(file)}`);
 const lock=JSON.parse(await readFile('package-lock.json','utf8')) as {packages:Record<string,{version?:string;license?:string}>};
 let notices='PIKO: MISJA FUNKCJA 1.0.0 — THIRD-PARTY NOTICES\n\nRuntime and author tools resolved by package-lock.json. Electron distribution includes LICENSE and LICENSES.chromium.html. Source code author identity and licensing are to be confirmed by its owner.\n';
 for(const [entry,meta]of Object.entries(lock.packages)){

@@ -1,0 +1,70 @@
+{
+  "opis": "Pełne odpowiedzi Claude z nagrania rozgrywki misji 4, na którym oparty jest film konkursowy (tools/record-film.ts). Dymki w filmie (tools/film-b/page.js) cytują przekonania Piko dosłownie, a uzasadnienia lotów we fragmentach.",
+  "nagranie": "2026-11-26 13:38",
+  "model": "claude-sonnet-5-5",
+  "prompt": "2.0.0",
+  "wyniki": {
+    "crash": true,
+    "success": true
+  },
+  "odpowiedzi": [
+    {
+      "scene": "M04-teach",
+      "utterance": "Rozumiem, że zamiana (x-1) na (x+1) poprawiła wzór. Według gry lot z 0,25(x+1)^2 się udał, a w bramkach G1 i G2 wzór daje y=0,25. Nie wiem jednak, w którą stronę plus przesuwa parabolę i o ile.",
+      "followUp": "W którą stronę plus w nawiasie przesuwa parabolę i jak zapisać inne przesunięcie, np. o 3?",
+      "belief": "Myślę, że zamiana minusa na plus w nawiasie przesuwa parabolę, ale nie wiem jeszcze w którą stronę ani o ile.",
+      "assessment": "partial",
+      "expression": null,
+      "validation": "not_proposed"
+    },
+    {
+      "scene": "M04-robot_transfer",
+      "utterance": "Z lekcji mam tylko, że plus w nawiasie przesuwa parabolę. Nie wiem jednak, w którą stronę ani o ile. Wzór początkowy ma już plus, więc zaczynam od niego i spróbuję 0,25(x+2)^2 dla bramek G1 i G2. To zgadywanie, bo lekcja nie mówi, jak dobrać liczbę w nawiasie.",
+      "followUp": null,
+      "belief": null,
+      "assessment": "not_applicable",
+      "expression": "0.25(x+2)^2",
+      "validation": "failed"
+    },
+    {
+      "scene": "M04-teach",
+      "utterance": "Rozumiem: w (x+1) nawias zeruje się dla x=-1, więc tam jest wierzchołek, czyli o 1 w lewo. Według gry wzór 0,25(x+1)^2 daje y=0,25 w G1 i G2 oraz 2,25 na starcie i mecie, więc pasuje do Twojego wyjaśnienia.",
+      "followUp": "Jak według Ciebie zapisać wzór, gdy wierzchołek ma być o 3 w prawo?",
+      "belief": "Myślę, że liczba w nawiasie ma przeciwny znak niż x wierzchołka, bo nawias zeruje się w wierzchołku, np. (x+1) daje wierzchołek w x=-1.",
+      "assessment": "sound",
+      "expression": null,
+      "validation": "not_proposed"
+    },
+    {
+      "scene": "M04-robot_transfer",
+      "utterance": "Stosuję zdanie z lekcji, że liczba w nawiasie ma przeciwny znak niż x wierzchołka. Bramki są w x=1 i x=3, więc dołek toru chcę mieć pośrodku, w x=2. Spróbuję wzoru 0,25(x-2)^2, bo nawias zeruje się wtedy dla x=2.",
+      "followUp": null,
+      "belief": null,
+      "assessment": "not_applicable",
+      "expression": "0.25(x-2)^2",
+      "validation": "passed"
+    }
+  ],
+  "w_filmie": [
+    {
+      "scena": "Lekcja 1, dymek Piko",
+      "tekst": "Myślę, że zamiana minusa na plus przesuwa parabolę, ale nie wiem jeszcze, w którą stronę ani o ile.",
+      "zrodlo": "odpowiedzi[0].belief, dosłownie"
+    },
+    {
+      "scena": "Lot 1, dymek Piko",
+      "tekst": "To zgadywanie, bo lekcja nie mówi, jak dobrać liczbę w nawiasie.",
+      "zrodlo": "odpowiedzi[1].utterance, fragment (ostatnie zdanie)"
+    },
+    {
+      "scena": "Lekcja 2, dymek Piko",
+      "tekst": "Myślę, że liczba w nawiasie ma przeciwny znak niż x wierzchołka, bo nawias zeruje się w wierzchołku.",
+      "zrodlo": "odpowiedzi[2].belief, początek (pominięty przykład „np. (x+1) daje wierzchołek w x=-1”)"
+    },
+    {
+      "scena": "Lot 2, dymek Piko",
+      "tekst": "Bramki są w x=1 i x=3, więc dołek toru chcę mieć pośrodku, w x=2. Spróbuję wzoru 0,25(x-2)^2, bo nawias zeruje się wtedy dla x=2.",
+      "zrodlo": "odpowiedzi[3].utterance, dosłownie (bez pierwszego zdania)"
+    }
+  ]
+}

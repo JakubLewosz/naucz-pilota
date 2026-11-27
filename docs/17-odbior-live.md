@@ -9,9 +9,9 @@ npm run test:m04:offline
 npm test -- tests/m04-generalization.test.ts
 ```
 
-Trzy translacje o −4, +3 i −6 oraz przebudowana geometria wykorzystują produkcyjny silnik. Dla każdej geometrii sprawdź A, B, C i kontrolę D bez notatki. Warianty mają tę samą symboliczną regułę oraz dowody liczbowe z nauczania. A, B i C przechodzą walidację zapisu z dosłowną notatką oraz źródłem `skipped`, ponieważ w aparaturze pomijamy modelową parafrazę. Testy badają przekazanie notatki jako danych `user`, brak rozwiązań i izolację sceny. [Wyniki i warunki](../checks/m04-generalization-1.2.0.md).
+Trzy translacje o −4, +3 i −6 oraz przebudowana geometria wykorzystują produkcyjny silnik. Dla każdej geometrii sprawdź A, B, C i kontrolę D bez notatki. Warianty mają tę samą symboliczną regułę oraz dowody liczbowe z nauczania. A, B i C przechodzą walidację zapisu z dosłowną notatką oraz źródłem `skipped`, ponieważ w aparaturze pomijamy modelową parafrazę. Testy badają przekazanie notatki jako danych `user`, brak rozwiązań i izolację sceny. [Wyniki i warunki](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/m04-generalization-1.2.0.md).
 
-Kontrolowana próba z 10 listopada 2026 wykorzystała **8 prób HTTP**. Objęła translację −4 i przebudowaną planszę, cztery warunki na każdej, po jednym żądaniu transferu. Model to `gpt-6-luna` z `xhigh`, limit 8192 tokenów oraz 90 s. Każdy przypadek miał oddzielny kontekst bez historii i jedną próbę. Otrzymano siedem zaliczonych wzorów, a D na przebudowanej planszy zakończyło się timeoutem podczas uśpienia hosta. Ponowne wykonanie wymaga osobnej zgody i unikalnego identyfikatora. [Raport live](../checks/m04-generalization-1.2.0.live.md).
+Kontrolowana próba z 10 listopada 2026 wykorzystała **8 prób HTTP**. Objęła translację −4 i przebudowaną planszę, cztery warunki na każdej, po jednym żądaniu transferu. Model to `gpt-6-luna` z `xhigh`, limit 8192 tokenów oraz 90 s. Każdy przypadek miał oddzielny kontekst bez historii i jedną próbę. Otrzymano siedem zaliczonych wzorów, a D na przebudowanej planszy zakończyło się timeoutem podczas uśpienia hosta. Ponowne wykonanie wymaga osobnej zgody i unikalnego identyfikatora. [Raport live](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/m04-generalization-1.2.0.live.md).
 
 ```sh
 npx tsx tests/live/run-m04-generalization.ts --live --max-calls 8 unikalny-id
@@ -34,7 +34,7 @@ Po odrębnej zgodzie na wywołania OpenAI uruchom poniższą komendę z nowym id
 npx tsx tests/live/m04-browser.ts --allow-paid moj-id-proby-live
 ```
 
-Wyniki pierwszej rzeczywistej próby oraz ocenę transferu zawiera [raport M04 A/B/C z promptem 1.1.0](../checks/ai-live-m04-abc-1.1.0.md).
+Wyniki pierwszej rzeczywistej próby oraz ocenę transferu zawiera [raport M04 A/B/C z promptem 1.1.0](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/ai-live-m04-abc-1.1.0.md).
 
 ## Próba kontraktu M04 bez opłat
 
@@ -67,7 +67,7 @@ Przed próbą zapisz limit wywołań i uzgodniony limit wydatków operatora. Po 
 
 ## Jedna instancja za HTTPS
 
-W repozytorium jest gotowy [stack Docker Compose i Caddy](../deploy/jury/compose.yaml). Test `npm run jury:https:smoke` uruchamia ten sam Caddyfile i produkcyjny backend w odizolowanej sieci Docker. Sprawdza zaufanie TLS, wejście dozwolonej sieci i odrzucenie drugiego klienta mimo podrobionych nagłówków, cookie Secure, obcy origin, limit 16 KiB, budżet zero oraz trwałą sesję po restarcie. Smoke używa lokalnego certyfikatu i syntetycznego klucza. [Raport lokalny](../checks/jury-https-smoke.json)
+W repozytorium jest gotowy [stack Docker Compose i Caddy](https://github.com/JakubLewosz/naucz-pilota/blob/main/deploy/jury/compose.yaml). Test `npm run jury:https:smoke` uruchamia ten sam Caddyfile i produkcyjny backend w odizolowanej sieci Docker. Sprawdza zaufanie TLS, wejście dozwolonej sieci i odrzucenie drugiego klienta mimo podrobionych nagłówków, cookie Secure, obcy origin, limit 16 KiB, budżet zero oraz trwałą sesję po restarcie. Smoke używa lokalnego certyfikatu i syntetycznego klucza. [Raport lokalny](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/jury-https-smoke.json)
 
 Na hostingu potrzebne są Linux, Docker Compose, zatwierdzona nazwa DNS skierowana na host, porty TCP 80 i 443 dla Caddy oraz adresy wyjściowe dopuszczonych sieci. Ustaw listę IP/CIDR rozdzieloną spacjami. Caddy używa adresu bezpośredniego połączenia, dlatego w tej konfiguracji ruch ma trafiać bezpośrednio do hosta. Jeśli sieć jury ma zmienne adresy, ustal stałą sieć wyjściową lub zatwierdzoną sieć prywatną przed testem. [Adres źródłowy w Caddy](https://caddyserver.com/docs/caddyfile/matchers#remote_ip) · [Automatyczny HTTPS](https://caddyserver.com/docs/automatic-https)
 

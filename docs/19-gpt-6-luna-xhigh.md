@@ -1,6 +1,6 @@
 # GPT-6 Luna z Extra High w Naucz Pilota
 
-Backend i runnery korzystają z tej samej konfiguracji. OpenAI Docs potwierdzają obsługę Responses API, Structured Outputs i `reasoning.effort: xhigh` przez `gpt-6-luna`. Po sprawdzeniu SDK z atrapą wykonano kontrolowane M04 A/B/C. API zwróciło sześć odpowiedzi modelu, a silnik zaliczył trzy loty. [Model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) · [Wyniki porównania M04](../checks/ai-live-m04-abc-luna-xhigh-1.1.0.md).
+Backend i runnery korzystają z tej samej konfiguracji. OpenAI Docs potwierdzają obsługę Responses API, Structured Outputs i `reasoning.effort: xhigh` przez `gpt-6-luna`. Po sprawdzeniu SDK z atrapą wykonano kontrolowane M04 A/B/C. API zwróciło sześć odpowiedzi modelu, a silnik zaliczył trzy loty. [Model GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) · [Wyniki porównania M04](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/ai-live-m04-abc-luna-xhigh-1.1.0.md).
 
 ## Uruchomienie lokalne
 
@@ -20,7 +20,7 @@ Limit 8192 obejmuje widoczną odpowiedź oraz rozumowanie. Backend daje całej t
 
 ## Próba z atrapą i dowód HTTP
 
-[Pełne body odebrane przez lokalną atrapę](../checks/luna-xhigh-http-stub-request.json) zawiera syntetyczną lekcję, prompt, schemat i parametry SDK. W zapisie uwzględniono wyłącznie body. Aby odtworzyć zapis, uruchom:
+[Pełne body odebrane przez lokalną atrapę](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/luna-xhigh-http-stub-request.json) zawiera syntetyczną lekcję, prompt, schemat i parametry SDK. W zapisie uwzględniono wyłącznie body. Aby odtworzyć zapis, uruchom:
 
 ```sh
 mkdir -p var
@@ -33,7 +33,7 @@ Test sprawdza także `AI_NOT_CONFIGURED` dla odrzuconego parametru i niedostępn
 
 Poniższe ustawienia dokumentują przebieg bazowy. Aktualną próbę promptu 1.2.0 na geometriach spoza kampanii opisuje [protokół A/B/C/D](17-odbior-live.md#uogólnienie-m04-na-czterech-geometriach-testowych).
 
-Przebieg z 10 listopada użył poniższych ustawień. Porównanie wykorzystało [zapis GPT-5.4 mini](../checks/ai-live-m04-abc-1.1.0.md) dla tego samego promptu 1.1.0 i tej samej geometrii. Runner tworzy trzy osobne sesje z identycznego stanu, każdą z jedną turą teach i jedną turą transferu. Ustawienie jednej próby wyłącza techniczne ponowienie i ogranicza budżet na granicy HTTP do sześciu żądań. Każdy kolejny przebieg wymaga zgody na wydatki i własnego identyfikatora.
+Przebieg z 10 listopada użył poniższych ustawień. Porównanie wykorzystało [zapis GPT-5.4 mini](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/ai-live-m04-abc-1.1.0.md) dla tego samego promptu 1.1.0 i tej samej geometrii. Runner tworzy trzy osobne sesje z identycznego stanu, każdą z jedną turą teach i jedną turą transferu. Ustawienie jednej próby wyłącza techniczne ponowienie i ogranicza budżet na granicy HTTP do sześciu żądań. Każdy kolejny przebieg wymaga zgody na wydatki i własnego identyfikatora.
 
 ```sh
 AI_MODEL=gpt-6-luna AI_REASONING_EFFORT=xhigh AI_MAX_OUTPUT_TOKENS=8192 \

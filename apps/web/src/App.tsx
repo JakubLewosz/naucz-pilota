@@ -262,9 +262,11 @@ export function App(){
  {s.mode!=='unavailable'&&canAskRobot(s,r)&&(!r.robot||r.robotTurns===0)&&<button disabled={s.busy} onClick={()=>void askPiko()}>Piko, spróbuj sam</button>}
  {!s.busy&&r.robotChecked&&r.robot?.mode==='demo'&&<p className="notice">Tryb pokazowy: Piko poleciał przygotowanym wzorem, a nie według Twojej lekcji, więc ten wynik nic o niej nie mówi.{s.liveAvailable?' Żeby sprawdzić lekcję, włącz prawdziwe AI przyciskiem u góry panelu.':''}</p>}
  {!s.busy&&r.robotChecked&&r.robot?.mode!=='demo'&&(r.attempts.robot_transfer?.at(-1)?.result.ok
-  ? (r.lessonReply?.assessment==='sound'
+  ? (r.lessonReply?.source==='live'&&r.lessonReply.assessment==='sound'
    ? <p className="notice ok">Twoja lekcja zadziałała: Piko przeleciał nową trasę, stosując Twoją notatkę.</p>
-   : <div className="notice"><p>Piko przeleciał, ale Twoja lekcja nie została oceniona jako pełna, więc mógł po części zgadnąć z samej planszy. Spróbuj wyjaśnić zasadę dokładniej.</p><button className="secondary" onClick={()=>dispatch({type:'RETEACH'})}>Popraw lekcję dla Piko</button></div>)
+   : <div className="notice"><p>{r.lessonReply?.source==='live'&&r.lessonReply.assessment
+     ?'Piko przeleciał, ale Twoja lekcja nie została oceniona jako pełna, więc mógł po części zgadnąć z samej planszy. Spróbuj wyjaśnić zasadę dokładniej.'
+     :'Piko przeleciał. Piko nie ocenił tej lekcji (zapisano ją bez „Powiedz Piko” albo w trybie pokazowym), więc nie wiadomo, czy wyjaśnienie było pełne.'}</p><button className="secondary" onClick={()=>dispatch({type:'RETEACH'})}>Popraw lekcję dla Piko</button></div>)
   : <div className="notice"><p>Piko poleciał tak, jak wynika z Twojej lekcji, i się rozbił. Sprawdź jego uzasadnienie: które zdanie notatki go zmyliło albo czego w niej zabrakło?</p><button onClick={()=>dispatch({type:'RETEACH'})}>Popraw lekcję dla Piko</button></div>)}
  {!s.busy&&(r.robotChecked
   ? <button className={r.attempts.robot_transfer?.at(-1)?.result.ok?undefined:'secondary'} onClick={()=>dispatch({type:'NEXT'})}>Teraz mój samodzielny lot</button>

@@ -22,7 +22,7 @@ for(const scenario of [
   assessment:'incorrect',feedback:'W wyjaśnieniu jest błąd. Możesz poprawić swoje słowa.'},
  {name:'abc',explanation:'abc',
   assessment:'not_applicable',feedback:'W tekście brakuje użytecznej wskazówki.'}
-] as const)test(`MOCK: ${scenario.name} remains user data and a safe lot does not verify the lesson`,async({page})=>{
+] as const)test(`MOCK: ${scenario.name} remains user data and a safe lot does not verify the lesson`,async({page,baseURL})=>{
  const observed:WireRequest[]=[];
  const paraphrase='Próbuję powiązać stałą z wysokością toru.';
  const {explanation}=scenario;
@@ -49,7 +49,7 @@ for(const scenario of [
  await once(providerStub,'listening');
  const store=new Store(':memory:');
  const api=createApp({
-  store,config:{mode:'live',model:'loopback-stub'},
+  store,config:{mode:'live',model:'loopback-stub',publicOrigin:new URL(baseURL!).origin},
   provider:openAIProvider('local-test-credential','loopback-stub',1200,{baseURL:address(providerStub)+'/v1'})
  }).listen(0,'127.0.0.1');
  await once(api,'listening');

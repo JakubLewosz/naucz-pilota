@@ -132,7 +132,7 @@ function lesson(id,title,noteText,belief,opts){const sc=scene(id,title),c0=sc.c(
  type(sh.querySelector('.txt'),noteText,c0.t+.3,Math.max(2,c0.d+.4));
  const st=student(170,150,690);sc.el.append(st);pop(st,sc.s.start+.4);
  const p=pikoBig(270,1030,170).expr(c1.t-.2,'think');sc.el.append(p);pop(p,sc.s.start+.3);
- const bb=sc.add(`<div class="bubble" style="width:790px"><span class="tag">Prawdziwa odpowiedź AI (Claude)</span><div class="t"></div></div>`,1030,480);
+ const bb=sc.add(`<div class="bubble" style="width:790px"><span class="tag">Fragment prawdziwej odpowiedzi Claude</span><div class="t"></div></div>`,1030,480);
  key(bb,[[c1.t-.3,{opacity:0,transform:'scale(.6)',backgroundColor:'#fff'},BOUNCE],[c1.t+.1,{opacity:1,transform:'scale(1)',backgroundColor:'#fff'},'linear'],[end+.2,{opacity:1,transform:'scale(1)',backgroundColor:'#fff'}],[end+.7,{opacity:1,transform:'scale(1)',backgroundColor:'#fff2a6'}]]);
  bb.style.transformOrigin='60px 0';type(bb.querySelector('.t'),belief,c1.t,c1.d*.94);
  pop(sc.add('<div class="chip saved">✓ zapisane w pamięci Piko</div>',1330,380),end+.45);
@@ -143,7 +143,7 @@ lesson('lesson1','Lekcja 1: uczeń tłumaczy krótko','Trzeba zamienić minus na
 function flight(id,title,belief,speech,formula,f,good){const sc=scene(id,title),c1=sc.c(1),c2=sc.c(2),end1=c1.t+c1.d,b=board(D.transfer,112,120,150);sc.el.append(b.svg);
  up(sc.add(`<div class="note" style="width:580px"><b>Pamięć Piko (z lekcji ucznia)</b>${belief}</div>`,960,150),sc.s.start+.4);
  const p=pikoBig(210,1600,120).expr(c1.t-.2,'think');sc.el.append(p);pop(p,sc.s.start+.3);
- const bb=sc.add(`<div class="bubble" style="width:820px"><span class="tag">Prawdziwa odpowiedź AI (Claude)</span><div class="t"></div></div>`,960,420);bb.style.transformOrigin='720px 0';pop(bb,c1.t-.3);type(bb.querySelector('.t'),speech,c1.t,c1.d*.94);
+ const bb=sc.add(`<div class="bubble" style="width:820px"><span class="tag">Fragment prawdziwej odpowiedzi Claude</span><div class="t"></div></div>`,960,420);bb.style.transformOrigin='720px 0';pop(bb,c1.t-.3);type(bb.querySelector('.t'),speech,c1.t,c1.d*.94);
  pop(sc.add(`<div class="formula">${formula}</div>`,960,770),c1.t+c1.d*.8);
  const fl=b.flyer(),sx=b.d.xMin,sy=(D.transfer.start.yMin+D.transfer.start.yMax)/2;
  if(good){
@@ -177,7 +177,7 @@ lesson('lesson2','Lekcja 2: tym razem pełna','Nawias (x + 1) zeruje się dla x 
   <g class="vv"><line x1="260" y1="200" x2="260" y2="232" stroke="#c66a00" stroke-width="4" stroke-dasharray="6 6"/><circle cx="260" cy="200" r="11" fill="#ff9f1c" stroke="#1b2a4a" stroke-width="4"/><text x="260" y="170" text-anchor="middle" font-size="34" font-weight="700" fill="#8a4b00" style="font-family:'Shantell Sans Variable'">x = −1</text></g>
   <text x="392" y="232" font-size="26" fill="#4a5872">0</text></svg>`,360,620);
  key(d.querySelector('.pp'),[[c0.t+2.2,{strokeDashoffset:1}],[c0.t+3.3,{strokeDashoffset:0}]]);key(d.querySelector('.vv'),[[c0.t+3.2,{opacity:0}],[c0.t+3.6,{opacity:1}]]);});
-flight('flight2','Lot Piko: druga próba','Myślę, że liczba w nawiasie ma przeciwny znak niż x wierzchołka, bo nawias zeruje się w wierzchołku.','Bramki są w x = 1 i x = 3, więc dołek toru chcę mieć pośrodku, w x = 2. Spróbuję nawiasu (x − 2).','f(x) = 0,25(x − 2)²',fGood,true);
+flight('flight2','Lot Piko: druga próba','Myślę, że liczba w nawiasie ma przeciwny znak niż x wierzchołka, bo nawias zeruje się w wierzchołku.','Bramki są w x=1 i x=3, więc dołek toru chcę mieć pośrodku, w x=2. Spróbuję wzoru 0,25(x-2)^2, bo nawias zeruje się wtedy dla x=2.','f(x) = 0,25(x − 2)²',fGood,true);
 clipScene('game3');clipScene('game4');
 /* 8. Jak to działa */
 {const sc=scene('tech','Jak to działa'),c0=sc.c(0),c1=sc.c(1),c2=sc.c(2);

@@ -13,7 +13,7 @@ Folder do wysłania tworzy `npm run release:prepare` w `release/Piko_Misja_Funkc
 | Wersja binarna + instrukcja uruchomienia | `02_aplikacja/Piko_Misja_Funkcja_Windows.zip` (z wbudowanym Claude), `instrukcja_uruchomienia.pdf` | gotowe |
 | Kod źródłowy + instrukcja kompilacji | `03_kod/Piko_Misja_Funkcja_kod.zip`, `instrukcja_kompilacji.pdf` | gotowe |
 | Instrukcja korzystania z aplikacji | `04_instrukcja/instrukcja_uzytkownika.pdf` | gotowe |
-| Film do 5 min, AVI lub MP4 | `05_prezentacja/Piko_Misja_Funkcja_film.mp4` (3:41, 1080p) | gotowe |
+| Film do 5 min, AVI lub MP4 | `05_prezentacja/Piko_Misja_Funkcja_film.mp4` (2:31, 1080p, animacja z wstawkami z gry) | gotowe |
 | Opis funkcjonalności, maks. 1 strona | `05_prezentacja/opis_funkcjonalnosci.pdf` | gotowe |
 | (dodatkowo) Raport z testów | `06_weryfikacja/` | gotowe |
 
