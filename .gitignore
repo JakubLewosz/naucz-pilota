@@ -23,3 +23,4 @@ __pycache__/
 *.pyc
 release/*.bundle
 !release/media/Piko_Misja_Funkcja_film.mp4
+release/STAN_PACZKI.json
