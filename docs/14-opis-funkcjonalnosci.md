@@ -17,12 +17,12 @@ Gracz wpisuje wzór funkcji, a robot Piko leci po jej wykresie przez bramki, omi
 
 ## Sztuczna inteligencja
 
-Piko korzysta z Claude Sonnet 5.5. W lekcji model dostaje opis planszy, sprawdzone fakty liczbowe i słowa gracza. W locie dostaje wyłącznie notatki z lekcji. Odpowiada w wymuszonym formacie JSON: wypowiedź, ocenę wyjaśnienia, przekonanie Piko i ewentualny wzór. Tekst gracza trafia do modelu tylko jako dane, więc polecenia w stylu „zignoruj instrukcje” nie działają. O zaliczeniu nigdy nie decyduje AI: każdy wzór, również wzór Piko, przelicza analitycznie własny silnik matematyczny gry. W testach na prawdziwym modelu wszystkie 22 odpowiedzi były poprawne, a lot Piko zależał od lekcji: dobra prowadziła do sukcesu, błędna do rozbicia w przewidywalny sposób.
+Piko korzysta z Claude Sonnet 5.5. W lekcji model dostaje opis planszy, sprawdzone fakty liczbowe i słowa gracza. W locie dostaje wyłącznie notatki z lekcji. Odpowiada w wymuszonym formacie JSON: wypowiedź, ocenę wyjaśnienia, przekonanie Piko i ewentualny wzór. Tekst gracza trafia do modelu tylko jako dane, więc polecenia w stylu „zignoruj instrukcje” nie działają. O zaliczeniu nigdy nie decyduje AI: każdy wzór, również wzór Piko, przelicza analitycznie własny silnik matematyczny gry. W testach na prawdziwym modelu wszystkie 22 odpowiedzi były zgodne ze schematem i fazą gry, a lot Piko zależał od lekcji: po 5 z 6 wzorcowych lekcji Piko przeleciał, a błędna lekcja kończyła się rozbiciem w przewidywalny sposób.
 
 ## Dla kogo i jak
 
-Gra jest po polsku, jednoosobowa, bez kont i rankingów. Postęp zostaje na urządzeniu. Działa w przeglądarce oraz jako aplikacja Windows z wbudowanym połączeniem z Claude, bez zakładania kont i wpisywania kluczy. Bez internetu włącza się tryb pokazowy z przygotowanymi odpowiedziami Piko, a tryb jest zawsze widoczny na ekranie. Ustawienia pozwalają ograniczyć animacje, powiększyć tekst do 200% i grać samą klawiaturą.
+Gra jest po polsku, jednoosobowa, bez kont i rankingów. Postęp zostaje na urządzeniu. Działa w przeglądarce oraz jako aplikacja Windows z wbudowanym połączeniem z Claude, bez zakładania kont i wpisywania kluczy. Bez internetu włącza się tryb pokazowy z przygotowanymi odpowiedziami Piko, a tryb jest zawsze widoczny na ekranie. Ustawienia pozwalają ograniczyć animacje i powiększyć tekst do 200%, a całą grę można obsłużyć klawiaturą.
 
 ## Technologia
 
-TypeScript, React, Express, SQLite i Electron. Kod jest sprawdzany przez 225 testów jednostkowych, 62 testy treści i 17 testów całej gry w przeglądarce.
+TypeScript, React, Express, SQLite i Electron. Kod jest sprawdzany przez 225 testów automatycznych (w tym 62 testy treści misji) i 17 testów całej gry w przeglądarce.

@@ -53,7 +53,7 @@ Piko: Misja Funkcja 1.0.0 dla Windows 10/11 (64-bit). Node.js ani Python nie są
 
 ## Uruchomienie
 
-1. Rozpakuj cały plik Piko_Misja_Funkcja_1.0.0_Windows_x64.zip do dowolnego folderu (np. na Pulpit). Nie uruchamiaj programu bezpośrednio z archiwum ZIP.
+1. Rozpakuj cały plik Piko_Misja_Funkcja_Windows.zip do dowolnego folderu (np. na Pulpit). Nie uruchamiaj programu bezpośrednio z archiwum ZIP.
 2. W rozpakowanym folderze uruchom Piko Misja Funkcja.exe. Zostaw obok wszystkie pozostałe pliki i folder resources.
 3. Jeśli Windows pokaże okno „System Windows ochronił ten komputer”, kliknij Więcej informacji, a potem Uruchom mimo to. Paczka nie ma płatnego podpisu cyfrowego.
 4. Kliknij Rozpocznij. Opis gry jest w instrukcji użytkownika.

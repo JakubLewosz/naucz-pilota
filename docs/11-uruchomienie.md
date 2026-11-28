@@ -18,7 +18,7 @@ Bez klucza API gra działa w trybie pokazowym, z przygotowanymi odpowiedziami Pi
 3. W `.env` ustaw `AI_MODE=live`, `AI_PROVIDER=anthropic` i `ANTHROPIC_API_KEY=` z Twoim kluczem. Domyślny model to `claude-sonnet-5-5` z `AI_REASONING_EFFORT=medium`.
 4. Uruchom ponownie `npm run dev`. Nowy gracz dostaje prawdziwe AI automatycznie, a w Ustawieniach możesz przełączać tryby.
 
-Klucz jest tylko na serwerze i nigdy nie trafia do przeglądarki ani do aplikacji okienkowej. Plik `.env` jest wykluczony z repozytorium. Zamiast Claude można użyć OpenAI: `AI_PROVIDER=openai`, `OPENAI_API_KEY`, `AI_MODEL=gpt-6-luna`.
+Klucz jest tylko na serwerze i nigdy nie trafia do przeglądarki. Wyjątkiem jest paczka Windows z wbudowanym Claude (`desktop:dist:ai`, opis niżej). Plik `.env` jest wykluczony z repozytorium. Zamiast Claude można użyć OpenAI: `AI_PROVIDER=openai`, `OPENAI_API_KEY`, `AI_MODEL=gpt-6-luna`.
 
 Jedna tura rozmowy kosztuje ok. 1–2 centów. Serwer ma limity: 6 tur na minutę na sesję i `AI_DAILY_REQUEST_BUDGET` (domyślnie 200) żądań dziennie.
 
@@ -39,13 +39,13 @@ Są dwa warianty paczki:
 
 ## Serwer w internecie (opcjonalnie)
 
-Dockerfile buduje obraz na Node 24. `deploy/jury/compose.yaml` dodaje Caddy (HTTPS), ograniczenie dostępu do wybranych adresów IP i trwały wolumen na bazę SQLite. `deploy/jury/compose-code.yaml` wpuszcza każdego, kto poda kod dostępu (`JURY_ACCESS_CODE`, 32–256 znaków). Klucz API przekaż jako zmienną środowiskową serwera, nie kopiuj `.env` do obrazu. Szczegóły i lista kontrolna: [17-odbior-live.md](17-odbior-live.md). Lokalny test całego stosu bez kosztów: `npm run jury:https:smoke` i `npm run docker:smoke`.
+Dockerfile buduje obraz na Node 24. `deploy/jury/compose.yaml` dodaje Caddy (HTTPS), ograniczenie dostępu do wybranych adresów IP i trwały wolumen na bazę SQLite. `deploy/jury/compose-code.yaml` wpuszcza każdego, kto poda kod dostępu (`JURY_ACCESS_CODE`, 32–256 znaków). Klucz API przekaż jako zmienną środowiskową serwera, nie kopiuj `.env` do obrazu. Szczegóły i lista kontrolna: `docs/17-odbior-live.md` w archiwum kodu. Lokalny test całego stosu bez kosztów: `npm run jury:https:smoke` i `npm run docker:smoke`.
 
 ## Testy
 
 - `npm run typecheck`, `npm run lint`: kontrola typów i stylu.
-- `npm test`: 225 testów jednostkowych (silnik, kontrakt AI, serwer, zapis gry, oba adaptery AI na atrapie HTTP).
-- `npm run test:content`, `python3 tools/validate_missions.py`: poprawność 24 plansz.
+- `npm test`: 225 testów automatycznych (silnik, kontrakt AI, serwer, zapis gry, oba adaptery AI na atrapie HTTP oraz 62 testy treści misji).
+- `npm run test:content` (same testy treści) i `python3 tools/validate_missions.py`: poprawność 24 plansz.
 - `npx playwright install chromium`, potem `npm run test:e2e`: 17 testów całej gry w przeglądarce.
 - `npm run test:ai:live -- --dry-run`: przygotowanie zestawu live bez wywołań API.
 - `npm run test:ai:live -- --allow-paid --max-calls 44`: 22 tury na prawdziwym modelu, raport w `var/ai-live/` i `checks/ai-live-results.json`.

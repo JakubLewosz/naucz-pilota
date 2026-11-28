@@ -19,12 +19,24 @@ for(const [source,target] of [
  if(!existsSync(source))throw new Error(`Required release artifact missing: ${source}`);await cp(source,`${root}/${target}`);
 }
 // Historical live clips are described in the report, separate from this candidate's film.
-for(const file of await readdir('docs/konkurs'))await cp(`docs/konkurs/${file}`,`${root}/01_formularze/${file}`);
-await cp('release/CHECKLISTA.md',`${root}/CHECKLISTA.md`);
+// Folder dla jury: bez roboczych notatek autora (checklista i stan paczki zostają w release/).
+for(const stale of ['CHECKLISTA.md','STAN_PACZKI.json','01_formularze/README.md'])await rm(`${root}/${stale}`,{force:true});
+await writeFile(`${root}/CZYTAJ_MNIE.txt`,`Piko: Misja Funkcja — zgłoszenie do konkursu „Sztuczna inteligencja wśród nas”
+
+01_formularze   Karta Zgłoszenia i Klauzula Informacyjna (skany)
+02_aplikacja    Aplikacja Windows (ZIP) i instrukcja uruchomienia
+03_kod          Kod źródłowy (ZIP) i instrukcja kompilacji
+04_instrukcja   Instrukcja użytkownika
+05_prezentacja  Film (MP4) i opis funkcjonalności
+06_weryfikacja  Raport z testów i zapisy testów na prawdziwym modelu
+
+Szybki start: rozpakuj 02_aplikacja/Piko_Misja_Funkcja_Windows.zip i uruchom „Piko Misja Funkcja.exe”.
+Kod źródłowy: https://github.com/JakubLewosz/naucz-pilota
+`);
 // Dla jury tylko aktualne wyniki; historyczne raporty z prac zostają w repozytorium.
 for(const file of ['checks/ai-live-claude-sonnet-5-5.md','checks/ai-live-results.json','checks/film-odpowiedzi-ai.json','test-results/e2e-results.json'])if(existsSync(file))await cp(file,`${root}/06_weryfikacja/${path.basename(file)}`);
 const lock=JSON.parse(await readFile('package-lock.json','utf8')) as {packages:Record<string,{version?:string;license?:string}>};
-let notices='PIKO: MISJA FUNKCJA 1.0.0 — THIRD-PARTY NOTICES\n\nRuntime and author tools resolved by package-lock.json. Electron distribution includes LICENSE and LICENSES.chromium.html. Source code author identity and licensing are to be confirmed by its owner.\n';
+let notices='PIKO: MISJA FUNKCJA 1.0.0 — THIRD-PARTY NOTICES\n\nRuntime and author tools resolved by package-lock.json. Electron distribution includes LICENSE and LICENSES.chromium.html. \n';
 for(const [entry,meta]of Object.entries(lock.packages)){
  if(!entry.startsWith('node_modules/')||!meta.version)continue;
  notices+=`\n${entry} @ ${meta.version}\nLicense identifier: ${meta.license??'See upstream package'}\n`;
@@ -50,5 +62,5 @@ const summary={date:new Date().toISOString(),sourceFiles:sourceFiles.length,
  scope:'Piko: Misja Funkcja 1.0.0, Windows x64 build; live AI: Claude Sonnet 5.5 (embedded local server when built with desktop:dist:ai, otherwise showcase mode).',
  live:{fullSuiteCurrent:verifiedLive,promptVersion:PROMPT_VERSION},
  missing:['Signed author forms (scans)','Current Windows EXE run on GitHub Actions or a Windows PC','Cloud sharing and e-mail to the organizer']};
-await writeFile(`${root}/STAN_PACZKI.json`,JSON.stringify(summary,null,2)+'\n');
+await writeFile('release/STAN_PACZKI.json',JSON.stringify(summary,null,2)+'\n');
 console.log('Prepared',root,'with',sourceFiles.length,'source files. External blockers remain explicit.');

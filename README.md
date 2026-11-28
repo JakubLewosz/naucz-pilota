@@ -27,7 +27,7 @@ Piko naprawdę uczy się tylko od gracza. Po lekcji zapisuje w pamięci jedno zd
 | Lot Piko | Piko zna **tylko** swoje przekonania z lekcji (bez kanonicznej zasady), sam dobiera wzór dla **nowej** trasy i mówi, które zdanie lekcji stosuje. | Przelicza tor Piko, wykrywa kolizje i pokazuje wynik. Po porażce gracz poprawia lekcję i Piko leci jeszcze raz. |
 | Bezpieczeństwo | Odpowiedź ma wymuszony schemat JSON. Tekst gracza trafia do modelu wyłącznie jako dane, nie jako polecenie. | Odrzuca odpowiedzi niezgodne z fazą gry, a błędnych wzorów Piko nie poprawia po cichu. |
 
-Wynik testu na prawdziwym modelu (prompt 2.1.0): 22/22 tur poprawnych. Przekonania Piko wiernie oddają słowa gracza, także błędne. Lot Piko zależy od lekcji: w misji 4 dobra lekcja daje udany lot, a błędna („plus przesuwa w prawo”) i pusta kończą się rozbiciem. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/ai-live-claude-sonnet-5-5.md).
+Wynik testu na prawdziwym modelu (prompt 2.1.0): 22/22 odpowiedzi zgodnych ze schematem i fazą gry, 5 z 6 lotów po wzorcowej lekcji udanych. Przekonania Piko wiernie oddają słowa gracza, także błędne. Lot Piko zależy od lekcji: w misji 4 dobra lekcja daje udany lot, a błędna („plus przesuwa w prawo”) i pusta kończą się rozbiciem. Szczegóły: [checks/ai-live-claude-sonnet-5-5.md](https://github.com/JakubLewosz/naucz-pilota/blob/main/checks/ai-live-claude-sonnet-5-5.md).
 
 ## Szybki start (kod źródłowy)
 
@@ -55,7 +55,7 @@ Wersja produkcyjna: `npm run build`, a potem `npm start` (aplikacja i API na htt
 
 ## Wersja na Windows
 
-Rozpakuj `Piko_Misja_Funkcja_1.0.0_Windows_x64.zip` i uruchom `Piko Misja Funkcja.exe`. Node nie jest potrzebny.
+Rozpakuj `Piko_Misja_Funkcja_Windows.zip` z paczki zgłoszenia (po własnej budowie: `release/bin/Piko_Misja_Funkcja_1.0.0_Windows_x64.zip`) i uruchom `Piko Misja Funkcja.exe`. Node nie jest potrzebny.
 
 - `npm run desktop:dist:ai`: paczka z **wbudowanym Claude**. W aplikacji działa mały serwer AI na 127.0.0.1, z tym samym kontraktem, walidacją i limitami co serwer internetowy (150 żądań dziennie na komputer). Klucz z `.env` trafia tylko do paczki, w postaci zaciemnionej, nigdy do repozytorium ani do okna gry. Bez internetu gra proponuje tryb pokazowy.
 - `npm run desktop:dist`: paczka bez klucza, tylko tryb pokazowy (albo serwer HTTPS z `PIKO_DESKTOP_HTTPS_ORIGIN`, [wdrożenie](docs/17-odbior-live.md)).
@@ -66,8 +66,8 @@ Do paczki z wbudowanym AI używaj osobnego klucza z limitem wydatków ustawionym
 
 ```sh
 npm run typecheck && npm run lint
-npm test                     # 225 testów jednostkowych (silnik, kontrakt AI, serwer, zapis)
-npm run test:content         # 62 testy treści misji
+npm test                     # 225 testów automatycznych (w tym 62 testy treści)
+npm run test:content         # same testy treści misji (62)
 npx playwright install chromium
 npm run test:e2e             # 17 testów całej gry w przeglądarce
 npm run test:ai:live -- --dry-run          # zestaw live bez wywołań API

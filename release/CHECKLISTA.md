@@ -19,11 +19,11 @@ Folder do wysłania tworzy `npm run release:prepare` w `release/Piko_Misja_Funkc
 
 ## Kroki dla autora
 
-0. **Klucz do aplikacji z wbudowanym AI.** Na platform.claude.com utwórz osobny workspace (np. „Piko konkurs”), ustaw w nim miesięczny limit wydatków (np. 10 USD) i utwórz w nim nowy klucz. Wpisz go w `.env` jako `ANTHROPIC_API_KEY` i zbuduj paczkę: `npm run desktop:dist:ai`, potem `npm run release:prepare`. Klucz da się wydobyć z pliku aplikacji, a organizator może publikować zgłoszenia, dlatego limit jest konieczny. Po ogłoszeniu wyników (do 20 grudnia 2026) unieważnij ten klucz.
-1. Pobierz ze strony konkursu załączniki (Karta Zgłoszenia, Klauzula Informacyjna), wypełnij je i podpisz. Osoba niepełnoletnia potrzebuje podpisu rodzica lub opiekuna. Zeskanuj albo zrób wyraźne zdjęcia i wrzuć je do `01_formularze/`.
+0. **Klucz do aplikacji z wbudowanym AI.** Paczka jest zbudowana z kluczem z `.env` (`npm run desktop:dist:ai`, potem `npm run release:prepare`). Klucz wygasa 22 grudnia 2026, po ogłoszeniu wyników. Klucz da się wydobyć z pliku aplikacji, więc warto mieć limit wydatków albo niskie saldo bez automatycznego doładowania.
+1. Pobierz ze strony konkursu załączniki (Karta Zgłoszenia, Klauzula Informacyjna), wypełnij je i podpisz. Osoba niepełnoletnia potrzebuje podpisu rodzica lub opiekuna. Zeskanuj albo zrób wyraźne zdjęcia, wrzuć je do `01_formularze/` i usuń stamtąd plik `DO_UZUPELNIENIA.txt`.
 2. Sprawdź warunki udziału: uczeń szkoły ponadpodstawowej, poniżej 21 lat przez cały konkurs, drużyna maksymalnie dwuosobowa.
 3. (Zalecane) Sprawdź aktualny EXE na Windows. Najprościej: na GitHubie wejdź w Actions, wybierz „Verify release on Windows and Linux”, kliknij Run workflow i wybierz gałąź `codex/jury-readiness`. Możesz też rozpakować ZIP na dowolnym komputerze z Windows i zagrać w misję 1.
 4. Obejrzyj film w całości (dźwięk i napisy).
 5. Wrzuć cały folder `Piko_Misja_Funkcja_zgloszenie` na Google Drive albo OneDrive. Ustaw dostęp „każdy, kto ma link, może wyświetlać”. Otwórz link w oknie prywatnym i sprawdź, czy da się pobrać pliki.
-6. Wyślij link na informatyka_konkurs@uwb.edu.pl przed 29 listopada 2026. W treści podaj tytuł projektu „Piko: Misja Funkcja” oraz imiona i nazwiska członków drużyny.
+6. Wyślij link na informatyka_konkurs@uwb.edu.pl najpóźniej 29 listopada 2026. W treści podaj tytuł projektu „Piko: Misja Funkcja” oraz imiona i nazwiska członków drużyny.
 7. Po konkursie unieważnij klucz wbudowany w aplikację i klucz używany w trakcie prac (platform.claude.com, API Keys).
